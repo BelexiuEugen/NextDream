@@ -5,8 +5,6 @@ import SwiftData
 struct CalendarView: View {
     
     @Environment(TaskViewModel.self) var vm;
-
-    @State var allTasks: [TaskModel] = []
     
     // Calendar
     @State private var tasksForSelectedDate: [TaskModel] = []
@@ -15,9 +13,12 @@ struct CalendarView: View {
     @State private var isPresented: Bool = false;
     
     var body: some View {
+        
+        @Bindable var vm = vm;
+        
         VStack {
             
-            FSCalendarView(tasks: $allTasks, selectedDate: $selectedDate, tasksForSelectedDate: $tasksForSelectedDate)
+            FSCalendarView(tasks: $vm.task, selectedDate: $selectedDate, tasksForSelectedDate: $tasksForSelectedDate)
                 .frame(height: 300)
                 .onChange(of: selectedDate) {
                     updateTasksForSelectedDate()
@@ -45,7 +46,6 @@ struct CalendarView: View {
             }
         }
         .onAppear {
-            vm.fetchAllTask()
             updateTasksForSelectedDate()
         }
     }
@@ -133,7 +133,7 @@ extension CalendarView{
 extension CalendarView{
     func updateTasksForSelectedDate() {
         
-        allTasks = vm.task;
+        vm.fetchAllTask()
         
         tasksForSelectedDate = vm.task.filter { Calendar.current.isDate($0.deadline, inSameDayAs: selectedDate) }
     }
