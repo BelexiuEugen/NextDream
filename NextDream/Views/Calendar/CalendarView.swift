@@ -4,9 +4,8 @@ import SwiftData
 
 struct CalendarView: View {
     
-    @Environment(\.modelContext) var modelContext: ModelContext
-    
-    @Query var taskList: [TaskModel]
+    @Environment(TaskViewModel.self) var vm;
+
     @State var allTasks: [TaskModel] = []
     
     // Calendar
@@ -28,12 +27,9 @@ struct CalendarView: View {
                 .font(.headline)
                 .padding()
             
-            //showTaskDetails()
+            showTaskDetails()
         }
         .padding()
-        .onAppear {
-            updateTasksForSelectedDate()
-        }
         .sheet(isPresented: $isPresented, content: {
             EventSelectionView()
                 .presentationDetents([.fraction(0.4), .medium, .large])
@@ -47,6 +43,10 @@ struct CalendarView: View {
                     Image(systemName: "calendar.badge.plus")
                 }
             }
+        }
+        .onAppear {
+            vm.fetchAllTask()
+            updateTasksForSelectedDate()
         }
     }
 }
@@ -81,43 +81,50 @@ extension CalendarView{
         .padding(.horizontal)
     }
     
-//    func showTaskDetails() -> some View{
-//        Group{
-//            if !tasksForSelectedDate.isEmpty {
-//                ScrollView {
-//                    ForEach(tasksForSelectedDate, id: \.self) { task in
-//                        HStack{
-//                            VStack(alignment: .leading, spacing: 5) {
-//                                Text("Task: \(task.taskName)")
-//                                    .font(.subheadline)
-//                                    .fontWeight(.bold)
-//                                    .foregroundStyle(task.isCompleted ? .green : .red)
-//                                    .frame(alignment: .leading)
-//                                if !task.taskDescription.isEmpty {
-//                                    Text("Description: \(task.taskDescription)")
-//                                        .font(.body)
-//                                        .foregroundColor(.gray)
-//                                    Divider()
-//                                }
-//                            }
-//                            .frame(maxWidth: .infinity, alignment: .leading)
-//                            .padding(.bottom, 10)
-//                            
-//                            Spacer()
-//                            
-//                            createButton(task: task)
-//                        }
-//                    }
-//                }
-//                .frame(maxWidth: .infinity, alignment: .leading)
-//                .padding(.horizontal)
-//            } else {
-//                Text("No tasks for this day")
-//                    .font(.subheadline)
-//                    .foregroundColor(.gray)
-//            }
-//        }
-//    }
+    func showTaskDetails() -> some View{
+        Group{
+            if !tasksForSelectedDate.isEmpty {
+                createScrollView()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
+            } else {
+                Text("No tasks for this day")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+            }
+        }
+    }
+    
+    func createScrollView() -> some View{
+        ScrollView {
+            ForEach(tasksForSelectedDate, id: \.self) { task in
+                HStack{
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Task: \(task.name)")
+                            .font(.subheadline)
+                            .fontWeight(.bold)
+                            .foregroundStyle(task.isCompleted ? .green : .red)
+                            .frame(alignment: .leading)
+                        
+                        if ((task.taskDescription?.isEmpty) != nil){
+                            Text("Description: \(task.taskDescription ?? "No description found")")
+                                .font(.body)
+                                .foregroundColor(.gray)
+                            Divider()
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 10)
+                    
+                    Spacer()
+                    
+                    createButton(task: task)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal)
+    }
 
 }
 
@@ -126,9 +133,9 @@ extension CalendarView{
 extension CalendarView{
     func updateTasksForSelectedDate() {
         
-        allTasks = taskList;
+        allTasks = vm.task;
         
-        tasksForSelectedDate = taskList.filter { Calendar.current.isDate($0.deadline, inSameDayAs: selectedDate) }
+        tasksForSelectedDate = vm.task.filter { Calendar.current.isDate($0.deadline, inSameDayAs: selectedDate) }
     }
     
     func formattedDate(_ date: Date) -> String {
