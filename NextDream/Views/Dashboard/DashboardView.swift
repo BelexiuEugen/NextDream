@@ -13,12 +13,9 @@ struct DashboardView: View {
     
     @State var isLoggingOut:Bool = false;
     
-    // Filter today's tasks
-    
-    // Chart Data for Pie Chart
     private var chartData: [(String, Int)] {
-        let completed = todayTasks.filter { $0.isCompleted }.count
-        let uncompleted = todayTasks.count - completed
+        let completed = vm.task.filter { $0.isCompleted }.count
+        let uncompleted = vm.task.count - completed
         return [("Completed", completed), ("Uncompleted", uncompleted)]
     }
     
@@ -42,11 +39,6 @@ struct DashboardView: View {
         .onAppear{
             vm.fetchTaskByDeadline(date: Date())
         }
-        
-        
-//        .toolbar {
-//            Button("Add destination", systemImage: "rectangle.portrait.and.arrow.right", action: exitAccount)
-//        }
     }
 }
 
@@ -149,14 +141,6 @@ extension DashboardView {
             vm.saveDataToDevice()
         }
     }
-    
-//    func exitAccount(){
-//
-//        TaskViewModel.exitAccount(with: modelContext)
-//        
-//        isLoggingOut.toggle()
-//            
-//    }
 }
 
 
