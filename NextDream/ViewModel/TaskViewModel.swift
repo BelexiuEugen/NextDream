@@ -65,46 +65,20 @@ extension TaskViewModel{
         
         return nil;
     }
-    // Not working as planned.
     func fetchTaskByDeadline(date: Date){
-        
-        let calendar = Calendar.current
-        let timeZone = TimeZone.current  // Get the system's local time zone
-        
-
-        let timeZoneOffset = TimeInterval(timeZone.secondsFromGMT(for: date))
-        
-        var components = calendar.dateComponents([.year, .month, .day], from: Date())
-        components.hour = 0
-        components.minute = 0
-        components.second = 0
-        components.timeZone = timeZone  // Apply the time zone
-
-        let startDateUTC = calendar.date(from: components)
-
-        let startDate = startDateUTC?.addingTimeInterval(timeZoneOffset)
-        
-        components.hour = 23
-        components.minute = 59
-        let endDateUTC = calendar.date(from: components)
-        let endDate = endDateUTC?.addingTimeInterval(timeZoneOffset)
-//
-        guard let startDate = startDate, let endDate = endDate else { return }
         
         guard let modelContext = modelContext else { return }
         
-        print(startDate);
-        print(endDate);
+        let calendar = Calendar.current
+        let startDate: Date? = calendar.startOfDay(for: date)
+        let endDate = calendar.date(byAdding: .day, value: 1, to: startDate ?? .now)
         
-        let descriptor = FetchDescriptor<TaskModel>(predicate: #Predicate{ endDate > $0.deadline && $0.deadline > startDate })
+        guard let startDate = startDate, let endDate = endDate else { return }
+        
+        let descriptor = FetchDescriptor<TaskModel>(predicate: #Predicate{ endDate > $0.deadline && $0.deadline >= startDate })
         
         do{
             let taskList = try modelContext.fetch(descriptor)
-            
-            for task in taskList{
-                print(task.name)
-                print(task.deadline)
-            }
 
             task = taskList;
         }catch{
