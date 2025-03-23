@@ -86,6 +86,23 @@ extension TaskViewModel{
         }
     }
     
+    func fetchAllTask(){
+        
+        guard let modelContext = modelContext else { return }
+        
+        do{
+            let descriptor = FetchDescriptor<TaskModel>();
+            let taskList = try modelContext.fetch(descriptor);
+            
+            task = taskList;
+            
+        }catch{
+            print("There was an error \(error.localizedDescription)");
+        }
+        
+        
+    }
+    
 }
 
 
