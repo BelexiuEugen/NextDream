@@ -15,9 +15,6 @@ struct TaskListingView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(TaskViewModel.self) var vm;
     
-//    @Query(sort: [SortDescriptor(\TaskModel.deadline, order: .reverse),
-//                  SortDescriptor(\TaskModel.name)]) var taskList:[TaskModel]
-    
     @State private var taskList: [TaskModel] = []
     
     var body: some View {
@@ -95,6 +92,8 @@ extension TaskListingView{
             modelContext.delete(item)
             
             vm.saveDataToDevice()
+            
+            taskList = TaskViewModel.fetchTasksByParentID(parentID: nil, modelContext: modelContext);
             
             guard item.id != "" else {return}
             
