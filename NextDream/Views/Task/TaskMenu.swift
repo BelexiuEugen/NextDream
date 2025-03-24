@@ -27,6 +27,7 @@ struct TaskMenu: View {
     "Custom Task"
 ]
     
+    @State private var selectedPriority: TaskPriority = .low
     @State private var selectedOption: TaskType = .day;
     @State private var showTask: Bool = false;
     @State private var startDate: Date = firstDay(of: Date());
@@ -43,6 +44,7 @@ struct TaskMenu: View {
     
     var body: some View {
         VStack {
+            
             HStack{
                 
                 Button {
@@ -61,6 +63,24 @@ struct TaskMenu: View {
                 .padding()
                 
             }
+            
+            HStack{
+                
+                Text("Priority Level: ")
+                
+                Picker("Priority", selection: $selectedPriority){
+                    ForEach(TaskPriority.allCases, id: \.self) { priority in
+                        HStack{
+                            Circle()
+                                .frame(width: 20, height: 20)
+                            Text(priority.rawValue)
+                        }
+                        .tag(priority);
+                    }
+                }
+                .pickerStyle(.segmented)
+            }
+            
             
             DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
                 .onChange(of: startDate) { oldValue, newValue in
@@ -105,7 +125,8 @@ struct TaskMenu: View {
 
 #Preview {
     
-    TaskMenu(path: NavigationViewModel(), sheetDetent: .constant(.medium));
+    TaskMenu(path: NavigationViewModel(), sheetDetent: .constant(.medium))
+        .environment(TaskViewModel())
 }
 
 extension TaskMenu{
@@ -142,10 +163,8 @@ extension TaskMenu{
         
         let taskData = TaskModelCreationData(name: "Your Task Name", parentID: nil, taskStartDate: startDate, numberOfYears: numberOfYears, numberOfMonths: numberOfMonths, numberOfWeeks: numberOfWeeks, numberOfDays: numberOfDays)
         
-        print(startDate)
-        
         guard let
-                newTask = vm.createTask(selectedOption: selectedOption, taskData: taskData)
+                newTask = vm.createTask(selectedOption: selectedOption, taskData: taskData, taskPriority: selectedPriority)
         else {return}
         
         path.modelView.append(newTask)
