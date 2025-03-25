@@ -15,32 +15,28 @@ struct TaskListingView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(TaskViewModel.self) var vm;
     
+    @Binding var sort: SortDescriptor<TaskModel>;
+    @Binding var searchString: String;
+    
     @State private var taskList: [TaskModel] = []
     
     var body: some View {
         
         createList()
             .onAppear{
-                taskList = TaskViewModel.fetchTasksByParentID(parentID: nil, modelContext: modelContext)
+                vm.fetchTaskByDescriptorAndSearchString(sort: sort, serchString: searchString);
+            }
+            .onChange(of: sort) {
+                vm.fetchTaskByDescriptorAndSearchString(sort: sort, serchString: searchString);
+            }
+            .onChange(of: searchString){
+                vm.fetchTaskByDescriptorAndSearchString(sort: sort, serchString: searchString);
             }
     }
-    
-//    init(sort: SortDescriptor<TaskModel>, serchString: String){
-//        
-//        _taskList = Query(filter: #Predicate{
-//            if serchString.isEmpty
-//            {
-//                return true
-//            }
-//            else{
-//                return $0.name.localizedStandardContains(serchString)
-//            }
-//        }, sort: [sort])
-//    }
 }
 
 #Preview {
-    TaskListingView(/*sort: SortDescriptor(\TaskModel.name), serchString: ""*/)
+    TaskListingView(sort: .constant(SortDescriptor(\TaskModel.name)), searchString: .constant(""))
 }
 
 // MARK: Body
@@ -48,7 +44,7 @@ extension TaskListingView{
     
     func createList() -> some View{
         List{
-            ForEach(taskList){ item in
+            ForEach(vm.task){ item in
                 HStack{
                     NavigationLink(value: item){
                         VStack(alignment: .leading){

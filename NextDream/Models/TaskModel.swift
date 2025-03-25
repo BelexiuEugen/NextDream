@@ -61,6 +61,7 @@ class TaskModel{
     }
 }
 
+
 enum TaskPriority: String, Codable, CaseIterable{
     case low = "Low"
     case medium = "Medium"

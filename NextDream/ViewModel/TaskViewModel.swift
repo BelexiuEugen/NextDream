@@ -103,6 +103,27 @@ extension TaskViewModel{
         
     }
     
+    func fetchTaskByDescriptorAndSearchString(sort: SortDescriptor<TaskModel>, serchString: String){
+        
+        guard let modelContext = modelContext else { return }
+        
+        do{
+            var descriptor = FetchDescriptor<TaskModel>()
+            
+            descriptor.predicate = #Predicate<TaskModel> { task in
+                (serchString.isEmpty || task.name.localizedStandardContains(serchString))
+                    && task.parentID == nil
+            }
+            
+            descriptor.sortBy = [sort];
+            
+            task = try modelContext.fetch(descriptor);
+            
+        } catch{
+            print("There was an error \(error.localizedDescription)");
+        }
+    }
+    
 }
 
 

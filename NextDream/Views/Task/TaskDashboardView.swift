@@ -20,62 +20,61 @@ struct TaskDashboardView: View {
     @State private var searchText = ""
     @State private var isPresented: Bool = false;
     @State private var sheetDetent: PresentationDetent = .fraction(0.4)
+    @State private var refreshTrigger = false // Force refresh trigger
     
     @State private var sortOrder = SortDescriptor(\TaskModel.name)
     
     var body: some View {
         NavigationStack(path: $path.modelView){
-            TaskListingView(/*sort: sortOrder, serchString:searchText*/)
-            .navigationTitle("Your Task")
-            .navigationDestination(for: TaskModel.self){ task in
-                TaskView(item: task, path: path)
-            }
-            .searchable(text: $searchText)
-            .toolbar{
-                
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        vm.deleteAllTask(with: modelContext);
-                    } label: {
-                        Image(systemName: "trash")
-                    }
-
+            TaskListingView(sort: $sortOrder, searchString:$searchText)
+                .navigationTitle("Your Task")
+                .navigationDestination(for: TaskModel.self){ task in
+                    TaskView(item: task, path: path)
                 }
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add destination", systemImage: "plus")
-                    {
-                        isPresented.toggle()
-                    }
-                }
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu("Sort", systemImage: "arrow.up.arrow.down"){
-                        Picker("Sort", selection: $sortOrder){
-                            Text("Name")
-                                .tag(SortDescriptor(\TaskModel.name))
-                            
-                            Text("Dead Line")
-                                .tag(SortDescriptor(\TaskModel.deadline))
-                            
-                            Text("Creation Date")
-                                .tag(SortDescriptor(\TaskModel.creationDate))
-                            
-                            Text("Progress")
-                                .tag(SortDescriptor(\TaskModel.progress))
-                            
+                .searchable(text: $searchText)
+                .toolbar{
+                    
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            vm.deleteAllTask(with: modelContext);
+                        } label: {
+                            Image(systemName: "trash")
                         }
-                        .pickerStyle(.inline)
+                        
+                    }
+                    
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Add destination", systemImage: "plus")
+                        {
+                            isPresented.toggle()
+                        }
+                    }
+                    
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Menu("Sort", systemImage: "arrow.up.arrow.down"){
+                            Picker("Sort", selection: $sortOrder){
+                                Text("Name")
+                                    .tag(SortDescriptor(\TaskModel.name))
+                                
+                                Text("Dead Line")
+                                    .tag(SortDescriptor(\TaskModel.deadline))
+                                
+                                Text("Progress")
+                                    .tag(SortDescriptor(\TaskModel.progress))
+                                
+                            }
+                            .pickerStyle(.inline)
+                        }
                     }
                 }
-            }
-            .sheet(isPresented: $isPresented, content: {
-                TaskMenu(path: path, sheetDetent: $sheetDetent)
-                    .presentationDetents([.fraction(0.4), .medium, .large], selection: $sheetDetent)
-            })
         }
+        .sheet(isPresented: $isPresented, content: {
+            TaskMenu(path: path, sheetDetent: $sheetDetent)
+                .presentationDetents([.fraction(0.4), .medium, .large], selection: $sheetDetent)
+        })
     }
 }
+
 
 #Preview {
     TaskDashboardView()
