@@ -18,8 +18,6 @@ struct TaskListingView: View {
     @Binding var sort: SortDescriptor<TaskModel>;
     @Binding var searchString: String;
     
-    @State private var taskList: [TaskModel] = []
-    
     var body: some View {
         
         createList()
@@ -83,13 +81,13 @@ extension TaskListingView{
     func deleteTask(_ indexSet: IndexSet){
         for index in indexSet{
         
-            let item = taskList[index]
+            let item = vm.task[index]
             TaskViewModel.deleteTaskById(id: item.id, modelContext: modelContext)
             modelContext.delete(item)
             
             vm.saveDataToDevice()
             
-            taskList = TaskViewModel.fetchTasksByParentID(parentID: nil, modelContext: modelContext);
+            vm.task = TaskViewModel.fetchTasksByParentID(parentID: nil, modelContext: modelContext);
             
             guard item.id != "" else {return}
             

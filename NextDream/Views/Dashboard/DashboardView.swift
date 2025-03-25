@@ -9,8 +9,6 @@ struct DashboardView: View {
     
     @Environment(TaskViewModel.self) var vm;
     
-    @State private var todayTasks: [TaskModel] = []
-    
     @State var isLoggingOut:Bool = false;
     
     private var chartData: [(String, Int)] {
@@ -124,21 +122,6 @@ extension  DashboardView{
                         .foregroundColor(.white)
                 }
             }
-        }
-    }
-}
-
-// MARK: Functions
-
-extension DashboardView {
-    func toggleTaskCompletion(at index: Int) {
-        guard index >= 0 && index < todayTasks.count else { return }
-        
-        let item = todayTasks[index]
-        item.isCompleted.toggle()
-        
-        DispatchQueue.global().async{
-            vm.saveDataToDevice()
         }
     }
 }

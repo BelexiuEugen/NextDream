@@ -20,7 +20,6 @@ struct TaskDashboardView: View {
     @State private var searchText = ""
     @State private var isPresented: Bool = false;
     @State private var sheetDetent: PresentationDetent = .fraction(0.4)
-    @State private var refreshTrigger = false // Force refresh trigger
     
     @State private var sortOrder = SortDescriptor(\TaskModel.name)
     

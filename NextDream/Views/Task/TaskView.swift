@@ -23,7 +23,6 @@ struct TaskView: View {
     @State private var description: String = "";
     @State private var creation: Date = .now;
     @State private var deadline: Date = .now;
-    @State private var subTaskList: [TaskModel] = [];
     
     var body: some View {
         
@@ -92,13 +91,11 @@ struct TaskView: View {
             }
         }
         .onAppear(){
-            //2025-03-10 14:13:11 +0000
-            print(deadline);
             name = item.name;
             description = item.taskDescription ?? "";
             creation = item.creationDate;
             deadline = item.deadline;
-            subTaskList = TaskViewModel.fetchTasksByParentID(parentID: item.id, modelContext: modelContext)
+            vm.task = TaskViewModel.fetchTasksByParentID(parentID: item.id, modelContext: modelContext)
         }
     }
 }
@@ -162,7 +159,7 @@ extension TaskView{
         
         Section("Sub Task") {
             List{
-                ForEach(subTaskList){ subTask in
+                ForEach(vm.task){ subTask in
                     NavigationLink(value: subTask){
                         Text(subTask.name)
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {

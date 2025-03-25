@@ -11,21 +11,12 @@ import SwiftData
 struct TaskMenu: View {
     
     @Environment(\.dismiss) var dismiss;
-    @Environment(\.modelContext) var modelContext
     @Environment(TaskViewModel.self) var vm;
     
     @State var taskToCalendar: [ItemCalendarSelection] = []
     
     @Bindable var path : NavigationViewModel
     @Binding var sheetDetent: PresentationDetent
-    
-    @State var values:[String] = [
-    "Day Task",
-    "Week Task",
-    "Month Task",
-    "Year Task",
-    "Custom Task"
-]
     
     @State private var selectedPriority: TaskPriority = .low
     @State private var selectedOption: TaskType = .day;
@@ -164,11 +155,9 @@ extension TaskMenu{
         let taskData = TaskModelCreationData(name: "Your Task Name", parentID: nil, taskStartDate: startDate, numberOfYears: numberOfYears, numberOfMonths: numberOfMonths, numberOfWeeks: numberOfWeeks, numberOfDays: numberOfDays)
         
         guard let
-                newTask = vm.createTask(selectedOption: selectedOption, taskData: taskData, taskPriority: selectedPriority)
-        else {return}
-        
-        path.modelView.append(newTask)
-        
+                    newTask = vm.createTask(selectedOption: selectedOption, taskData: taskData, taskPriority: selectedPriority)
+            else {return}
+            path.modelView.append(newTask)
         dismiss()
     }
 }
