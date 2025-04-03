@@ -28,28 +28,21 @@ struct TaskView: View {
         
         Form{
             TextField("Task Name", text: $name)
-                .disabled(isEditing)
-//                .background(isEditing ? Color.clear : Color.gray.opacity(0.2))
-                .foregroundColor(isEditing ? .gray : .primary)
+                .disabled(true)
+                .foregroundColor(.primary)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             
             TextField("Details", text: $description)
-                .disabled(isEditing)
-                .foregroundColor(isEditing ? .gray : .primary)
+                .disabled(true)
+                .foregroundColor(.primary)
             
-//            DatePicker("Creation", selection: $creation)
-//                .disabled(isEditing)
-//                .foregroundStyle(isEditing ? .gray : .primary);
             
             DatePicker("deadline", selection: $deadline)
-                .disabled(isEditing)
-                .foregroundColor(isEditing ? .gray : .primary)
-            
-            //                createProgressView()
-            //                .padding(.bottom, 16)
+                .disabled(true)
+                .foregroundColor(.primary)
             
             
-                            createTaskSection()
+            createTaskSection()
         }
         .navigationTitle(item.name)
         .frame(minWidth: 300, idealWidth: 400, maxWidth: 500)
@@ -57,31 +50,11 @@ struct TaskView: View {
             
             ToolbarItem(placement: .topBarTrailing) {
                 
-                Button {
-                    isEditing.toggle()
-                    
-                    if isEditing
-                    {
-                        if checkForDifference(){
-                            
-                            if let identifier = item.calendarIdentifier{
-                                if modifyEvent(identifier: identifier){
-                                    print("The task was updated in the database.");
-                                }
-                            }
-                            
-                            item.name = name;
-                            item.taskDescription = description;
-                            item.deadline = deadline;
-                            
-                            vm.saveDataToDevice()
-                        }
-                    }
-                    
+                NavigationLink {
+                    TaskSettingsView(task: item)
                 } label: {
-                    Image(systemName: isEditing ? "square.and.pencil" : "checkmark.circle")
+                    Image(systemName: "gear")
                 }
-                
             }
         }
         .onDisappear(){
@@ -113,6 +86,7 @@ struct TaskView: View {
         return NavigationStack {
             TaskView(item: taskModel, path: pathExample)
                 .modelContainer(container)
+                .environment(TaskViewModel())
         }
         
     }catch{

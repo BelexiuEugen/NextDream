@@ -34,6 +34,16 @@ struct DashboardView: View {
         .padding()
         .frame(minWidth: 400, minHeight: 600) // macOS-friendly sizing
         .navigationTitle("Dashboard")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                
+                NavigationLink {
+                    UserSettingsView()
+                } label: {
+                    Image(systemName: "gear")
+                }
+            }
+        }
         .onAppear{
             vm.fetchTaskByDeadline(date: Date())
         }
@@ -46,6 +56,7 @@ struct DashboardView: View {
 #Preview{
     NavigationStack{
         DashboardView()
+            .environment(TaskViewModel())
     }
 }
 
