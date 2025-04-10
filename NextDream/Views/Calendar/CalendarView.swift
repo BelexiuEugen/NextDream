@@ -56,7 +56,7 @@ struct CalendarView: View {
     func createMonthTask(){
         guard let startDate = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: currentPage)) else { return }
         
-        guard var endDate = Calendar.current.date(byAdding: .month, value: 1, to: startDate) else { return }
+        guard let endDate = Calendar.current.date(byAdding: .month, value: 1, to: startDate) else { return }
         
         vm.fetchTaskByInterval(startDate: startDate, endDate: endDate)
         
