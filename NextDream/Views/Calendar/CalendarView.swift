@@ -9,7 +9,7 @@ struct CalendarView: View {
     // Calendar
     @State private var tasksForSelectedDate: [TaskModel] = []
     @State private var selectedDate: Date = Date()
-    
+    @State var currentPage: Date = Date()
     @State private var isPresented: Bool = false;
     
     var body: some View {
@@ -18,7 +18,7 @@ struct CalendarView: View {
         
         VStack {
             
-            FSCalendarView(tasks: $vm.task, selectedDate: $selectedDate, tasksForSelectedDate: $tasksForSelectedDate)
+            FSCalendarView(tasks: $vm.task, selectedDate: $selectedDate, tasksForSelectedDate: $tasksForSelectedDate, currentPage: $currentPage)
                 .frame(height: 300)
                 .onChange(of: selectedDate) {
                     updateTasksForSelectedDate()
@@ -48,12 +48,25 @@ struct CalendarView: View {
         .onAppear {
             updateTasksForSelectedDate()
         }
+        .onChange(of: currentPage) {
+            createMonthTask()
+        }
+    }
+    
+    func createMonthTask(){
+        guard let startDate = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: currentPage)) else { return }
+        
+        guard var endDate = Calendar.current.date(byAdding: .month, value: 1, to: startDate) else { return }
+        
+        vm.fetchTaskByInterval(startDate: startDate, endDate: endDate)
+        
     }
 }
 
 #Preview {
     NavigationStack{
         CalendarView()
+            .environment(TaskViewModel())
     }
 }
 
@@ -133,8 +146,7 @@ extension CalendarView{
 extension CalendarView{
     func updateTasksForSelectedDate() {
         
-        vm.fetchAllTask()
-        
+        createMonthTask()
         tasksForSelectedDate = vm.task.filter { Calendar.current.isDate($0.deadline, inSameDayAs: selectedDate) }
     }
     
