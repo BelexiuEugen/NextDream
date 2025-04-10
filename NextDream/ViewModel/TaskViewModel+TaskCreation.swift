@@ -13,6 +13,8 @@ extension TaskViewModel{
         
         guard modelContext != nil else { return nil}
         
+        taskCount += 1;
+        
         var result: TaskModel?;
         var newTaskData = taskData;
         
@@ -47,6 +49,8 @@ extension TaskViewModel{
         modelContext.insert(newDayModel);
         
         self.saveDataToDevice()
+        
+        taskCount += 1;
         
         return newDayModel;
     }

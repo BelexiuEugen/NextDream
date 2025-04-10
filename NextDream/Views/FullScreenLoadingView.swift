@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct FullScreenLoadingView: View {
+    
+    @Binding var taskCompleted: Int
+    
     var body: some View {
         ZStack {
             Color.black.opacity(0.5)
@@ -18,7 +21,7 @@ struct FullScreenLoadingView: View {
                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
                     .scaleEffect(2)
                 
-                Text("Loading...")
+                Text("Task Created: \(taskCompleted)")
                     .foregroundColor(.white)
                     .font(.headline)
                     .padding(.top, 10)
@@ -28,5 +31,5 @@ struct FullScreenLoadingView: View {
 }
 
 #Preview {
-    FullScreenLoadingView()
+    FullScreenLoadingView( taskCompleted: .constant(12))
 }

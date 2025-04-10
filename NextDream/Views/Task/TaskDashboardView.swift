@@ -26,8 +26,10 @@ struct TaskDashboardView: View {
     
     var body: some View {
         
+        @Bindable var vm = vm;
+        
         if isLoading{
-            FullScreenLoadingView()
+            FullScreenLoadingView(taskCompleted: $vm.taskCount)
         } else{
             
             NavigationStack(path: $path.modelView){
