@@ -17,6 +17,7 @@ struct TaskMenu: View {
     
     @Bindable var path : NavigationViewModel
     @Binding var sheetDetent: PresentationDetent
+    @Binding var isLoading: Bool;
     
     @State private var selectedPriority: TaskPriority = .low
     @State private var selectedOption: TaskType = .day;
@@ -116,7 +117,7 @@ struct TaskMenu: View {
 
 #Preview {
     
-    TaskMenu(path: NavigationViewModel(), sheetDetent: .constant(.medium))
+    TaskMenu(path: NavigationViewModel(), sheetDetent: .constant(.medium), isLoading: .constant(false))
         .environment(TaskViewModel())
 }
 
@@ -153,11 +154,18 @@ extension TaskMenu{
     func createTask(){
         
         let taskData = TaskModelCreationData(name: "Your Task Name", parentID: nil, taskStartDate: startDate, numberOfYears: numberOfYears, numberOfMonths: numberOfMonths, numberOfWeeks: numberOfWeeks, numberOfDays: numberOfDays)
-        
-        guard let
-                    newTask = vm.createTask(selectedOption: selectedOption, taskData: taskData, taskPriority: selectedPriority)
+            
+            
+        isLoading = true;
+
+        Task{
+            
+            guard let
+                    newTask = await vm.createTask(selectedOption: selectedOption, taskData: taskData, taskPriority: selectedPriority)
             else {return}
             path.modelView.append(newTask)
+            isLoading = false;
+        }
         dismiss()
     }
 }
