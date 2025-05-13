@@ -22,7 +22,7 @@ struct TaskSettingsView: View {
                 
                 TaskDescription()
                 
-                DatePicker("Deadline", selection: $task.deadline)
+                DatePicker("Deadline", selection: $task.deadline).disabled(true)
                 
                 ColorPicker("Color", selection: $color)
                 

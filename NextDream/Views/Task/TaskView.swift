@@ -94,26 +94,6 @@ struct TaskView: View {
     }
 }
 
-extension TaskView{
-    
-    func checkForDifference() -> Bool{
-        
-        guard
-            item.name == name,
-            item.taskDescription == description,
-            item.deadline == deadline
-        else {return true}
-        
-        return false;
-    }
-    
-    func modifyEvent(identifier: String) -> Bool{
-        
-        return eventManager.modifyEvent(eventIdentifier: identifier, name: name, description: description, deadline: deadline)
-    }
-}
-
-
 // MARK: Body
 extension TaskView{
     

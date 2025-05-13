@@ -33,7 +33,6 @@ class EventManager{
     func saveEvent(event: EKEvent) -> String?{
         
         do {
-            
             event.calendar = eventStore.defaultCalendarForNewEvents
             
             try eventStore.save(event, span: .thisEvent)
@@ -73,10 +72,8 @@ class EventManager{
         event.endDate = deadline;
         
         do {
-                try eventStore.save(event, span: .thisEvent)
-                
+            try eventStore.save(event, span: .thisEvent)
             return true;
-
         } catch {
             print("Error updating event: \(error.localizedDescription)")
             return false;

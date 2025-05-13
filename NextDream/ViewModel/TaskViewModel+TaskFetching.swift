@@ -42,9 +42,6 @@ extension TaskViewModel{
         
         guard let modelContext = modelContext else { return }
         
-        print(startDate);
-        print(endDate);
-        
         let descriptor = FetchDescriptor<TaskModel>(predicate: #Predicate{endDate > $0.deadline && $0.deadline >= startDate})
         
         do{
