@@ -43,9 +43,9 @@ struct TaskDashboardView: View {
                         
                         ToolbarItem(placement: .topBarLeading) {
                             Button {
-                                vm.deleteAllTask(with: modelContext);
+//                                vm.deleteAllTask(with: modelContext);
                             } label: {
-                                Image(systemName: "trash")
+                                Image(systemName: "arrow.up.arrow.down")
                             }
                             
                         }
@@ -58,7 +58,7 @@ struct TaskDashboardView: View {
                         }
                         
                         ToolbarItem(placement: .topBarTrailing) {
-                            Menu("Sort", systemImage: "arrow.up.arrow.down"){
+                            Menu("Sort", systemImage: "slider.horizontal.3"){
                                 Picker("Sort", selection: $sortOrder){
                                     Text("Name")
                                         .tag(SortDescriptor(\TaskModel.name))
