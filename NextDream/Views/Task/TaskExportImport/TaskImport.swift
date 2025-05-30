@@ -8,11 +8,30 @@
 import SwiftUI
 
 struct TaskImport: View {
+    
+    @Environment(\.dismiss) var dismiss;
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Import")
+            .toolbar {
+                ToolbarItem {
+                    Button {
+                        dismiss()
+                    } label: {
+                        VStack{
+                            Image(systemName: "square.and.arrow.up")
+                            
+                            Text("Export")
+                        }
+                    }
+                    
+                }
+            }
     }
 }
 
 #Preview {
-    TaskImport()
+    NavigationStack{
+        TaskImport()
+    }
 }

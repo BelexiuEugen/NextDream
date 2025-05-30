@@ -13,7 +13,7 @@ struct TaskMenu: View {
     @Environment(\.dismiss) var dismiss;
     @Environment(TaskViewModel.self) var vm;
     
-    @State var taskToCalendar: [ItemCalendarSelection] = []
+    @State var taskToCalendar: [ItemDropdownSelection] = []
     
     @Bindable var path : NavigationViewModel
     @Binding var sheetDetent: PresentationDetent

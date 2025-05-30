@@ -8,8 +8,8 @@
 import Foundation
 
 @Observable
-class ItemCalendarSelection : Identifiable{
-    var item: TaskModel
+class ItemDropdownSelection : Identifiable{
+    var item: TaskModel // details could be, or data
     var isSelected: Bool
     
     init(item: TaskModel, isSelected: Bool) {

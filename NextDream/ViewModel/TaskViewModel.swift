@@ -36,6 +36,23 @@ class NavigationViewModel{
     var modelView: [TaskModel] = []
 }
 
+extension TaskViewModel{
+    
+    static func asDictionaryList(tasks: [TaskModel]) -> [[String: Any]]{
+        
+        var newTasksArray: [[String: Any]] = [];
+        
+        for task in tasks{
+            
+            let newTask: [String: Any] = task.createDictionary()
+            
+            newTasksArray.append(newTask)
+        }
+        
+        return newTasksArray
+    }
+}
+
 
 //MARK: Task Deletion
 

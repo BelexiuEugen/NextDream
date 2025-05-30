@@ -42,12 +42,12 @@ struct TaskDashboardView: View {
                     .toolbar{
                         
                         ToolbarItem(placement: .topBarLeading) {
-                            Button {
-//                                vm.deleteAllTask(with: modelContext);
+                            
+                            NavigationLink {
+                                TaskExport()
                             } label: {
                                 Image(systemName: "arrow.up.arrow.down")
-                            }
-                            
+                            }                            
                         }
                         
                         ToolbarItem(placement: .topBarTrailing) {

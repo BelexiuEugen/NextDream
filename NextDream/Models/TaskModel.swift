@@ -15,7 +15,7 @@ import SwiftData
 // isVisible - I don't know it's purpose
 
 @Model
-class TaskModel{
+class TaskModel: Identifiable{
     
     var id: String = UUID().uuidString
     var name: String
@@ -58,6 +58,22 @@ class TaskModel{
         self.deadline = deadline;
         self.taskType = taskType;
         self.taskPriority = taskPriority;
+    }
+    
+    func createDictionary() -> [String: Any]{
+        return [
+            "name" : self.name,
+            "taskDescription" : self.taskDescription as Any,
+            "parentID" : self.parentID as Any,
+            "calendarIdentifier" : self.calendarIdentifier as Any,
+            "creationDate" : self.creationDate.convertToStringFormat(),
+            "deadline" : self.deadline.convertToStringFormat(),
+            "progress" : self.progress,
+            "isCompleted" : self.isCompleted,
+            "isSelected" : self.isSelected,
+            "taskType" : self.taskType.rawValue,
+            "taskPriority" : self.taskPriority.rawValue
+        ]
     }
 }
 
