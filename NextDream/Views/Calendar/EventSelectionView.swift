@@ -11,7 +11,7 @@ import EventKit
 
 struct EventSelectionView: View {
     
-    @State var taskToCalendar: [ItemCalendarSelection] = []
+    @State var taskToCalendar: [ItemDropdownSelection] = []
     
     @State var values:[String] = [
     "Select task to add",
@@ -104,7 +104,7 @@ extension EventSelectionView{
     func populateTaskCalendar(){
         
         taskToCalendar = taskList.map{item in
-            ItemCalendarSelection(item: item, isSelected: item.calendarIdentifier != nil ? true : false)
+            ItemDropdownSelection(item: item, isSelected: item.calendarIdentifier != nil ? true : false)
         }
     }
     

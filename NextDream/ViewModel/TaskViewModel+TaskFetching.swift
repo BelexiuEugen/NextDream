@@ -68,7 +68,10 @@ extension TaskViewModel{
         do{
             let taskList = try modelContext.fetch(descriptor)
 
-            task = taskList;
+            for task in taskList{
+                print(task.name);
+            }
+//            task = taskList;
         }catch{
             print("There was an error \(error.localizedDescription)")
         }
@@ -109,6 +112,18 @@ extension TaskViewModel{
             
         } catch{
             print("There was an error \(error.localizedDescription)");
+        }
+    }
+    
+    func fetchMainTasks(){
+        guard let modelContext = modelContext else { return }
+        
+        do{
+            let descriptor = FetchDescriptor<TaskModel>(predicate: #Predicate { $0.parentID == nil})
+            
+            task = try modelContext.fetch(descriptor)
+        } catch{
+            print("There was an error \(error.localizedDescription)")
         }
     }
     
