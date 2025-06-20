@@ -13,3 +13,11 @@ enum ExportType: String, CaseIterable{
     case PDF
     case JPG
 }
+
+enum ErrorType{
+    
+}
+
+enum symbolName{
+    
+}
