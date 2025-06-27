@@ -75,10 +75,18 @@ struct TaskDashboardView: View {
                         }
                     }
             }
-            .sheet(isPresented: $isPresented, content: {
-                TaskMenu(path: path, sheetDetent: $sheetDetent, isLoading: $isLoading)
+            .sheet(isPresented: $isPresented){
+                    
+                    TaskMenu(
+                        taskCreationManager: TaskCreationManager(
+                            modelContext: modelContext
+                        ),
+                        path: path,
+                        sheetDetent: $sheetDetent,
+                        isLoading: $isLoading
+                    )
                     .presentationDetents([.fraction(0.4), .medium, .large], selection: $sheetDetent)
-            })
+            }
         }
     }
 }
@@ -87,11 +95,6 @@ struct TaskDashboardView: View {
 #Preview {
     TaskDashboardView()
         .environment(TaskViewModel())
-}
-
-// MARK: Body
-extension TaskDashboardView{
-
 }
 
 // MARK: Functions

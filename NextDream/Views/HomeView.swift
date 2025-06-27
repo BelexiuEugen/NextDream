@@ -11,7 +11,6 @@ import SwiftData
 struct HomeView: View {
     
     @Environment(\.modelContext) var modelContext;
-    @Environment(TaskViewModel.self) var vm;
     
     @State private var selectedTab = 2 // Set the initial tab index or tag
     
@@ -25,19 +24,16 @@ struct HomeView: View {
                 }
                 
                 Tab("DashBoard", systemImage: "square.grid.2x2", value: 2){
-                    DashboardView()
+                    DashboardView(modelContext: modelContext)
                 }
 
                 Tab("Calendar", systemImage: "calendar", value: 3){
                     NavigationStack{
-                        CalendarView()
+                        CalendarView(modelContext: modelContext)
                     }
                 }
                 
             }
-        }
-        .onAppear{
-            vm.modelContext = modelContext;
         }
     }
 }

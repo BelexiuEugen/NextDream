@@ -30,6 +30,7 @@ struct TaskListingView: View {
             .onChange(of: searchString){
                 vm.fetchTaskByDescriptorAndSearchString(sort: sort, serchString: searchString);
             }
+        
     }
 }
 

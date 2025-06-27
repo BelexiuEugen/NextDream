@@ -6,24 +6,34 @@
 //
 
 import Foundation
+import SwiftData
 
-extension TaskViewModel{
+protocol TaskCreation{
+    func createTask(selectedOption: TaskType, taskData: TaskModelCreationData, taskPriority: TaskPriority) -> TaskModel?
+}
+
+class TaskCreationManager: TaskCreation{
     
-    func createTask(selectedOption: TaskType, taskData: TaskModelCreationData, taskPriority: TaskPriority = .low) async -> TaskModel?{
+    
+    private var modelContext: ModelContext
+    
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+    }
+    
+    func createTask(selectedOption: TaskType, taskData: TaskModelCreationData, taskPriority: TaskPriority = .low) -> TaskModel?{
         
-        guard modelContext != nil else { return nil}
-        
-        taskCount += 1;
+//        taskCount += 1;
         
         var result: TaskModel?;
         var newTaskData = taskData;
         
         switch selectedOption {
         case .day:
-            newTaskData.name = getDayName(taskData.taskStartDate);
+            newTaskData.name = taskData.taskStartDate.getDayName()
             result = createDay(taskData: newTaskData, taskPriority: taskPriority);
         case .week:
-            newTaskData.name = weekRange(for: taskData.taskStartDate);
+            newTaskData.name = taskData.taskStartDate.weekRange()
             result = createWeek(taskData: newTaskData, taskPriority: taskPriority)
         case .month:
             result = createMonth(taskData: taskData, taskPriority: taskPriority)
@@ -42,22 +52,18 @@ extension TaskViewModel{
     
     func createDay(taskData: TaskModelCreationData, taskPriority: TaskPriority) -> TaskModel?{
         
-        guard let modelContext = modelContext else { return nil}
-        
         let newDayModel = TaskModel(name: taskData.name, parentID: taskData.parentID, deadline: taskData.taskStartDate, taskType: .day, taskPriority: taskPriority);
         
         modelContext.insert(newDayModel);
         
         self.saveDataToDevice()
         
-        taskCount += 1;
+//        taskCount += 1;
         
         return newDayModel;
     }
     
     func createWeek(taskData: TaskModelCreationData, taskPriority: TaskPriority) -> TaskModel?{
-        
-        guard let modelContext = modelContext else { return nil}
         
         guard let deadline = Calendar.current.date(byAdding: .day, value: taskData.totalWeekDays, to: taskData.taskStartDate) else { return nil};
         
@@ -72,7 +78,7 @@ extension TaskViewModel{
             guard let startDate = Calendar.current.date(byAdding: .day, value: 1, to: subTaskStartDate) else { break }
             
             let subTaskData = TaskModelCreationData(
-                name: getDayName(subTaskStartDate),
+                name: subTaskStartDate.getDayName(),
                 parentID: newWeekModel.id,
                 taskStartDate: subTaskStartDate)
             
@@ -85,8 +91,6 @@ extension TaskViewModel{
     }
     
     func createMonth(taskData: TaskModelCreationData, taskPriority: TaskPriority) -> TaskModel?{
-        
-        guard let modelContext = modelContext else { return nil}
         
         guard let deadline = Calendar.current.date(byAdding: .day, value: taskData.totalMonthDays - 1, to: taskData.taskStartDate) else { return nil};
         
@@ -105,7 +109,7 @@ extension TaskViewModel{
             guard let startDate = Calendar.current.date(byAdding: .day, value: 7, to: subTaskStartDate) else { break }
             
             let subTaskData = TaskModelCreationData(
-                name: weekRange(for: subTaskStartDate),
+                name: subTaskStartDate.weekRange(),
                 parentID: newMonthModel.id,
                 taskStartDate: subTaskStartDate
             )
@@ -119,7 +123,6 @@ extension TaskViewModel{
     }
     
     func createYear(taskData: TaskModelCreationData, taskPriority: TaskPriority) -> TaskModel?{
-        guard let modelContext = modelContext else { return nil}
         
         guard let deadline = Calendar.current.date(byAdding: .year, value: 1, to: taskData.taskStartDate) else { return nil};
         
@@ -153,8 +156,6 @@ extension TaskViewModel{
     }
     
     func createCustom(taskData: TaskModelCreationData, taskPriority: TaskPriority) -> TaskModel?{
-        
-        guard let modelContext = modelContext else { return nil}
         
         guard let deadlineWithYears = Calendar.current.date(byAdding: .year, value: taskData.numberOfYears, to: taskData.taskStartDate) else { return nil};
         
@@ -213,7 +214,7 @@ extension TaskViewModel{
             
             guard let startDate = Calendar.current.date(byAdding: .day, value: 7, to: subTaskStartDate) else {break}
             
-            let subTaskData = TaskModelCreationData(name: weekRange(for: subTaskStartDate), parentID: parentID, taskStartDate: subTaskStartDate)
+            let subTaskData = TaskModelCreationData(name: subTaskStartDate.weekRange(), parentID: parentID, taskStartDate: subTaskStartDate)
             
             _ = createWeek(taskData: subTaskData, taskPriority: taskPriority)
             
@@ -225,7 +226,7 @@ extension TaskViewModel{
             
             guard let startDate = Calendar.current.date(byAdding: .day, value: 1, to: subTaskStartDate) else {break}
             
-            let subTaskData = TaskModelCreationData(name: getDayName(subTaskStartDate), parentID: parentID, taskStartDate: subTaskStartDate)
+            let subTaskData = TaskModelCreationData(name: subTaskStartDate.getDayName(), parentID: parentID, taskStartDate: subTaskStartDate)
             
             _ = createDay(taskData: subTaskData, taskPriority: taskPriority)
             
@@ -233,4 +234,81 @@ extension TaskViewModel{
         }
     }
     
+    
+    func saveDataToDevice(){
+        
+        do{
+            try modelContext.save()
+            
+        } catch{
+            print("there was an error saving the task")
+        }
+    }
+    
+}
+
+// MARK: Additions
+
+extension TaskCreationManager{
+    func createFreeWeek(_ daysToSkip: inout Int,totalMonthDays: Int, parentID: String, startDate: Date, taskPriority: TaskPriority) {
+        // Create Free & Plan Week
+        switch totalMonthDays{
+        case 31:
+             daysToSkip += 3;
+        case 30:
+             daysToSkip += 2;
+        case 29:
+             daysToSkip += 1;
+        default:
+            return
+        }
+        
+        let subTaskData = TaskModelCreationData(name: "Rest & Plan", parentID: parentID, taskStartDate: startDate, totalWeekDays: daysToSkip - 1)
+        
+        _ = createWeek(taskData: subTaskData, taskPriority: taskPriority)
+    }
+    
+    func createMonthByName(monthName: String, parentID: String, startDate: Date, taskPriority: TaskPriority){
+        
+        let currentYear = Calendar.current.component(.year, from: startDate)
+        
+        var numberOfDays = 0;
+        
+        switch monthName{
+        case "January", "March", "May", "July", "August", "October", "December" :
+            numberOfDays = 31;
+        case "April", "June", "September", "November":
+            numberOfDays = 30;
+        default:
+            if isLeapYear(currentYear){
+                numberOfDays = 29;
+            } else{
+                numberOfDays = 28;
+            }
+        }
+        
+        let taskData: TaskModelCreationData = TaskModelCreationData(name: monthName, parentID: parentID, taskStartDate: startDate, totalMonthDays: numberOfDays)
+        
+        _ = createMonth(taskData: taskData, taskPriority: taskPriority)
+    }
+    
+    func getNumberOfDays(_ monthName: String, currentYear: Int) -> Int{
+        
+        switch monthName{
+        case "January", "March", "May", "July", "August", "October", "December" :
+            return 31;
+        case "April", "June", "September", "November":
+            return 30;
+        default:
+            if isLeapYear(currentYear){
+                return 29;
+            } else{
+                return 28;
+            }
+        }
+    }
+    
+    func isLeapYear(_ year: Int) -> Bool{
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
+    }
 }

@@ -6,14 +6,16 @@ import SwiftData
 // MARK: - Dashboard View
 struct DashboardView: View {
     
-    
-    @Environment(TaskViewModel.self) var vm;
-    
+    @State var viewModel: DashboardViewModel
     @State var isLoggingOut:Bool = false;
     
+    init(modelContext: ModelContext) {
+        _viewModel = State(wrappedValue: DashboardViewModel(modelContext: modelContext))
+    }
+    
     private var chartData: [(String, Int)] {
-        let completed = vm.task.filter { $0.isCompleted }.count
-        let uncompleted = vm.task.count - completed
+        let completed = viewModel.tasks.filter { $0.isCompleted }.count
+        let uncompleted = viewModel.tasks.count - completed
         return [("Completed", completed), ("Uncompleted", uncompleted)]
     }
     
@@ -45,7 +47,7 @@ struct DashboardView: View {
             }
         }
         .onAppear{
-            vm.fetchTaskByDeadline(date: Date())
+            viewModel.fetchTaskByDeadline(date: Date())
         }
     }
 }
@@ -54,9 +56,15 @@ struct DashboardView: View {
 
 // MARK: - Previews
 #Preview{
-    NavigationStack{
-        DashboardView()
-            .environment(TaskViewModel())
+
+    do{
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: TaskModel.self, configurations: config)
+        return DashboardView(modelContext: container.mainContext)
+            .modelContainer(container)
+        
+    }catch{
+        fatalError("Failed to create ModelContainer for preview: \(error)")
     }
 }
 
@@ -111,7 +119,7 @@ extension  DashboardView{
     
     func createTodayTask() -> some View{
         
-        List(vm.task) { task in
+        List(viewModel.tasks) { task in
             createSubTaskField(task: task)
         }
         .listStyle(.plain)
