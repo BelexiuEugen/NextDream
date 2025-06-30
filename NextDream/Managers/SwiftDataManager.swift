@@ -1,16 +1,22 @@
 //
-//  TaskViewModel+TaskFetching.swift
+//  SwiftDataManager.swift
 //  NextDream
 //
-//  Created by Jan on 09/04/2025.
+//  Created by Jan on 30/06/2025.
 //
 
 import Foundation
 import SwiftData
 
-extension TaskViewModel{
+class SwiftDataManager{
     
-    static func fetchTasksByParentID(parentID: String?, modelContext: ModelContext) -> [TaskModel]{
+    private var modelContext: ModelContext
+    
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+    }
+    
+    func fetchTasksByParentID(parentID: String?) throws -> [TaskModel]{
         
         let descriptor = FetchDescriptor<TaskModel>(predicate: #Predicate{ $0.parentID == parentID})
         
@@ -18,10 +24,8 @@ extension TaskViewModel{
             let taskList = try modelContext.fetch(descriptor)
             return taskList;
         } catch{
-            print("There was an error \(error.localizedDescription)")
+            throw error
         }
-        
-        return [];
     }
     
     static func getTaskByID(id: String, modelContext: ModelContext) -> TaskModel?{
@@ -38,16 +42,15 @@ extension TaskViewModel{
         return nil;
     }
     
-    func fetchTaskByInterval(startDate: Date, endDate: Date){
+    func fetchTaskByInterval(startDate: Date, endDate: Date) throws -> [TaskModel]{
         
         let descriptor = FetchDescriptor<TaskModel>(predicate: #Predicate{endDate > $0.deadline && $0.deadline >= startDate})
         
         do{
-            let taskList = try modelContext.fetch(descriptor)
-            
-            tasks = taskList;
+            return try modelContext.fetch(descriptor)
+
         } catch{
-            print("There was an error \(error.localizedDescription)")
+            throw error
         }
     }
     
@@ -73,22 +76,18 @@ extension TaskViewModel{
         }
     }
     
-    func fetchAllTask(){
+    func fetchAllTask() throws -> [TaskModel]{
         
         do{
             let descriptor = FetchDescriptor<TaskModel>();
-            let taskList = try modelContext.fetch(descriptor);
-            
-            tasks = taskList;
+            return  try modelContext.fetch(descriptor);
             
         }catch{
-            print("There was an error \(error.localizedDescription)");
+            throw error
         }
-        
-        
     }
     
-    func fetchTaskByDescriptorAndSearchString(sort: SortDescriptor<TaskModel>, serchString: String){
+    func fetchTaskByDescriptorAndSearchString(sort: SortDescriptor<TaskModel>, serchString: String) throws -> [TaskModel]{
         
         do{
             var descriptor = FetchDescriptor<TaskModel>()
@@ -100,21 +99,20 @@ extension TaskViewModel{
             
             descriptor.sortBy = [sort];
             
-            tasks = try modelContext.fetch(descriptor);
+            return try modelContext.fetch(descriptor);
             
         } catch{
-            print("There was an error \(error.localizedDescription)");
+            throw error
         }
     }
     
-    func fetchMainTasks(){
+    func fetchMainTasks() throws -> [TaskModel]{
         
         do{
             let descriptor = FetchDescriptor<TaskModel>(predicate: #Predicate { $0.parentID == nil})
-            
-            tasks = try modelContext.fetch(descriptor)
+            return try modelContext.fetch(descriptor)
         } catch{
-            print("There was an error \(error.localizedDescription)")
+            throw error
         }
     }
 }

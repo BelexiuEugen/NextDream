@@ -11,7 +11,7 @@ import SwiftData
 struct TaskView: View {
     
     @Environment(\.modelContext) var modelContext
-    @Environment(TaskViewModel.self) var vm
+    @Environment(TaskViewModel.self) var viewModel
     @State var eventManager: EventManager = EventManager()
     
     @Bindable var item : TaskModel
@@ -68,30 +68,30 @@ struct TaskView: View {
             description = item.taskDescription ?? "";
             creation = item.creationDate;
             deadline = item.deadline;
-            vm.task = TaskViewModel.fetchTasksByParentID(parentID: item.id, modelContext: modelContext)
+            viewModel.tasks = TaskViewModel.fetchTasksByParentID(parentID: item.id, modelContext: modelContext)
         }
     }
 }
 
 #Preview {
-    do{
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        
-        let container = try ModelContainer(for: TaskModel.self, configurations: config)
-        
-        let taskModel = TaskModel(name: "Test", deadline: .now + 3600, taskType: TaskType.day, taskPriority: .low)
-        
-        let pathExample = NavigationViewModel()
-        
-        return NavigationStack {
-            TaskView(item: taskModel, path: pathExample)
-                .modelContainer(container)
-                .environment(TaskViewModel())
-        }
-        
-    }catch{
-        fatalError("Something wrong")
-    }
+//    do{
+//        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+//        
+//        let container = try ModelContainer(for: TaskModel.self, configurations: config)
+//        
+//        let taskModel = TaskModel(name: "Test", deadline: .now + 3600, taskType: TaskType.day, taskPriority: .low)
+//        
+//        let pathExample = NavigationViewModel()
+//        
+//        return NavigationStack {
+//            TaskView(item: taskModel, path: pathExample)
+//                .modelContainer(container)
+//                .environment(TaskViewModel())
+//        }
+//        
+//    }catch{
+//        fatalError("Something wrong")
+//    }
 }
 
 // MARK: Body
@@ -113,7 +113,7 @@ extension TaskView{
         
         Section("Sub Task") {
             List{
-                ForEach(vm.task){ subTask in
+                ForEach(viewModel.tasks){ subTask in
                     NavigationLink(value: subTask){
                         Text(subTask.name)
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {

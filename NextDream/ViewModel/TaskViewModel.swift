@@ -11,15 +11,17 @@ import SwiftData
 @Observable
 class TaskViewModel{
     
-    var task: [TaskModel] = []
+    var tasks: [TaskModel] = []
     
-    var modelContext: ModelContext? = nil
+    var modelContext: ModelContext
     
     var taskCount: Int = 0;
     
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+    }
+    
     func saveDataToDevice(){
-        
-        guard let modelContext = modelContext else { return }
         
         do{
             try modelContext.save()

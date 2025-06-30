@@ -13,7 +13,7 @@ struct TaskDropdown: View {
     
     var body: some View {
         List{
-            ForEach(taskToExport) { task in
+            ForEach($taskToExport) { $task in
                 
                 HStack{
                     
@@ -36,10 +36,9 @@ struct TaskDropdown: View {
     
     let firstTask = TaskModel(name: "Example", deadline: .now, taskType: .day, taskPriority: .low)
     
-    var taskToExport: [ItemDropdownSelection] = [
+    let taskToExport: [ItemDropdownSelection] = [
         ItemDropdownSelection(item: firstTask, isSelected: false)
     ];
     
     TaskDropdown(taskToExport: .constant(taskToExport))
-        .environment(TaskViewModel())
 }

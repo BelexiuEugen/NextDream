@@ -17,8 +17,17 @@ struct TaskMenu: View {
     @Binding var sheetDetent: PresentationDetent
     @Binding var isLoading: Bool;
     
-    init(taskCreationManager: TaskCreationManager, path: NavigationViewModel, sheetDetent: Binding<PresentationDetent>, isLoading: Binding<Bool>) {
-        _viewModel = State(wrappedValue: TaskCreationViewModel(taskCreationManager: taskCreationManager))
+    init(
+        taskCreationManager: TaskCreationManager,
+        path: NavigationViewModel,
+        sheetDetent: Binding<PresentationDetent>,
+        isLoading: Binding<Bool>
+    ) {
+        _viewModel = State(
+            wrappedValue: TaskCreationViewModel(
+                taskCreationManager: taskCreationManager
+            )
+        )
         self.path = path
         _sheetDetent = sheetDetent
         _isLoading = isLoading
@@ -114,5 +123,5 @@ struct TaskMenu: View {
 }
 
 #Preview {
-    TaskDashboardView()
+    HomeView()
 }

@@ -20,7 +20,7 @@ struct HomeView: View {
             TabView(selection: $selectedTab){
                 
                 Tab("Task List", systemImage: "checklist", value: 1) {
-                    TaskDashboardView()
+                    TaskDashboardView(modelContext: modelContext)
                 }
                 
                 Tab("DashBoard", systemImage: "square.grid.2x2", value: 2){
@@ -41,5 +41,4 @@ struct HomeView: View {
 
 #Preview {
     HomeView()
-        .environment(TaskViewModel())
 }

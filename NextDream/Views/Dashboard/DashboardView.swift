@@ -7,16 +7,9 @@ import SwiftData
 struct DashboardView: View {
     
     @State var viewModel: DashboardViewModel
-    @State var isLoggingOut:Bool = false;
     
     init(modelContext: ModelContext) {
         _viewModel = State(wrappedValue: DashboardViewModel(modelContext: modelContext))
-    }
-    
-    private var chartData: [(String, Int)] {
-        let completed = viewModel.tasks.filter { $0.isCompleted }.count
-        let uncompleted = viewModel.tasks.count - completed
-        return [("Completed", completed), ("Uncompleted", uncompleted)]
     }
     
     var body: some View {
@@ -128,7 +121,7 @@ extension  DashboardView{
     
     func createChart() -> some View{
         Chart {
-            ForEach(chartData, id: \.0) { category, count in
+            ForEach(viewModel.chartData, id: \.0) { category, count in
                 SectorMark(
                     angle: .value("Count", count),
                     innerRadius: .ratio(0.5),

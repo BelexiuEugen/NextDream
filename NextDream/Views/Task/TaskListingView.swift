@@ -13,29 +13,43 @@ import SwiftData
 struct TaskListingView: View {
     
     @Environment(\.modelContext) var modelContext
-    @Environment(TaskViewModel.self) var vm;
     
+    @Bindable var viewModel: TaskViewModel
     @Binding var sort: SortDescriptor<TaskModel>;
     @Binding var searchString: String;
     
+    init(sort: Binding<SortDescriptor<TaskModel>>, searchString: Binding<String>, viewModel: Bindable<TaskViewModel>) {
+        _sort = sort
+        _searchString = searchString
+        
+        _viewModel = viewModel
+        
+        viewModel.wrappedValue.fetchTaskByDescriptorAndSearchString(sort: sort.wrappedValue, serchString: searchString.wrappedValue);
+    }
+    
     var body: some View {
         
-        createList()
-            .onAppear{
-                vm.fetchTaskByDescriptorAndSearchString(sort: sort, serchString: searchString);
+        List{
+            ForEach(viewModel.tasks){ item in
+                HStack{
+                    NavigationLink(value: item){
+                        VStack(alignment: .leading){
+                            Text(item.name)
+                                .font(.headline)
+                            
+                            Text(item.deadline.formatted(date: .long, time: .shortened))
+                        }
+                    }
+                    .listRowSeparator(.hidden)
+                }
             }
-            .onChange(of: sort) {
-                vm.fetchTaskByDescriptorAndSearchString(sort: sort, serchString: searchString);
-            }
-            .onChange(of: searchString){
-                vm.fetchTaskByDescriptorAndSearchString(sort: sort, serchString: searchString);
-            }
-        
+            .onDelete(perform: deleteTask)
+        }
     }
 }
 
 #Preview {
-    TaskListingView(sort: .constant(SortDescriptor(\TaskModel.name)), searchString: .constant(""))
+//    TaskListingView(sort: .constant(SortDescriptor(\TaskModel.name)), searchString: .constant(""))
 }
 
 // MARK: Body
@@ -43,7 +57,7 @@ extension TaskListingView{
     
     func createList() -> some View{
         List{
-            ForEach(vm.task){ item in
+            ForEach(viewModel.tasks){ item in
                 HStack{
                     NavigationLink(value: item){
                         VStack(alignment: .leading){
@@ -82,13 +96,13 @@ extension TaskListingView{
     func deleteTask(_ indexSet: IndexSet){
         for index in indexSet{
         
-            let item = vm.task[index]
+            let item = viewModel.tasks[index]
             TaskViewModel.deleteTaskById(id: item.id, modelContext: modelContext)
             modelContext.delete(item)
             
-            vm.saveDataToDevice()
+            viewModel.saveDataToDevice()
             
-            vm.task = TaskViewModel.fetchTasksByParentID(parentID: nil, modelContext: modelContext);
+            viewModel.tasks = TaskViewModel.fetchTasksByParentID(parentID: nil, modelContext: modelContext);
             
             guard item.id != "" else {return}
             
@@ -99,7 +113,7 @@ extension TaskListingView{
         
         modelContext.delete(itemToDelete)
         
-        vm.saveDataToDevice()
+        viewModel.saveDataToDevice()
         
         guard itemToDelete.id != "" else {return}
         

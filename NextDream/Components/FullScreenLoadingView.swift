@@ -31,5 +31,5 @@ struct FullScreenLoadingView: View {
 }
 
 #Preview {
-    FullScreenLoadingView( taskCompleted: .constant(12))
+    FullScreenLoadingView(taskCompleted: .constant(12))
 }

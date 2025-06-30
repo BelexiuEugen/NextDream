@@ -13,10 +13,17 @@ final class DashboardViewModel{
     
     var tasks: [TaskModel] = []
     
+    var isLoggingOut:Bool = false;
     var modelContext: ModelContext
     
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
+    }
+    
+    var chartData: [(String, Int)] {
+        let completed = tasks.filter { $0.isCompleted }.count
+        let uncompleted = tasks.count - completed
+        return [("Completed", completed), ("Uncompleted", uncompleted)]
     }
     
     func fetchTaskByDeadline(date: Date){
@@ -35,4 +42,6 @@ final class DashboardViewModel{
             print("There was an error \(error.localizedDescription)")
         }
     }
+    
+    
 }

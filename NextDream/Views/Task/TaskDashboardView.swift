@@ -11,9 +11,10 @@ import SwiftData
 
 
 struct TaskDashboardView: View {
-    
+
     @Environment(\.modelContext) var modelContext
-    @Environment(TaskViewModel.self) var vm;
+    
+    @State private var vm: TaskViewModel;
     
     @State private var path: NavigationViewModel = NavigationViewModel()
     
@@ -24,6 +25,10 @@ struct TaskDashboardView: View {
     
     @State private var sortOrder = SortDescriptor(\TaskModel.name)
     
+    init(modelContext: ModelContext){
+        _vm = State(wrappedValue: TaskViewModel(modelContext: modelContext))
+    }
+    
     var body: some View {
         
         @Bindable var vm = vm;
@@ -33,10 +38,12 @@ struct TaskDashboardView: View {
         } else{
             
             NavigationStack(path: $path.modelView){
-                TaskListingView(sort: $sortOrder, searchString:$searchText)
+                TaskListingView(sort: $sortOrder, searchString:$searchText, viewModel: $vm)
+                    .environment(vm)
                     .navigationTitle("Your Task")
                     .navigationDestination(for: TaskModel.self){ task in
                         TaskView(item: task, path: path)
+                            .environment(vm)
                     }
                     .searchable(text: $searchText)
                     .toolbar{
@@ -93,24 +100,5 @@ struct TaskDashboardView: View {
 
 
 #Preview {
-    TaskDashboardView()
-        .environment(TaskViewModel())
-}
-
-// MARK: Functions
-extension TaskDashboardView{
-    
-    func addTask() {
-        
-        let taskModel = TaskModel(name: "", deadline: .now + 3600, taskType: TaskType.day, taskPriority: .low)
-        
-//        let task = TaskViewModel(task: taskModel)
-        modelContext.insert(taskModel)
-        
-        vm.saveDataToDevice()
-        
-        withAnimation {
-            path.modelView.append(taskModel) // Add task to the navigation stack
-        }
-    }
+    HomeView()
 }
