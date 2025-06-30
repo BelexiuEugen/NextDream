@@ -13,8 +13,8 @@ struct ExportView: View {
     
     @State private var viewModel: ExportViewModel
     
-    init(modelContext: ModelContext) {
-        _viewModel = State(wrappedValue: ExportViewModel(modelContext: modelContext))
+    init(modelContext: ModelContext, taskRepository: TaskRepository) {
+        _viewModel = State(wrappedValue: ExportViewModel(modelContext: modelContext, taskRepository: taskRepository))
     }
     
     var body: some View {
@@ -44,23 +44,7 @@ struct ExportView: View {
         }
         .background(Color.gray.opacity(0.1))
         .toolbar {
-            ToolbarItem {
-                NavigationLink {
-                    TaskImport()
-                } label: {
-                    VStack{
-                        Image(systemName: "square.and.arrow.down")
-                        
-                        Text("Import")
-                    }
-                }
-                
-            }
-        }
-        .onAppear{
-            viewModel.fetchMainTasks()
-            
-            viewModel.addTaskToExport()
+            taskImportButton
         }
         .fileExporter(isPresented: $viewModel.isExporting, document: JSONExportDocument(data: viewModel.exportedData ?? viewModel.errorData)){ result in
             switch result {
@@ -82,6 +66,21 @@ struct ExportView: View {
 }
 
 extension ExportView{
+    
+    var taskImportButton: ToolbarItem<Void, some View>{
+        ToolbarItem {
+            NavigationLink {
+                TaskImport()
+            } label: {
+                VStack{
+                    Image(systemName: "square.and.arrow.down")
+                    
+                    Text("Import")
+                }
+            }
+            
+        }
+    }
     
     var exportOption: some View{
         VStack{

@@ -18,6 +18,9 @@ final class ExportViewModel{
     var isExporting: Bool = false;
     var exportedData: Data? = nil
     var modelContext: ModelContext
+
+    var queryDescriptorManager: QueryDescriptorManager = QueryDescriptorManager()
+    var taskRepository: TaskRepository
     
     var errorData: Data {
         // Example JSON data for export
@@ -25,16 +28,19 @@ final class ExportViewModel{
         return try! JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted)
     }
     
-    init(modelContext: ModelContext){
+    init(modelContext: ModelContext, taskRepository: TaskRepository){
         self.modelContext = modelContext
+        self.taskRepository = taskRepository
+        self.fetchMainTasks()
+        self.addTaskToExport()
     }
     
     func fetchMainTasks(){
         
+        let descriptor = queryDescriptorManager.descriptorForMainTasks()
+        
         do{
-            let descriptor = FetchDescriptor<TaskModel>(predicate: #Predicate { $0.parentID == nil})
-            
-            tasks = try modelContext.fetch(descriptor)
+            tasks = try taskRepository.fetchTasks(descriptor: descriptor)
         } catch{
             print("There was an error \(error.localizedDescription)")
         }
@@ -52,10 +58,9 @@ final class ExportViewModel{
         let taskData: [TaskModel] = taskToExport.filter { $0.isSelected }.map { $0.item }
         
         guard !taskData.isEmpty else {
-            print("No data presented");
-            return }
-        
-        
+            print("No data presented")
+            return
+        }
         
         switch selectedType{
             

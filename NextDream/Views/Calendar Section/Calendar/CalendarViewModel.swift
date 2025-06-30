@@ -12,41 +12,42 @@ import SwiftData
 final class CalendarViewModel {
     
     var tasks: [TaskModel] = []
-    
     var tasksForSelectedDate: [TaskModel] = []
-    var selectedDate: Date = Date()
-    var currentPage: Date = Date()
     var isPresented: Bool = false;
-    
     var modelContext: ModelContext
     
-    init(modelContext: ModelContext) {
+    var selectedDate: Date = Date(){
+        didSet{
+            self.updateTasksForSelectedDate()
+        }
+    }
+    var currentPage: Date = Date(){
+        didSet{
+            self.createMonthTask()
+        }
+    }
+    
+    var queryDescriptorManager: QueryDescriptorManager = QueryDescriptorManager()
+    var taskRepository: TaskRepository
+    
+    init(modelContext: ModelContext, taskRepository: TaskRepository) {
         self.modelContext = modelContext
+        self.taskRepository = taskRepository
+        self.updateTasksForSelectedDate()
     }
     
     func fetchTaskByInterval(startDate: Date, endDate: Date){
-        
-        
-        let descriptor = FetchDescriptor<TaskModel>(predicate: #Predicate{endDate > $0.deadline && $0.deadline >= startDate})
-        
-        do{
-            tasks = try modelContext.fetch(descriptor)
+        let descriptor = queryDescriptorManager.fetchTaskByInterval(startDate: startDate, endDate: endDate)
+        do {
+            tasks = try taskRepository.fetchTasks(descriptor: descriptor)
         } catch{
-            print("There was an error \(error.localizedDescription)")
+            print("Implement an error in here")
         }
     }
     
     func updateTasksForSelectedDate() {
-        
         createMonthTask()
-        
-        tasksForSelectedDate = tasks
-            .filter {
-                Calendar.current.isDate(
-                    $0.deadline,
-                    inSameDayAs: selectedDate
-                )
-            }
+        tasksForSelectedDate = tasks.filter { Calendar.current.isDate( $0.deadline, inSameDayAs: selectedDate) }
     }
     
     func createMonthTask(){

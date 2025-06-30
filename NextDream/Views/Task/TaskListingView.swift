@@ -55,7 +55,7 @@ struct TaskListingView: View {
 // MARK: Body
 extension TaskListingView{
     
-    func createList() -> some View{
+    private var createList: some View{
         List{
             ForEach(viewModel.tasks){ item in
                 HStack{
@@ -102,7 +102,7 @@ extension TaskListingView{
             
             viewModel.saveDataToDevice()
             
-            viewModel.tasks = TaskViewModel.fetchTasksByParentID(parentID: nil, modelContext: modelContext);
+            viewModel.tasks = viewModel.fetchTasksByParentID(parentID: nil);
             
             guard item.id != "" else {return}
             

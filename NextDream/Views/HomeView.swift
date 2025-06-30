@@ -14,22 +14,27 @@ struct HomeView: View {
     
     @State private var selectedTab = 2 // Set the initial tab index or tag
     
+    private var taskRepository: DefaultTaskRepository {
+            DefaultTaskRepository(modelContext: modelContext)
+        }
+    
+    
     var body: some View {
         
         VStack{
             TabView(selection: $selectedTab){
                 
                 Tab("Task List", systemImage: "checklist", value: 1) {
-                    TaskDashboardView(modelContext: modelContext)
+                    TaskDashboardView(modelContext: modelContext, taskRepository: taskRepository)
                 }
                 
                 Tab("DashBoard", systemImage: "square.grid.2x2", value: 2){
-                    DashboardView(modelContext: modelContext)
+                    DashboardView(modelContext: modelContext, taskRepository: taskRepository)
                 }
 
                 Tab("Calendar", systemImage: "calendar", value: 3){
                     NavigationStack{
-                        CalendarView(modelContext: modelContext)
+                        CalendarView(modelContext: modelContext, taskRepository: taskRepository)
                     }
                 }
                 

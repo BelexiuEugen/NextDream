@@ -10,20 +10,6 @@ import SwiftData
 
 extension TaskViewModel{
     
-    static func fetchTasksByParentID(parentID: String?, modelContext: ModelContext) -> [TaskModel]{
-        
-        let descriptor = FetchDescriptor<TaskModel>(predicate: #Predicate{ $0.parentID == parentID})
-        
-        do{
-            let taskList = try modelContext.fetch(descriptor)
-            return taskList;
-        } catch{
-            print("There was an error \(error.localizedDescription)")
-        }
-        
-        return [];
-    }
-    
     static func getTaskByID(id: String, modelContext: ModelContext) -> TaskModel?{
         
         let descriptor = FetchDescriptor<TaskModel>(predicate: #Predicate{ $0.id == id})
@@ -86,25 +72,6 @@ extension TaskViewModel{
         }
         
         
-    }
-    
-    func fetchTaskByDescriptorAndSearchString(sort: SortDescriptor<TaskModel>, serchString: String){
-        
-        do{
-            var descriptor = FetchDescriptor<TaskModel>()
-            
-            descriptor.predicate = #Predicate<TaskModel> { task in
-                (serchString.isEmpty || task.name.localizedStandardContains(serchString))
-                    && task.parentID == nil
-            }
-            
-            descriptor.sortBy = [sort];
-            
-            tasks = try modelContext.fetch(descriptor);
-            
-        } catch{
-            print("There was an error \(error.localizedDescription)");
-        }
     }
     
     func fetchMainTasks(){

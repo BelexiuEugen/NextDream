@@ -11,88 +11,49 @@ import SwiftData
 
 
 struct TaskDashboardView: View {
-
+    
     @Environment(\.modelContext) var modelContext
     
     @State private var vm: TaskViewModel;
     
-    @State private var path: NavigationViewModel = NavigationViewModel()
-    
-    @State private var isLoading = false;
-    @State private var searchText = ""
-    @State private var isPresented: Bool = false;
-    @State private var sheetDetent: PresentationDetent = .fraction(0.4)
-    
-    @State private var sortOrder = SortDescriptor(\TaskModel.name)
-    
-    init(modelContext: ModelContext){
-        _vm = State(wrappedValue: TaskViewModel(modelContext: modelContext))
+    init(modelContext: ModelContext, taskRepository: TaskRepository){
+        _vm = State(wrappedValue: TaskViewModel(modelContext: modelContext, taskRepository: taskRepository))
     }
     
     var body: some View {
         
         @Bindable var vm = vm;
         
-        if isLoading{
+        if vm.isLoading{
             FullScreenLoadingView(taskCompleted: $vm.taskCount)
         } else{
             
-            NavigationStack(path: $path.modelView){
-                TaskListingView(sort: $sortOrder, searchString:$searchText, viewModel: $vm)
+            NavigationStack(path: $vm.path.modelView){
+                TaskListingView(sort: $vm.sortOrder, searchString:$vm.searchText, viewModel: $vm)
                     .environment(vm)
                     .navigationTitle("Your Task")
                     .navigationDestination(for: TaskModel.self){ task in
-                        TaskView(item: task, path: path)
+                        TaskView(item: task, path: vm.path)
                             .environment(vm)
                     }
-                    .searchable(text: $searchText)
+                    .searchable(text: $vm.searchText)
                     .toolbar{
-                        
-                        ToolbarItem(placement: .topBarLeading) {
-                            
-                            NavigationLink {
-                                TaskExport()
-                            } label: {
-                                Image(systemName: "arrow.up.arrow.down")
-                            }                            
-                        }
-                        
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button("Add destination", systemImage: "plus")
-                            {
-                                isPresented.toggle()
-                            }
-                        }
-                        
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Menu("Sort", systemImage: "slider.horizontal.3"){
-                                Picker("Sort", selection: $sortOrder){
-                                    Text("Name")
-                                        .tag(SortDescriptor(\TaskModel.name))
-                                    
-                                    Text("Dead Line")
-                                        .tag(SortDescriptor(\TaskModel.deadline))
-                                    
-                                    Text("Progress")
-                                        .tag(SortDescriptor(\TaskModel.progress))
-                                    
-                                }
-                                .pickerStyle(.inline)
-                            }
-                        }
+                        exportButton
+                        newTaskButton
+                        filterButton
                     }
             }
-            .sheet(isPresented: $isPresented){
+            .sheet(isPresented: $vm.isPresented){
                     
-                    TaskMenu(
+                    TaskCreationView(
                         taskCreationManager: TaskCreationManager(
                             modelContext: modelContext
                         ),
-                        path: path,
-                        sheetDetent: $sheetDetent,
-                        isLoading: $isLoading
+                        path: vm.path,
+                        sheetDetent: $vm.sheetDetent,
+                        isLoading: $vm.isLoading
                     )
-                    .presentationDetents([.fraction(0.4), .medium, .large], selection: $sheetDetent)
+                    .presentationDetents([.fraction(0.4), .medium, .large], selection: $vm.sheetDetent)
             }
         }
     }
@@ -101,4 +62,44 @@ struct TaskDashboardView: View {
 
 #Preview {
     HomeView()
+}
+
+extension TaskDashboardView{
+    private var exportButton: ToolbarItem<Void, some View>{
+        ToolbarItem(placement: .topBarLeading) {
+            NavigationLink {
+                ExportView(modelContext: vm.modelContext, taskRepository: vm.taskRepository)
+            } label: {
+                Image(systemName: "arrow.up.arrow.down")
+            }
+        }
+    }
+    
+    private var newTaskButton: ToolbarItem<Void, some View>{
+        ToolbarItem(placement: .topBarTrailing) {
+            Button("Add destination", systemImage: "plus")
+            {
+                vm.isPresented.toggle()
+            }
+        }
+    }
+    
+    private var filterButton: ToolbarItem<Void, some View>{
+        ToolbarItem(placement: .topBarTrailing) {
+            Menu("Sort", systemImage: "slider.horizontal.3"){
+                Picker("Sort", selection: $vm.sortOrder){
+                    Text("Name")
+                        .tag(SortDescriptor(\TaskModel.name))
+                    
+                    Text("Dead Line")
+                        .tag(SortDescriptor(\TaskModel.deadline))
+                    
+                    Text("Progress")
+                        .tag(SortDescriptor(\TaskModel.progress))
+                    
+                }
+                .pickerStyle(.inline)
+            }
+        }
+    }
 }

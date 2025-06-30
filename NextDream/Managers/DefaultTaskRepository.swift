@@ -8,12 +8,24 @@
 import Foundation
 import SwiftData
 
-class SwiftDataManager{
+protocol TaskRepository{
+    func fetchTasks(descriptor: FetchDescriptor<TaskModel>) throws -> [TaskModel]
+}
+
+class DefaultTaskRepository: TaskRepository{
     
     private var modelContext: ModelContext
     
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
+    }
+    
+    func fetchTasks(descriptor: FetchDescriptor<TaskModel>) throws -> [TaskModel] {
+        do{
+            return try modelContext.fetch(descriptor)
+        } catch{
+            throw error
+        }
     }
     
     func fetchTasksByParentID(parentID: String?) throws -> [TaskModel]{

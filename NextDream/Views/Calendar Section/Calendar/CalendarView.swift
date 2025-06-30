@@ -6,8 +6,8 @@ struct CalendarView: View {
     
     @State private var viewModel: CalendarViewModel
     
-    init(modelContext: ModelContext){
-        _viewModel = State(wrappedValue: CalendarViewModel(modelContext: modelContext))
+    init(modelContext: ModelContext, taskRepository: TaskRepository){
+        _viewModel = State(wrappedValue: CalendarViewModel(modelContext: modelContext, taskRepository: taskRepository))
     }
     
     var body: some View {
@@ -21,16 +21,13 @@ struct CalendarView: View {
                 tasksForSelectedDate: $viewModel.tasksForSelectedDate,
                 currentPage: $viewModel.currentPage
             )
-                .frame(height: 300)
-                .onChange(of: viewModel.selectedDate) {
-                    viewModel.updateTasksForSelectedDate()
-                }
+            .frame(height: 300)
             
             Text("Selected Date: \(viewModel.selectedDate.toMediumStyle())")
                 .font(.headline)
                 .padding()
             
-            showTaskDetails()
+            showTaskDetails
         }
         .padding()
         .sheet(isPresented: $viewModel.isPresented, content: {
@@ -38,20 +35,7 @@ struct CalendarView: View {
                 .presentationDetents([.fraction(0.4), .medium, .large])
         })
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                
-                Button {
-                    viewModel.isPresented.toggle()
-                } label: {
-                    Image(systemName: "calendar.badge.plus")
-                }
-            }
-        }
-        .onAppear {
-            viewModel.updateTasksForSelectedDate()
-        }
-        .onChange(of: viewModel.currentPage) {
-            viewModel.createMonthTask()
+            calendarButton
         }
     }
 }
@@ -84,10 +68,21 @@ extension CalendarView{
         .padding(.horizontal)
     }
     
-    func showTaskDetails() -> some View{
+    private var calendarButton: ToolbarItem<Void, some View>{
+        ToolbarItem(placement: .topBarTrailing) {
+            
+            Button {
+                viewModel.isPresented.toggle()
+            } label: {
+                Image(systemName: "calendar.badge.plus")
+            }
+        }
+    }
+    
+    private var showTaskDetails: some View{
         Group{
             if !viewModel.tasksForSelectedDate.isEmpty {
-                createScrollView()
+                createScrollView
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
             } else {
@@ -98,7 +93,7 @@ extension CalendarView{
         }
     }
     
-    func createScrollView() -> some View{
+    private var createScrollView: some View{
         ScrollView {
             ForEach(viewModel.tasksForSelectedDate, id: \.self) { task in
                 HStack{

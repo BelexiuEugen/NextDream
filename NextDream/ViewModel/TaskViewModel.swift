@@ -7,18 +7,28 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 @Observable
 class TaskViewModel{
     
     var tasks: [TaskModel] = []
-    
     var modelContext: ModelContext
-    
     var taskCount: Int = 0;
+    var taskRepository: TaskRepository
     
-    init(modelContext: ModelContext) {
+    var path: NavigationViewModel = NavigationViewModel()
+    var isLoading = false;
+    var searchText = ""
+    var isPresented: Bool = false;
+    var sheetDetent: PresentationDetent = .fraction(0.4)
+    var sortOrder = SortDescriptor(\TaskModel.name)
+    
+    var queryDescriptorManager: QueryDescriptorManager = QueryDescriptorManager()
+    
+    init(modelContext: ModelContext, taskRepository: TaskRepository) {
         self.modelContext = modelContext
+        self.taskRepository = taskRepository
     }
     
     func saveDataToDevice(){
@@ -29,6 +39,30 @@ class TaskViewModel{
         } catch{
             print("there was an error saving the task")
         }
+    }
+    
+    func fetchTaskByDescriptorAndSearchString(sort: SortDescriptor<TaskModel>, serchString: String){
+        
+        var descriptor = queryDescriptorManager.descriptorForSortAndString(sort: sort, serchString: serchString)
+        
+        do{
+            tasks = try taskRepository.fetchTasks(descriptor: descriptor)
+        } catch{
+            print("A error must be applied here");
+        }
+    }
+    
+    func fetchTasksByParentID(parentID: String?) -> [TaskModel]{
+        
+        let descriptor = queryDescriptorManager.descriptorForParentID(parentID: parentID)
+        
+        do{
+            return try taskRepository.fetchTasks(descriptor: descriptor)
+        } catch{
+            print("add an error in here")
+        }
+        
+        return [];
     }
     
 }
