@@ -33,8 +33,7 @@ struct TaskDashboardView: View {
                     .environment(vm)
                     .navigationTitle("Your Task")
                     .navigationDestination(for: TaskModel.self){ task in
-                        TaskView(item: task, path: vm.path)
-                            .environment(vm)
+                        TaskView(taskRepository: vm.taskRepository, modelContext: vm.modelContext, task: task, path: vm.path)
                     }
                     .searchable(text: $vm.searchText)
                     .toolbar{

@@ -43,7 +43,7 @@ class TaskViewModel{
     
     func fetchTaskByDescriptorAndSearchString(sort: SortDescriptor<TaskModel>, serchString: String){
         
-        var descriptor = queryDescriptorManager.descriptorForSortAndString(sort: sort, serchString: serchString)
+        let descriptor = queryDescriptorManager.descriptorForSortAndString(sort: sort, serchString: serchString)
         
         do{
             tasks = try taskRepository.fetchTasks(descriptor: descriptor)
@@ -94,37 +94,35 @@ extension TaskViewModel{
 
 extension TaskViewModel{
     
-    static func deleteTaskById(id: String, modelContext: ModelContext){
+    func deleteTaskById(id: String){
         
-        let subTask: [TaskModel] = fetchTasksByParentID(parentID: id, modelContext: modelContext);
+        let subTask: [TaskModel] = fetchTasksByParentID(parentID: id);
         
         for task in subTask{
             
             if task.taskType != .day{
-                deleteTaskById(id: task.id, modelContext: modelContext)
+                deleteTaskById(id: task.id)
             }
 
             modelContext.delete(task)
         }
     }
     
-    func deleteAllTask(with context: ModelContext){
+    func deleteTask(_ indexSet: IndexSet){
+        for index in indexSet{
         
-        do{
-            let allTasks = try context.fetch(FetchDescriptor<TaskModel>())
+            let item = tasks[index]
+            deleteTaskById(id: item.id)
+            modelContext.delete(item)
             
-            // Delete each task
-            for task in allTasks {
-                context.delete(task)
-            }
+            saveDataToDevice()
             
-            self.saveDataToDevice()
+            tasks = fetchTasksByParentID(parentID: nil);
             
-        }catch{
-            print("There was an error deleting the data")
+            guard item.id != "" else {return}
+            
         }
     }
-    
 }
 
 // MARK: Task Creation

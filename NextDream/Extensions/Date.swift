@@ -9,6 +9,12 @@ import Foundation
 
 extension Date{
     
+    var custom: String {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "EEEE, MMMM d, yyyy - h:mm a"
+            return formatter.string(from: self)
+    }
+    
     func convertToStringFormat() -> String{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
@@ -52,5 +58,11 @@ extension Date{
         let month = monthFormatter.string(from: self)
         
         return "\(startDay) - \(endDay) \(month)"
+    }
+    
+    func showDate() -> String{
+        let formatter = DateFormatter.myCustomStyle.string(from: self)
+        let result: String = "\(formatter)"
+        return result
     }
 }

@@ -18,15 +18,15 @@ struct TaskSettingsView: View {
         ScrollView{
             
             VStack{
-                TaskName()
+                TaskName
                 
-                TaskDescription()
+                TaskDescription
                 
                 DatePicker("Deadline", selection: $task.deadline).disabled(true)
                 
                 ColorPicker("Color", selection: $color)
                 
-                createTaskPriority()
+                createTaskPriority
                 
                 Spacer()
             }
@@ -52,8 +52,8 @@ struct TaskSettingsView: View {
 
 extension TaskSettingsView{
     
-    fileprivate func TaskName() -> some View {
-        return TextField("Task Name", text: $task.name)
+    private var TaskName: some View {
+        TextField("Task Name", text: $task.name)
             .font(.title)
             .fontWeight(.semibold)
             .padding()
@@ -62,8 +62,8 @@ extension TaskSettingsView{
             .clipShape(RoundedRectangle(cornerRadius: 10))
     }
     
-    fileprivate func TaskDescription() -> some View {
-        return TextField("Task Description", text: $details)
+    private var TaskDescription: some View {
+        TextField("Task Description", text: $details)
             .font(.caption)
             .fontWeight(.semibold)
             .padding()
@@ -72,8 +72,8 @@ extension TaskSettingsView{
             .clipShape(RoundedRectangle(cornerRadius: 10))
     }
     
-    fileprivate func createTaskPriority() -> some View {
-        return HStack{
+    private var createTaskPriority: some View {
+        HStack{
             Text("Priority Level: ")
             
             Picker("Priority", selection: $task.taskPriority){
