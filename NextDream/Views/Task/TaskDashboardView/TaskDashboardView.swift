@@ -12,12 +12,16 @@ import SwiftData
 
 struct TaskDashboardView: View {
     
-    @Environment(\.modelContext) var modelContext
+    @State private var vm: TaskDashboardViewModel;
     
-    @State private var vm: TaskViewModel;
-    
-    init(modelContext: ModelContext, taskRepository: TaskRepository){
-        _vm = State(wrappedValue: TaskViewModel(modelContext: modelContext, taskRepository: taskRepository))
+    init(modelContext: ModelContext, taskRepository: TaskRepository, taskCreationManager: TaskCreation){
+        _vm = State(
+            wrappedValue: TaskDashboardViewModel(
+                modelContext: modelContext,
+                taskRepository: taskRepository,
+                taskCreationManager: taskCreationManager
+            )
+        )
     }
     
     var body: some View {
@@ -25,7 +29,7 @@ struct TaskDashboardView: View {
         @Bindable var vm = vm;
         
         if vm.isLoading{
-            FullScreenLoadingView(taskCompleted: $vm.taskCount)
+            FullScreenLoadingView(taskCompleted: $vm.taskCreationManager.taskCount)
         } else{
             
             NavigationStack(path: $vm.path.modelView){
@@ -45,12 +49,10 @@ struct TaskDashboardView: View {
             .sheet(isPresented: $vm.isPresented){
                     
                     TaskCreationView(
-                        taskCreationManager: TaskCreationManager(
-                            modelContext: modelContext
-                        ),
+                        taskCreationManager: vm.taskCreationManager,
                         path: vm.path,
                         sheetDetent: $vm.sheetDetent,
-                        isLoading: $vm.isLoading
+                        isLoading: $vm.isLoading,
                     )
                     .presentationDetents([.fraction(0.4), .medium, .large], selection: $vm.sheetDetent)
             }

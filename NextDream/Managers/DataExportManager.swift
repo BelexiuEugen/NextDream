@@ -16,14 +16,14 @@ class DataExportManager{
     
     func convertToJSON(tasks: [TaskModel]) -> Data?{
         
-        let newTasksArray = TaskViewModel.asDictionaryList(tasks: tasks)
+        let newTasksArray = TaskDashboardViewModel.asDictionaryList(tasks: tasks)
         
         return try? JSONSerialization.data(withJSONObject: newTasksArray, options: .prettyPrinted)
     }
     
     func convertToCSV(tasks: [TaskModel]) -> Data?{
         
-        let newTasksArray = TaskViewModel.asDictionaryList(tasks: tasks)
+        let newTasksArray = TaskDashboardViewModel.asDictionaryList(tasks: tasks)
         
         let headers = Array(newTasksArray[0].keys)
         var csvString = headers.joined(separator: ",") + "\n"

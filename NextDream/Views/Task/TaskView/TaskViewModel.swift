@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 
 @Observable
-final class TaskViewModel1{
+final class TaskViewModel{
     
     var tasks: [TaskModel] = []
     var task: TaskModel

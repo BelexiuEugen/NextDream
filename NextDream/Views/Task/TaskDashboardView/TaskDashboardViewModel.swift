@@ -10,12 +10,10 @@ import SwiftData
 import SwiftUI
 
 @Observable
-class TaskViewModel{
+class TaskDashboardViewModel{
     
     var tasks: [TaskModel] = []
     var modelContext: ModelContext
-    var taskCount: Int = 0;
-    var taskRepository: TaskRepository
     
     var path: NavigationViewModel = NavigationViewModel()
     var isLoading = false;
@@ -25,10 +23,13 @@ class TaskViewModel{
     var sortOrder = SortDescriptor(\TaskModel.name)
     
     var queryDescriptorManager: QueryDescriptorManager = QueryDescriptorManager()
+    var taskRepository: TaskRepository
+    var taskCreationManager: TaskCreation
     
-    init(modelContext: ModelContext, taskRepository: TaskRepository) {
+    init(modelContext: ModelContext, taskRepository: TaskRepository, taskCreationManager: TaskCreation) {
         self.modelContext = modelContext
         self.taskRepository = taskRepository
+        self.taskCreationManager = taskCreationManager
     }
     
     func saveDataToDevice(){
@@ -72,7 +73,7 @@ class NavigationViewModel{
     var modelView: [TaskModel] = []
 }
 
-extension TaskViewModel{
+extension TaskDashboardViewModel{
     
     static func asDictionaryList(tasks: [TaskModel]) -> [[String: Any]]{
         
@@ -92,7 +93,7 @@ extension TaskViewModel{
 
 //MARK: Task Deletion
 
-extension TaskViewModel{
+extension TaskDashboardViewModel{
     
     func deleteTaskById(id: String){
         

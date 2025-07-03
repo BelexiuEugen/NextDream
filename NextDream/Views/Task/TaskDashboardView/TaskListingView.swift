@@ -12,15 +12,9 @@ import SwiftData
 
 struct TaskListingView: View {
     
-    @Environment(\.modelContext) var modelContext
+    @Bindable var viewModel: TaskDashboardViewModel
     
-    @Bindable var viewModel: TaskViewModel
-    @Binding var sort: SortDescriptor<TaskModel>;
-    @Binding var searchString: String;
-    
-    init(sort: Binding<SortDescriptor<TaskModel>>, searchString: Binding<String>, viewModel: Bindable<TaskViewModel>) {
-        _sort = sort
-        _searchString = searchString
+    init(sort: Binding<SortDescriptor<TaskModel>>, searchString: Binding<String>, viewModel: Bindable<TaskDashboardViewModel>) {
         _viewModel = viewModel
         
         viewModel.wrappedValue.fetchTaskByDescriptorAndSearchString(sort: sort.wrappedValue, serchString: searchString.wrappedValue);

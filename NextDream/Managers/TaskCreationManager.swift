@@ -9,11 +9,16 @@ import Foundation
 import SwiftData
 
 protocol TaskCreation{
+    
+    var taskCount: Int {get set}
+    
     func createTask(selectedOption: TaskType, taskData: TaskModelCreationData, taskPriority: TaskPriority) -> TaskModel?
 }
 
+@Observable
 class TaskCreationManager: TaskCreation{
     
+    var taskCount: Int = 0
     
     private var modelContext: ModelContext
     
@@ -22,8 +27,6 @@ class TaskCreationManager: TaskCreation{
     }
     
     func createTask(selectedOption: TaskType, taskData: TaskModelCreationData, taskPriority: TaskPriority = .low) -> TaskModel?{
-        
-//        taskCount += 1;
         
         var result: TaskModel?;
         var newTaskData = taskData;
@@ -58,7 +61,7 @@ class TaskCreationManager: TaskCreation{
         
         self.saveDataToDevice()
         
-//        taskCount += 1;
+        taskCount += 1;
         
         return newDayModel;
     }

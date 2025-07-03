@@ -10,12 +10,10 @@ import SwiftData
 
 struct TaskView: View {
 
-    @State private var vm: TaskViewModel1
-    @Bindable var path : NavigationViewModel
+    @State private var vm: TaskViewModel
     
     init(taskRepository: TaskRepository, modelContext: ModelContext, task: TaskModel, path: NavigationViewModel){
-        _vm = State(wrappedValue: TaskViewModel1(task: task, taskRepository: taskRepository, modelContext: modelContext))
-        self.path = path
+        _vm = State(wrappedValue: TaskViewModel(task: task, taskRepository: taskRepository, modelContext: modelContext))
     }
     
     var body: some View {

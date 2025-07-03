@@ -13,19 +13,21 @@ struct TaskCreationView: View {
     @Environment(\.dismiss) var dismiss;
     @State private var viewModel: TaskCreationViewModel
     
-    @Bindable var path : NavigationViewModel
-    @Binding var sheetDetent: PresentationDetent
-    @Binding var isLoading: Bool;
-    
-    init( taskCreationManager: TaskCreationManager,
+    init(
+        taskCreationManager: TaskCreation,
         path: NavigationViewModel,
         sheetDetent: Binding<PresentationDetent>,
-        isLoading: Binding<Bool>) {
+        isLoading: Binding<Bool>
+    ) {
         
-        _viewModel = State(wrappedValue: TaskCreationViewModel( taskCreationManager: taskCreationManager))
-        self.path = path
-        _sheetDetent = sheetDetent
-        _isLoading = isLoading
+        _viewModel = State(
+            wrappedValue: TaskCreationViewModel(
+                taskCreationManager: taskCreationManager,
+                sheetDetent: sheetDetent,
+                isLoading: isLoading,
+                path: path
+            )
+        )
     }
     
     var body: some View {
@@ -42,16 +44,6 @@ struct TaskCreationView: View {
             }
         }
         .padding(.horizontal)
-        .onChange(of: viewModel.selectedOption) { oldValue, newValue in
-            if(newValue == .custom){
-                sheetDetent = .medium
-            }
-            else{
-                sheetDetent = .fraction(0.4)
-            }
-            
-            viewModel.startDate = viewModel.startDate.firstDate()
-        }
     }
 }
 
@@ -65,7 +57,7 @@ extension TaskCreationView{
         HStack{
             
             Button {
-                viewModel.createTask(isLoading: $isLoading, path: $path, dismiss: dismiss)
+                viewModel.createTask(isLoading: $viewModel.isLoading.wrappedValue, path: $viewModel.path.wrappedValue, dismiss: dismiss)
             } label: {
                 Text("Perform")
             }
