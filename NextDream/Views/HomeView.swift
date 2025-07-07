@@ -36,7 +36,9 @@ struct HomeView: View {
                 }
                 
                 Tab("DashBoard", systemImage: "square.grid.2x2", value: 2){
-                    DashboardView(modelContext: modelContext, taskRepository: taskRepository)
+                    NavigationStack{
+                        DashboardView(modelContext: modelContext, taskRepository: taskRepository)
+                    }
                 }
 
                 Tab("Calendar", systemImage: "calendar", value: 3){

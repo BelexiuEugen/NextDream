@@ -7,25 +7,9 @@
 
 import SwiftUI
 
-enum Theme: String, CaseIterable{
-    case light = "light"
-    case dark = "dark"
-    case custom = "custom"
-}
-
-enum FontSize: String, CaseIterable{
-    case largeTitle = "Extremly Big"
-    case title2 = "Big"
-    case headline = "Normal"
-    case body = "Small"
-}
-
 struct UserSettingsView: View {
     
-    @State var notification: Bool = false;
-    @State var autoReschedule: Bool = false;
-    @State var selectedTheme: Theme = .light;
-    @State var selectedFontSize: FontSize = .body;
+    @State var viewModel = UserSettingsViewModel()
     
     var body: some View {
         ScrollView {
@@ -37,35 +21,7 @@ struct UserSettingsView: View {
                 createThemePicker()
                 
                 createFontSizePicker()
-                
-                HStack{
-                    Button {
-                        
-                    } label: {
-                        Text("Export")
-                    }
-                    
-                    Spacer()
-                    
-                    Button {
-                        
-                    } label: {
-                        Text("Categories")
-                    }
-                    
-                    Spacer()
-                    
-                    Button {
-                        
-                    } label: {
-                        Text("Import")
-                    }
-                }
-                .padding()
-
-                
             }
-            .padding()
             .padding(.top)
         }
         .navigationTitle("User Settings")
@@ -82,7 +38,7 @@ struct UserSettingsView: View {
 extension UserSettingsView{
     
     private func createNotificationToggle() -> some View{
-        Toggle("Notification", isOn: $notification)
+        Toggle("Notification", isOn: $viewModel.notification)
             .font(.title3)
             .fontWeight(.semibold)
             .onLongPressGesture {
@@ -92,10 +48,36 @@ extension UserSettingsView{
     }
     
     private func createRescheduleToggle() -> some View{
-        Toggle("Auto-Reschedule", isOn: $autoReschedule)
-            .font(.title3)
-            .fontWeight(.semibold)
-            .padding()
+        VStack{
+            Toggle("Auto-Reschedule", isOn: $viewModel.autoReschedule)
+                .font(.title3)
+                .fontWeight(.semibold)
+                .padding()
+            
+            
+            HStack{
+                
+                if viewModel.autoReschedule{
+                    
+                    Text("Add your time")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    
+                    Spacer()
+                    
+                    DatePicker(
+                        "Add your hour",
+                        selection: $viewModel.autoRescheduleTime,
+                        displayedComponents: .hourAndMinute
+                    )
+                    .disabled(!viewModel.autoReschedule)
+                    .labelsHidden()
+                }
+            }
+            .frame(height: 30)
+            .padding(.horizontal)
+        }
+        .animation(.easeInOut(duration: 0.3), value: viewModel.autoReschedule)
     }
     
     private func createThemePicker() -> some View{
@@ -104,7 +86,7 @@ extension UserSettingsView{
                 .font(.title3)
                 .fontWeight(.semibold)
             
-            Picker("Select Theme", selection: $selectedTheme) {
+            Picker("Select Theme", selection: $viewModel.selectedTheme) {
                 ForEach(Theme.allCases, id: \.self) { theme in
                     Text(theme.rawValue)
                 }
@@ -122,7 +104,7 @@ extension UserSettingsView{
             
             Spacer()
             
-            Picker("", selection: $selectedFontSize) {
+            Picker("", selection: $viewModel.selectedFontSize) {
                 ForEach(FontSize.allCases, id: \.self) { size in
                     Text(size.rawValue);
                 }

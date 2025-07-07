@@ -13,9 +13,10 @@ struct DashboardView: View {
     }
     
     var body: some View {
+        
         VStack(spacing: 20) {
-            // MARK: - Task List
-            createBoardTitle
+            
+            StreakRowView(streakCount: 10, todayTaskAchieved: 0, totalTaskAchieved: 10)
             
             createTodayTask
             
@@ -27,8 +28,9 @@ struct DashboardView: View {
                 .padding()
         }
         .padding()
+//        .background(.purple)
         .frame(minWidth: 400, minHeight: 600) // macOS-friendly sizing
-        .navigationTitle("Dashboard")
+//        .navigationTitle("Dashboard")
         .toolbar {
             userSettingsButton
         }
@@ -43,8 +45,14 @@ struct DashboardView: View {
     do{
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: TaskModel.self, configurations: config)
-        return DashboardView(modelContext: container.mainContext, taskRepository: DefaultTaskRepository(modelContext: container.mainContext))
-            .modelContainer(container)
+        return NavigationStack{DashboardView(
+            modelContext: container.mainContext,
+            taskRepository: DefaultTaskRepository(
+                modelContext: container.mainContext
+            )
+        )
+        .modelContainer(container)
+        }
         
     }catch{
         fatalError("Failed to create ModelContainer for preview: \(error)")
