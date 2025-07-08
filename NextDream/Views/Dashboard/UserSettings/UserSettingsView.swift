@@ -9,23 +9,28 @@ import SwiftUI
 
 struct UserSettingsView: View {
     
+    @Environment(\.dismiss) private var dismiss
+    
     @State var viewModel = UserSettingsViewModel()
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading){
-                createNotificationToggle()
+                createNotificationToggle
                 
-                createRescheduleToggle()
+                createRescheduleToggle
                 
-                createThemePicker()
+                createThemePicker
                 
-                createFontSizePicker()
+                createFontSizePicker
             }
             .padding(.top)
         }
         .navigationTitle("User Settings")
         .background(.gray.opacity(0.4))
+        .toolbar {
+            saveButton
+        }
     }
 }
 
@@ -37,7 +42,7 @@ struct UserSettingsView: View {
 
 extension UserSettingsView{
     
-    private func createNotificationToggle() -> some View{
+    private var createNotificationToggle: some View{
         Toggle("Notification", isOn: $viewModel.notification)
             .font(.title3)
             .fontWeight(.semibold)
@@ -45,42 +50,50 @@ extension UserSettingsView{
                 // Add a mini explication for every thing
             }
             .padding()
-    }
-    
-    private func createRescheduleToggle() -> some View{
-        VStack{
-            Toggle("Auto-Reschedule", isOn: $viewModel.autoReschedule)
-                .font(.title3)
-                .fontWeight(.semibold)
-                .padding()
-            
-            
-            HStack{
-                
-                if viewModel.autoReschedule{
-                    
-                    Text("Add your time")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                    
-                    Spacer()
-                    
-                    DatePicker(
-                        "Add your hour",
-                        selection: $viewModel.autoRescheduleTime,
-                        displayedComponents: .hourAndMinute
-                    )
-                    .disabled(!viewModel.autoReschedule)
-                    .labelsHidden()
-                }
+            .onChange(of: viewModel.notification) {
+                Task{ await viewModel.updateNotificationStatus() }
             }
-            .frame(height: 30)
-            .padding(.horizontal)
-        }
-        .animation(.easeInOut(duration: 0.3), value: viewModel.autoReschedule)
     }
     
-    private func createThemePicker() -> some View{
+    private var createRescheduleToggle: some View{
+        VStack{
+            if viewModel.notification{
+                Toggle("Auto-Reschedule", isOn: $viewModel.autoReschedule)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .padding()
+                
+                
+                
+                HStack{
+                    
+                    if viewModel.autoReschedule{
+                        
+                        Text("Add your time")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        
+                        Spacer()
+                        
+                        DatePicker(
+                            "Add your hour",
+                            selection: $viewModel.autoRescheduleTime,
+                            displayedComponents: .hourAndMinute
+                        )
+                        .disabled(!viewModel.autoReschedule)
+                        .labelsHidden()
+                    }
+                }
+                .frame(height: 30)
+                .padding(.horizontal)
+            }
+        }
+        .frame(height: 90)
+        .animation(.easeInOut(duration: 0.3), value: viewModel.autoReschedule)
+        .animation(.easeOut(duration: 0.3), value: viewModel.notification)
+    }
+    
+    private var createThemePicker: some View{
         HStack{
             Text("Theme: ")
                 .font(.title3)
@@ -96,7 +109,7 @@ extension UserSettingsView{
         .padding()
     }
     
-    private func createFontSizePicker() -> some View{
+    private var createFontSizePicker: some View{
         HStack{
             Text("Font Size:")
                 .font(.title3)
@@ -111,5 +124,18 @@ extension UserSettingsView{
             }
         }
         .padding()
+    }
+}
+
+extension UserSettingsView{
+    private var saveButton: ToolbarItem<Void, some View>{
+        ToolbarItem(placement: .topBarTrailing) {
+            Button("Save"){
+                Task{
+                    await viewModel.saveData()
+                }
+                dismiss()
+            }
+        }
     }
 }

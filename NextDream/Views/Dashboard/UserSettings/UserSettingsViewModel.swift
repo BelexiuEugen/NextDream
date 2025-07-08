@@ -6,53 +6,92 @@
 //
 
 import Foundation
+import SwiftUI
 
 //static let notification = "notification"
 //static let areNotificationEnabled = "areNotificationEnabled"
 //static let isReminderEnabled = "isReminderEnabled"
 
+
 @Observable
 final class UserSettingsViewModel{
     
-    var notification: Bool = false
-//    private var _autoReschedule = false
-    var autoReschedule: Bool = false
+    var notification: Bool = defaults.bool(forKey: UserDefaultsKeys.areNotificationEnabled)
+    var autoReschedule: Bool = defaults.string(forKey: UserDefaultsKeys.notificationIdentifier) != nil
+    var didChangedRescheduleTime = false
     var selectedTheme: Theme = .light;
     var selectedFontSize: FontSize = .body;
-    private var _autoRescheduleTime: Date = .now
-    var autoRescheduleTime: Date{
-        get { _autoRescheduleTime }
-        set { scheduleNotification(date: newValue) }
-    }
+    var autoRescheduleTime: Date = .now
     var notificationManager = NotificationManager()
     
-    private func scheduleNotification(date: Date){
-        Task{
-            guard await checkPermissionForNotification() else {
-                return
-            }
-            
-            await addScheduledNotification(date: date)
-        }
-    }
-    
-    private func addScheduledNotification(date: Date) async {
+    func saveData() async{
         
-        do{
-            let identifier = try await notificationManager.scheduleLocalNotification(date: date)
-            UserDefaults().set(identifier, forKey: UserDefaultsKeys.notificationIdentifier)
-        } catch{
-            
-        }
-    }
-    
-    private func updateNotificationStatus() async{
-        guard await checkPermissionForNotification() else{
+        defaults.set(_notification, forKey: UserDefaultsKeys.areNotificationEnabled)
+        
+        guard autoReschedule, notification else {
+            deleteUserDefaults()
             return
         }
         
-        notification.toggle()  // or better, assign explicitly
+        guard
+            let storedDate = defaults.object(forKey: UserDefaultsKeys.notificationScheduledDate) as? Date,
+            let identifier = defaults.string(forKey: UserDefaultsKeys.notificationIdentifier) else {
+            await saveUserDefaults()
+            return
+        }
+        
+        guard !isSameClockTime(userSavedDate: storedDate) else { return }
+        
+        notificationManager.deleteNotification(identifier: identifier)
+        await saveUserDefaults()
+        
     }
+    
+    private func saveUserDefaults() async {
+        await addScheduledNotification()
+        defaults.set(autoRescheduleTime, forKey: UserDefaultsKeys.notificationScheduledDate)
+    }
+    
+    // Save Data
+    private func deleteUserDefaults(){
+        if let identifier = defaults.string(forKey: UserDefaultsKeys.notificationIdentifier) {
+            notificationManager.deleteNotification(identifier: identifier)
+            defaults.removeObject(forKey: UserDefaultsKeys.notificationScheduledDate)
+            defaults.removeObject(forKey: UserDefaultsKeys.notificationIdentifier)
+        }
+    }
+    
+    // Save Data
+    private func isSameClockTime(userSavedDate: Date) -> Bool{
+        let calendar = Calendar.current
+        
+        let firstDate = calendar.dateComponents([.hour, .minute], from: userSavedDate)
+        let secondDate = calendar.dateComponents([.hour, .minute], from: autoRescheduleTime)
+        
+        print(firstDate.hour == secondDate.hour && firstDate.hour == secondDate.hour)
+        
+        return firstDate.hour == secondDate.hour && firstDate.minute == secondDate.minute
+    }
+    
+    private func addScheduledNotification() async {
+        
+        do{
+            print(autoRescheduleTime)
+            let identifier = try await notificationManager.scheduleLocalNotification(date: autoRescheduleTime)
+            defaults.set(identifier, forKey: UserDefaultsKeys.notificationIdentifier)
+        } catch{
+            print("Add a error in here.")
+        }
+    }
+    
+    func updateNotificationStatus() async{
+    guard await checkPermissionForNotification() else{
+        notification = false
+        return
+    }
+    
+//    notification.toggle()  // or better, assign explicitly
+}
     
     private func checkPermissionForNotification() async -> Bool{
         let key = UserDefaultsKeys.areNotificationEnabled
@@ -60,6 +99,7 @@ final class UserSettingsViewModel{
         if !UserDefaults.standard.bool(forKey: key) {
             
             guard await askPermissionForNotification() else{
+                notification = false
                 return false
             }
             
@@ -81,5 +121,13 @@ final class UserSettingsViewModel{
         }
         
         return result
+    }
+}
+
+//MARK: Unused functions.
+
+extension UserSettingsViewModel{
+    func deleteAllNotification(){
+        notificationManager.deleteAllNotification()
     }
 }

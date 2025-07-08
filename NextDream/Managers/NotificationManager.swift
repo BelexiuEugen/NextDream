@@ -19,8 +19,8 @@ class NotificationManager{
         let content = createNotificationCotent()
         let dateComponents = createDateComponent(date: date)
         
-        print(date)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+//        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
 
         let identifier = UUID().uuidString
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
@@ -28,6 +28,17 @@ class NotificationManager{
         try await UNUserNotificationCenter.current().add(request)
         
         return identifier
+    }
+    
+    func deleteNotification(identifier: String){
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier])
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+    }
+    
+    func deleteAllNotification(){
+        let center = UNUserNotificationCenter.current()
+        center.removeAllDeliveredNotifications()
+        center.removeAllPendingNotificationRequests()
     }
     
     private func createNotificationCotent() -> UNMutableNotificationContent{
@@ -46,6 +57,7 @@ class NotificationManager{
         var dateComponents = DateComponents()
         dateComponents.hour =  calendar.component(.hour, from: date)
         dateComponents.minute = calendar.component(.minute, from: date)
+        dateComponents.timeZone = .current
         
         return dateComponents
     }

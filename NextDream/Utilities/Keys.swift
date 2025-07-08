@@ -7,7 +7,10 @@
 
 import Foundation
 
+let defaults = UserDefaults.standard
+
 struct UserDefaultsKeys {
     static let notificationIdentifier = "notificationIdentifier"
     static let areNotificationEnabled = "areNotificationEnabled"
+    static let notificationScheduledDate = "notificationScheduledDate"
 }
