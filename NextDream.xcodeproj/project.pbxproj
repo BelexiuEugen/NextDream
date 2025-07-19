@@ -8,10 +8,47 @@
 
 /* Begin PBXBuildFile section */
 		3DEEA0D72D36D4600073B5BA /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 3DEEA0D62D36D4600073B5BA /* FSCalendar */; };
+		B0CA2EB62E2BCB7D00DB2C5D /* NextDreamWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B0CA2EA02E2BCB7900DB2C5D /* NextDreamWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B0CA2F3E2E2BD73900DB2C5D /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0CA2EA42E2BCB7900DB2C5D /* SwiftUI.framework */; };
+		B0CA2F412E2BD73A00DB2C5D /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0CA2EA22E2BCB7900DB2C5D /* WidgetKit.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B0CA2EB42E2BCB7D00DB2C5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DEEA0582D36D29A0073B5BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B0CA2E9F2E2BCB7900DB2C5D;
+			remoteInfo = NextDreamWidgetExtension;
+		};
+		B0CA2F432E2C277700DB2C5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DEEA0582D36D29A0073B5BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B0CA2E9F2E2BCB7900DB2C5D;
+			remoteInfo = NextDreamWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B0CA2EB72E2BCB7D00DB2C5D /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B0CA2EB62E2BCB7D00DB2C5D /* NextDreamWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		3DEEA0602D36D29A0073B5BA /* NextDream.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NextDream.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0CA2EA02E2BCB7900DB2C5D /* NextDreamWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NextDreamWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0CA2EA22E2BCB7900DB2C5D /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		B0CA2EA42E2BCB7900DB2C5D /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -22,6 +59,13 @@
 			);
 			target = 3DEEA05F2D36D29A0073B5BA /* NextDream */;
 		};
+		B0CA2EBB2E2BCB7D00DB2C5D /* Exceptions for "NextDreamWidget" folder in "NextDreamWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B0CA2E9F2E2BCB7900DB2C5D /* NextDreamWidgetExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -31,6 +75,14 @@
 				3DB22DDF2D7F1E2A00DE5D3B /* Exceptions for "NextDream" folder in "NextDream" target */,
 			);
 			path = NextDream;
+			sourceTree = "<group>";
+		};
+		B0CA2EA62E2BCB7A00DB2C5D /* NextDreamWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B0CA2EBB2E2BCB7D00DB2C5D /* Exceptions for "NextDreamWidget" folder in "NextDreamWidgetExtension" target */,
+			);
+			path = NextDreamWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -44,6 +96,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B0CA2E9D2E2BCB7900DB2C5D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0CA2F3E2E2BD73900DB2C5D /* SwiftUI.framework in Frameworks */,
+				B0CA2F412E2BD73A00DB2C5D /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -51,6 +112,8 @@
 			isa = PBXGroup;
 			children = (
 				3DEEA0622D36D29A0073B5BA /* NextDream */,
+				B0CA2EA62E2BCB7A00DB2C5D /* NextDreamWidget */,
+				B0CA2EA12E2BCB7900DB2C5D /* Frameworks */,
 				3DEEA0612D36D29A0073B5BA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,8 +122,18 @@
 			isa = PBXGroup;
 			children = (
 				3DEEA0602D36D29A0073B5BA /* NextDream.app */,
+				B0CA2EA02E2BCB7900DB2C5D /* NextDreamWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B0CA2EA12E2BCB7900DB2C5D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B0CA2EA22E2BCB7900DB2C5D /* WidgetKit.framework */,
+				B0CA2EA42E2BCB7900DB2C5D /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -73,10 +146,13 @@
 				3DEEA05C2D36D29A0073B5BA /* Sources */,
 				3DEEA05D2D36D29A0073B5BA /* Frameworks */,
 				3DEEA05E2D36D29A0073B5BA /* Resources */,
+				B0CA2EB72E2BCB7D00DB2C5D /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B0CA2EB52E2BCB7D00DB2C5D /* PBXTargetDependency */,
+				B0CA2F442E2C277700DB2C5D /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				3DEEA0622D36D29A0073B5BA /* NextDream */,
@@ -89,6 +165,28 @@
 			productReference = 3DEEA0602D36D29A0073B5BA /* NextDream.app */;
 			productType = "com.apple.product-type.application";
 		};
+		B0CA2E9F2E2BCB7900DB2C5D /* NextDreamWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0CA2EBA2E2BCB7D00DB2C5D /* Build configuration list for PBXNativeTarget "NextDreamWidgetExtension" */;
+			buildPhases = (
+				B0CA2E9C2E2BCB7900DB2C5D /* Sources */,
+				B0CA2E9D2E2BCB7900DB2C5D /* Frameworks */,
+				B0CA2E9E2E2BCB7900DB2C5D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B0CA2EA62E2BCB7A00DB2C5D /* NextDreamWidget */,
+			);
+			name = NextDreamWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = NextDreamWidgetExtension;
+			productReference = B0CA2EA02E2BCB7900DB2C5D /* NextDreamWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -96,11 +194,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1620;
+				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					3DEEA05F2D36D29A0073B5BA = {
 						CreatedOnToolsVersion = 16.2;
+					};
+					B0CA2E9F2E2BCB7900DB2C5D = {
+						CreatedOnToolsVersion = 16.4;
 					};
 				};
 			};
@@ -122,12 +223,20 @@
 			projectRoot = "";
 			targets = (
 				3DEEA05F2D36D29A0073B5BA /* NextDream */,
+				B0CA2E9F2E2BCB7900DB2C5D /* NextDreamWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		3DEEA05E2D36D29A0073B5BA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0CA2E9E2E2BCB7900DB2C5D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -144,7 +253,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B0CA2E9C2E2BCB7900DB2C5D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B0CA2EB52E2BCB7D00DB2C5D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B0CA2E9F2E2BCB7900DB2C5D /* NextDreamWidgetExtension */;
+			targetProxy = B0CA2EB42E2BCB7D00DB2C5D /* PBXContainerItemProxy */;
+		};
+		B0CA2F442E2C277700DB2C5D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B0CA2E9F2E2BCB7900DB2C5D /* NextDreamWidgetExtension */;
+			targetProxy = B0CA2F432E2C277700DB2C5D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		3DEEA06E2D36D29C0073B5BA /* Debug */ = {
@@ -276,6 +405,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"NextDream/Resources\"";
+				DEVELOPMENT_TEAM = B3FHRWVY23;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NextDream/Info.plist;
@@ -306,6 +436,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"NextDream/Resources\"";
+				DEVELOPMENT_TEAM = B3FHRWVY23;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NextDream/Info.plist;
@@ -322,6 +453,62 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Person.NextDream;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B0CA2EB82E2BCB7D00DB2C5D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B3FHRWVY23;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NextDreamWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NextDreamWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Person.NextDream.NextDreamWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B0CA2EB92E2BCB7D00DB2C5D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B3FHRWVY23;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NextDreamWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NextDreamWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Person.NextDream.NextDreamWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -345,6 +532,15 @@
 			buildConfigurations = (
 				3DEEA0712D36D29C0073B5BA /* Debug */,
 				3DEEA0722D36D29C0073B5BA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B0CA2EBA2E2BCB7D00DB2C5D /* Build configuration list for PBXNativeTarget "NextDreamWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0CA2EB82E2BCB7D00DB2C5D /* Debug */,
+				B0CA2EB92E2BCB7D00DB2C5D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
