@@ -116,3 +116,10 @@ struct TaskModelCreationData{
         self.numberOfDays = numberOfDays
     }
 }
+
+extension TaskModel{
+    
+    func toString() -> String{
+        return self.name
+    }
+}

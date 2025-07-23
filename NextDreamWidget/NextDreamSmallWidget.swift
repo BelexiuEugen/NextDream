@@ -41,36 +41,44 @@ struct Provider: AppIntentTimelineProvider {
 //    }
 }
 
-struct NextDreamWidgetEntryView : View {
+struct NextDreamSmallWidgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
-
-            Text("Favorite Emoji:")
-            Text(entry.configuration.favoriteEmoji)
+        VStack(spacing: 4) {
+            Text("Streak")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            
+            Text("\(entry.configuration.streakCount)")
+                .font(.system(size: 28, weight: .bold, design: .rounded))
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
+                .foregroundColor(.primary)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
+        
     }
 }
 
-struct NextDreamWidget: Widget {
+struct NextDreamSmallWidget: Widget {
     let kind: String = "NextDreamWidget"
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
-            NextDreamWidgetEntryView(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
+            NextDreamSmallWidgetEntryView(entry: entry)
+                .containerBackground(.clear, for: .widget)
+
         }
         .configurationDisplayName("Test")
         .description("just a simple description for my widget")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([.systemSmall])
     }
 }
 
 #Preview(as: .systemSmall) {
-    NextDreamWidget()
+    NextDreamSmallWidget()
 } timeline: {
     SimpleEntry(date: .now, configuration: .smiley)
 //    SimpleEntry(date: .now, configuration: .starEyes)

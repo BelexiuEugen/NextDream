@@ -12,7 +12,8 @@ import SwiftUI
 struct NextDreamWidgetBundle: WidgetBundle {
     
     var body: some Widget {
-        NextDreamWidget()
+//        NextDreamSmallWidget()
+        NextDreamMediumWidget()
 //        NextDreamWidgetControl()
 //        NextDreamWidgetLiveActivity()
         

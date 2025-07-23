@@ -7,11 +7,16 @@
 
 import Foundation
 import SwiftData
+import WidgetKit
 
 @Observable
 final class DashboardViewModel{
     
-    var tasks: [TaskModel] = []
+    var tasks: [TaskModel] = []{
+        didSet{
+            updateWidgetData()
+        }
+    }
     
     var isLoggingOut:Bool = false;
     var modelContext: ModelContext
@@ -22,6 +27,19 @@ final class DashboardViewModel{
         self.modelContext = modelContext
         self.taskRepository = taskRepository
         self.fetchTaskByDeadline(date: .now)
+    }
+    
+    func reloadTasks(){
+        self.fetchTaskByDeadline(date: .now)
+    }
+    
+    func updateWidgetData(){
+        let arrayToWidget = toStringArray()
+        let sharedDefaults = UserDefaults(suiteName: "group.com.Person.NextDream")
+        sharedDefaults?.set(arrayToWidget, forKey: "widgetMessage")
+
+        WidgetCenter.shared.reloadTimelines(ofKind: "mediumWidget")
+        
     }
     
     var chartData: [(String, Int)] {
@@ -38,6 +56,16 @@ final class DashboardViewModel{
             print("Implement, error handling in here")
         }
     }
-    
-    
+}
+
+extension DashboardViewModel{
+    func toStringArray() -> [String]{
+        var result: [String] = []
+        
+        for task in tasks{
+            result.append(task.toString())
+        }
+        
+        return result
+    }
 }

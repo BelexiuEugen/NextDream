@@ -13,4 +13,5 @@ struct UserDefaultsKeys {
     static let notificationIdentifier = "notificationIdentifier"
     static let areNotificationEnabled = "areNotificationEnabled"
     static let notificationScheduledDate = "notificationScheduledDate"
+    static let widgetList = "wigetList"
 }

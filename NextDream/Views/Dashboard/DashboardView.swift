@@ -23,16 +23,18 @@ struct DashboardView: View {
             // MARK: - Pie Chart
             createTaskCompletedTitle
             
-            createChart
-                .frame(height: 250)
-                .padding()
+//            createChart
+//                .frame(height: 250)
+//                .padding()
         }
         .padding()
-//        .background(.purple)
         .frame(minWidth: 400, minHeight: 600) // macOS-friendly sizing
 //        .navigationTitle("Dashboard")
         .toolbar {
             userSettingsButton
+        }
+        .onAppear{
+            viewModel.reloadTasks()
         }
     }
 }
