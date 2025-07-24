@@ -42,3 +42,6 @@ Package.resolved
 
 # Other
 .DS_Store
+
+# Ignore Xcode UI state
+*.xcuserstate
