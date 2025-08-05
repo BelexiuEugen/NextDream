@@ -103,8 +103,11 @@ struct TaskModelCreationData{
     let numberOfMonths: Int
     let numberOfWeeks: Int
     let numberOfDays: Int
+    let taskPriority: TaskPriority
+    let taskType: TaskType
+    let startWeekDay: Weekday
     
-    init(name: String, parentID: String?, taskStartDate: Date, totalWeekDays: Int = 6, totalMonthDays: Int = 28, numberOfYears: Int = 0, numberOfMonths: Int = 0, numberOfWeeks: Int = 0, numberOfDays: Int = 0) {
+    init(name: String, parentID: String?, taskStartDate: Date, totalWeekDays: Int = 6, totalMonthDays: Int = 28, numberOfYears: Int = 0, numberOfMonths: Int = 0, numberOfWeeks: Int = 0, numberOfDays: Int = 0, taskPriority: TaskPriority, taskType: TaskType, startWeekday: Weekday) {
         self.name = name
         self.parentID = parentID
         self.taskStartDate = taskStartDate
@@ -114,6 +117,9 @@ struct TaskModelCreationData{
         self.numberOfMonths = numberOfMonths
         self.numberOfWeeks = numberOfWeeks
         self.numberOfDays = numberOfDays
+        self.taskPriority = taskPriority
+        self.taskType = taskType
+        self.startWeekDay = startWeekday
     }
 }
 

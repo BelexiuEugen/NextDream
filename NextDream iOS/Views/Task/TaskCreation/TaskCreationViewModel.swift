@@ -54,7 +54,10 @@ final class TaskCreationViewModel{
             numberOfYears: numberOfYears,
             numberOfMonths: numberOfMonths,
             numberOfWeeks: numberOfWeeks,
-            numberOfDays: numberOfDays
+            numberOfDays: numberOfDays,
+            taskPriority: selectedPriority,
+            taskType: selectedOption,
+            startWeekday: .monday
         )
         
         
@@ -63,7 +66,7 @@ final class TaskCreationViewModel{
         Task{
             
             guard let
-                    newTask = taskCreationManager.createTask(selectedOption: selectedOption, taskData: taskData, taskPriority: selectedPriority)
+                    newTask = taskCreationManager.createTask(taskData: taskData)
             else {return}
             path.modelView.append(newTask)
             isLoading.wrappedValue = false;

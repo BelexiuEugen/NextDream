@@ -96,3 +96,36 @@ enum FontSize: String, CaseIterable{
     case headline = "Normal"
     case body = "Small"
 }
+
+enum Weekday: String, CaseIterable, Codable {
+    case monday = "Monday"
+    case tuesday = "Tuesday"
+    case wednesday = "Wednesday"
+    case thursday = "Thursday"
+    case friday = "Friday"
+    case saturday = "Saturday"
+    case sunday = "Sunday"
+    
+    var index: Int {
+        return Weekday.allCases.firstIndex(of: self)!
+    }
+}
+
+extension Weekday {
+    static func from(date: Date, calendar: Calendar = .current) -> Weekday? {
+        let weekdayIndex = calendar.component(.weekday, from: date)
+        
+        // Map system weekday index to your enum
+        // Calendar weekday: 1 = Sunday, 2 = Monday, ..., 7 = Saturday
+        switch weekdayIndex {
+        case 1: return .sunday
+        case 2: return .monday
+        case 3: return .tuesday
+        case 4: return .wednesday
+        case 5: return .thursday
+        case 6: return .friday
+        case 7: return .saturday
+        default: return nil
+        }
+    }
+}
