@@ -98,16 +98,32 @@ enum FontSize: String, CaseIterable{
 }
 
 enum Weekday: String, CaseIterable, Codable {
+    
+    case sunday = "Sunday"
     case monday = "Monday"
     case tuesday = "Tuesday"
     case wednesday = "Wednesday"
     case thursday = "Thursday"
     case friday = "Friday"
     case saturday = "Saturday"
-    case sunday = "Sunday"
     
     var index: Int {
-        return Weekday.allCases.firstIndex(of: self)!
+        switch self {
+        case .sunday:
+            1
+        case .monday:
+            2
+        case .tuesday:
+            3
+        case .wednesday:
+            4
+        case .thursday:
+            5
+        case .friday:
+            6
+        case .saturday:
+            7
+        }
     }
 }
 

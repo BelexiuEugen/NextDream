@@ -36,9 +36,9 @@ class TaskCreationManager: TaskCreation{
             newTaskData.name = taskData.taskStartDate.getDayName()
             result = createDay(taskData: newTaskData);
         case .week:
-            newTaskData.name = taskData.taskStartDate.weekRange()
+            newTaskData.name = taskData.taskStartDate.weekRange(7)
             result = createWeek(taskData: newTaskData)
-        case .month:
+        case .month: break
 //            result = createMonth(taskData: taskData, taskPriority: taskPriority)
         case .year:
             newTaskData.name = "\(Calendar.current.component(.year, from: taskData.taskStartDate))"
@@ -47,6 +47,9 @@ class TaskCreationManager: TaskCreation{
 //            result = createCustom(taskData: taskData, taskPriority: taskPriority)
             break;
         }
+        
+        print(taskCount)
+        taskCount = 0
         
         self.saveDataToDevice()
         
@@ -76,7 +79,7 @@ class TaskCreationManager: TaskCreation{
         
         var subTaskStartDate = taskData.taskStartDate
         
-        for _ in 0...taskData.totalWeekDays{
+        for _ in 1...taskData.totalWeekDays{
             
             guard let startDate = Calendar.current.date(byAdding: .day, value: 1, to: subTaskStartDate) else { break }
             
@@ -113,18 +116,19 @@ class TaskCreationManager: TaskCreation{
 extension TaskCreationManager{
     
     func createRegularMonth(taskData: TaskModelCreationData) -> TaskModel?{
-        guard let deadline = Calendar.current.date(byAdding: .day, value: taskData.totalWeekDays, to: taskData.taskStartDate) else { return nil};
+        guard let deadline = Calendar.current.date(byAdding: .day, value: 21 + taskData.totalWeekDays, to: taskData.taskStartDate) else { return nil};
         
         let newRegularMonth = TaskModel(name: taskData.name, parentID: taskData.parentID, deadline: deadline, taskType: .month, taskPriority: taskData.taskPriority);
+        modelContext.insert(newRegularMonth);
         
-        var daysCount = calculateFirstWeekDayCount(date: taskData.taskStartDate, startWeekDay: taskData.startWeekDay)
+        var daysCount = taskData.totalWeekDays
         
         var subTaskStartDate = taskData.taskStartDate
         
         for _ in 1...4{
             
             let subTaskData = TaskModelCreationData(
-                name: taskData.taskStartDate.weekRange(),
+                name: subTaskStartDate.weekRange(daysCount),
                 parentID: newRegularMonth.id,
                 taskStartDate: subTaskStartDate,
                 totalWeekDays: daysCount,
@@ -135,26 +139,32 @@ extension TaskCreationManager{
             
             _ = createWeek(taskData: subTaskData)
             
-            subTaskStartDate = Calendar.current.date(byAdding: .day, value: daysCount, to: taskData.taskStartDate) ?? .now
+            subTaskStartDate = Calendar.current.date(byAdding: .day, value: daysCount, to: subTaskStartDate) ?? .now
             
             daysCount = 7
             
         }
+        
+        return newRegularMonth
         
     }
     
     func createRegularYear(taskData: TaskModelCreationData) -> TaskModel?{
         guard let deadline = Calendar.current.date(byAdding: .year, value: 1, to: taskData.taskStartDate) else { return nil};
         
-        let newYearModel = TaskModel(name: taskData.name, parentID: taskData.parentID, deadline: deadline - 1, taskType: .year, taskPriority: taskData.taskPriority);
+        let newRegularYear = TaskModel(name: taskData.name, parentID: taskData.parentID, deadline: deadline, taskType: .year, taskPriority: taskData.taskPriority);
         
-        modelContext.insert(newYearModel)
+        modelContext.insert(newRegularYear)
         
-        createRegularYearSubMonths(parentID: newYearModel.id, taskData: taskData)
+        createRegularYearSubMonths(parentID: newRegularYear.id, taskData: taskData)
+        
+        return newRegularYear
     }
     
     func createRegularYearSubMonths(parentID: String, taskData: TaskModelCreationData){
-        var daysCount = calculateFirstWeekDayCount(date: taskData.taskStartDate, startWeekDay: taskData.startWeekDay)
+        
+        let daysCountFirstWeek = calculateFirstWeekDayCount(date: taskData.taskStartDate, startWeekDay: taskData.startWeekDay)
+        var daysCount = daysCountFirstWeek
         
         var monthStartDate = taskData.taskStartDate
         
@@ -170,15 +180,15 @@ extension TaskCreationManager{
             
             _ = createRegularMonth(taskData: newTaskData)
             
-            monthStartDate = Calendar.current.date(byAdding: .day, value: daysCount + 21, to: taskData.taskStartDate) ?? .now
+            monthStartDate = Calendar.current.date(byAdding: .day, value: daysCount + 21, to: monthStartDate) ?? .now
             daysCount = 7
         }
         
-        daysCount = 7 - daysCount + 1
+        daysCount = 7 - daysCountFirstWeek + 1
         
         let subTaskData = TaskModelCreationData(
             name: "Progress Check",
-            parentID: taskData.parentID,
+            parentID: parentID,
             taskStartDate: monthStartDate,
             totalWeekDays: daysCount,
             taskPriority: taskData.taskPriority,

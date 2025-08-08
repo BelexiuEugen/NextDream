@@ -67,21 +67,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3DB22DDF2D7F1E2A00DE5D3B /* Exceptions for "NextDream iOS" folder in "NextDream" target */ = {
+		3DB22DDF2D7F1E2A00DE5D3B /* Exceptions for "NextDream" folder in "NextDream" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = 3DEEA05F2D36D29A0073B5BA /* NextDream */;
 		};
-		B00CA8DF2E2FAAA700617585 /* Exceptions for "NextDream iOS" folder in "NextDreamWidgetExtension" target */ = {
+		B00CA8DF2E2FAAA700617585 /* Exceptions for "NextDream" folder in "NextDreamWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Utilities/Keys.swift,
 			);
 			target = B0CA2E9F2E2BCB7900DB2C5D /* NextDreamWidgetExtension */;
 		};
-		B0CA2EBB2E2BCB7D00DB2C5D /* Exceptions for "NextDream Widget" folder in "NextDreamWidgetExtension" target */ = {
+		B0CA2EBB2E2BCB7D00DB2C5D /* Exceptions for "NextDreamWidget" folder in "NextDreamWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -91,21 +91,21 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		3DEEA0622D36D29A0073B5BA /* NextDream iOS */ = {
+		3DEEA0622D36D29A0073B5BA /* NextDream */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				3DB22DDF2D7F1E2A00DE5D3B /* Exceptions for "NextDream iOS" folder in "NextDream" target */,
-				B00CA8DF2E2FAAA700617585 /* Exceptions for "NextDream iOS" folder in "NextDreamWidgetExtension" target */,
+				3DB22DDF2D7F1E2A00DE5D3B /* Exceptions for "NextDream" folder in "NextDream" target */,
+				B00CA8DF2E2FAAA700617585 /* Exceptions for "NextDream" folder in "NextDreamWidgetExtension" target */,
 			);
-			path = "NextDream iOS";
+			path = NextDream;
 			sourceTree = "<group>";
 		};
-		B0CA2EA62E2BCB7A00DB2C5D /* NextDream Widget */ = {
+		B0CA2EA62E2BCB7A00DB2C5D /* NextDreamWidget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				B0CA2EBB2E2BCB7D00DB2C5D /* Exceptions for "NextDream Widget" folder in "NextDreamWidgetExtension" target */,
+				B0CA2EBB2E2BCB7D00DB2C5D /* Exceptions for "NextDreamWidget" folder in "NextDreamWidgetExtension" target */,
 			);
-			path = "NextDream Widget";
+			path = NextDreamWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -135,8 +135,8 @@
 			isa = PBXGroup;
 			children = (
 				B0BCD8462E311B00009B7E18 /* NextDreamWidgetExtension.entitlements */,
-				3DEEA0622D36D29A0073B5BA /* NextDream iOS */,
-				B0CA2EA62E2BCB7A00DB2C5D /* NextDream Widget */,
+				3DEEA0622D36D29A0073B5BA /* NextDream */,
+				B0CA2EA62E2BCB7A00DB2C5D /* NextDreamWidget */,
 				B0CA2EA12E2BCB7900DB2C5D /* Frameworks */,
 				3DEEA0612D36D29A0073B5BA /* Products */,
 			);
@@ -179,7 +179,7 @@
 				B0CA2F442E2C277700DB2C5D /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				3DEEA0622D36D29A0073B5BA /* NextDream iOS */,
+				3DEEA0622D36D29A0073B5BA /* NextDream */,
 			);
 			name = NextDream;
 			packageProductDependencies = (
@@ -203,7 +203,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				B0CA2EA62E2BCB7A00DB2C5D /* NextDream Widget */,
+				B0CA2EA62E2BCB7A00DB2C5D /* NextDreamWidget */,
 			);
 			name = NextDreamWidgetExtension;
 			packageProductDependencies = (

@@ -99,11 +99,6 @@ extension TaskCreationView{
             selection: $viewModel.startDate,
             displayedComponents: .date
         )
-        .onChange(of: viewModel.startDate) { oldValue, newValue in
-            if viewModel.selectedOption == .year || viewModel.selectedOption == .custom{
-                viewModel.startDate = viewModel.startDate.firstDate()
-                }
-            }
     }
     
     private var customSelectionRegion: some View{

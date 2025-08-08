@@ -19,7 +19,7 @@ final class TaskCreationViewModel{
         }
     }
     var showTask: Bool = false
-    var startDate: Date = Date().firstDate()
+    var startDate: Date = Date()
     var numberOfYears = 1
     var numberOfDays = 1
     var isPresented: Bool = false;
@@ -107,7 +107,5 @@ extension TaskCreationViewModel{
         else{
             sheetDetent.wrappedValue = .fraction(0.4)
         }
-        
-        startDate = startDate.firstDate()
     }
 }

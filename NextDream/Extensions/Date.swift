@@ -40,11 +40,11 @@ extension Date{
         return formatter.string(from: self)
     }
     
-    func weekRange() -> String {
+    func weekRange(_ numberOfDays: Int) -> String {
         let calendar = Calendar.current
         // Get the start and end of the week
         
-        let weekEnd = calendar.date(byAdding: .day, value: 6, to: self) ?? self
+        let endOfWeek = calendar.date(byAdding: .day, value: numberOfDays - 1, to: self) ?? self
         
         // Format day numbers (12, 17) and month name (February)
         let dayFormatter = DateFormatter()
@@ -54,10 +54,22 @@ extension Date{
         monthFormatter.dateFormat = "MMMM"
         
         let startDay = dayFormatter.string(from: self)
-        let endDay = dayFormatter.string(from: weekEnd)
+        let endDay = dayFormatter.string(from: endOfWeek)
         let month = monthFormatter.string(from: self)
         
+        if datesAreInDifferentMonth(self, endOfWeek){
+            let endDayMonth = monthFormatter.string(from: endOfWeek)
+            return "\(startDay) \(month) - \(endDay) \(endDayMonth)"
+        }
+        
         return "\(startDay) - \(endDay) \(month)"
+    }
+    
+    func datesAreInDifferentMonth(_ firstDate: Date, _ secondDate: Date) -> Bool{
+        let firstMonthIndex = Calendar.current.component(.month, from: firstDate)
+        let secondMonthIndex = Calendar.current.component(.month, from: secondDate)
+        
+        return firstMonthIndex != secondMonthIndex
     }
     
     func showDate() -> String{
