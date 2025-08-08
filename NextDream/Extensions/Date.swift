@@ -36,7 +36,7 @@ extension Date{
     
     func getDayName() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM d"
+        formatter.dateFormat = "d MMMM"
         return formatter.string(from: self)
     }
     

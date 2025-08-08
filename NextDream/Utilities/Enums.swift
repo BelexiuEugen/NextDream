@@ -43,7 +43,7 @@ enum Notification: String{
     }
 }
 
-//MARK: Elements
+//MARK: Streak Elements
 
 enum ElementStreak{
     case streak, todayTaskAchieved, totalTaskAchieved
@@ -97,6 +97,8 @@ enum FontSize: String, CaseIterable{
     case body = "Small"
 }
 
+//MARK: Task Creation
+
 enum Weekday: String, CaseIterable, Codable {
     
     case sunday = "Sunday"
@@ -125,23 +127,90 @@ enum Weekday: String, CaseIterable, Codable {
             7
         }
     }
+    
+    func calculateDaysCount(from date: Date, calendar: Calendar = .current) -> Int{
+        let weekdayIndex = calendar.component(.weekday, from: date)
+        let userWeekDayIndex = self.index
+        
+        guard weekdayIndex != userWeekDayIndex else { return 7}
+        
+        return userWeekDayIndex > weekdayIndex ? userWeekDayIndex - weekdayIndex : 7 - weekdayIndex + userWeekDayIndex
+    }
 }
 
-extension Weekday {
-    static func from(date: Date, calendar: Calendar = .current) -> Weekday? {
-        let weekdayIndex = calendar.component(.weekday, from: date)
-        
-        // Map system weekday index to your enum
-        // Calendar weekday: 1 = Sunday, 2 = Monday, ..., 7 = Saturday
-        switch weekdayIndex {
-        case 1: return .sunday
-        case 2: return .monday
-        case 3: return .tuesday
-        case 4: return .wednesday
-        case 5: return .thursday
-        case 6: return .friday
-        case 7: return .saturday
-        default: return nil
+enum Months: Int{
+    case january = 1
+    case february = 2
+    case march = 3
+    case april = 4
+    case may = 5
+    case june = 6
+    case july = 7
+    case august = 8
+    case september = 9
+    case october = 10
+    case november = 11
+    case december = 12
+    
+    var monthName: String{
+        switch self {
+        case .january:
+            "January"
+        case .february:
+            "February"
+        case .march:
+            "March"
+        case .april:
+            "April"
+        case .may:
+            "May"
+        case .june:
+            "June"
+        case .july:
+            "July"
+        case .august:
+            "August"
+        case .september:
+            "September"
+        case .october:
+            "October"
+        case .november:
+            "November"
+        case .december:
+            "December"
         }
+    }
+    
+    init(date: Date, calendar: Calendar = .current) {
+        let monthIndex = calendar.component(.month, from: date)
+        
+        self = Months(rawValue: monthIndex) ?? .january
+    }
+    
+    mutating func next(){
+        guard let month = Months(rawValue: self.rawValue % 12 + 1) else { return }
+        
+        self = month
+    }
+    
+    func calculateDaysCount(date: Date) -> Int{
+        switch self {
+        case .january, .march, .may, .july, .august, .october, .december:
+            return 31
+        case .april, .june, .september, .november:
+            return 30
+        default:
+            return februaryDayCount(startDate: date)
+        }
+    }
+    
+    func februaryDayCount(startDate: Date) -> Int{
+        let currentYear = Calendar.current.component(.year, from: startDate)
+        
+        return Months.isLeapYear(currentYear) ? 29 : 28
+    }
+    
+    static func isLeapYear(_ year: Int) -> Bool{
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
     }
 }

@@ -57,7 +57,8 @@ final class TaskCreationViewModel{
             numberOfDays: numberOfDays,
             taskPriority: selectedPriority,
             taskType: selectedOption,
-            startWeekday: .monday
+            startWeekday: .monday,
+            currentMonth: .january
         )
         
         
