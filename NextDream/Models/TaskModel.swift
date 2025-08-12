@@ -59,6 +59,25 @@ class TaskModel: Identifiable{
         self.taskType = taskType;
         self.taskPriority = taskPriority;
     }
+}
+
+
+enum TaskPriority: String, Codable, CaseIterable{
+    case low = "Low"
+    case medium = "Medium"
+    case high = "High"
+}
+
+enum TaskType: String, Codable, CaseIterable{
+    case day = "Day Task"
+    case week = "Week Task"
+    case month = "Month Task"
+    case year = "Year Task"
+    case custom = "Custom Task"
+    case byDate = "By Date"
+}
+
+extension TaskModel{
     
     func createDictionary() -> [String: Any]{
         return [
@@ -75,57 +94,6 @@ class TaskModel: Identifiable{
             "taskPriority" : self.taskPriority.rawValue
         ]
     }
-}
-
-
-enum TaskPriority: String, Codable, CaseIterable{
-    case low = "Low"
-    case medium = "Medium"
-    case high = "High"
-}
-
-enum TaskType: String, Codable, CaseIterable{
-    case day = "Day Task"
-    case week = "Week Task"
-    case month = "Month Task"
-    case year = "Year Task"
-    case custom = "Custom Task"
-}
-
-struct TaskModelCreationData{
-    
-    var name: String
-    let parentID: String?
-    var taskStartDate: Date
-    let weekDaysCount: Int
-    let monthDaysCount: Int
-    let numberOfYears: Int
-    let numberOfMonths: Int
-    let numberOfWeeks: Int
-    let numberOfDays: Int
-    let taskPriority: TaskPriority
-    let taskType: TaskType
-    let startWeekDay: Weekday
-    let currentMonth: Months
-    
-    init(name: String, parentID: String?, taskStartDate: Date, weekDaysCount: Int = 6, monthDaysCount: Int = 28, numberOfYears: Int = 0, numberOfMonths: Int = 0, numberOfWeeks: Int = 0, numberOfDays: Int = 0, taskPriority: TaskPriority, taskType: TaskType, startWeekday: Weekday, currentMonth: Months) {
-        self.name = name
-        self.parentID = parentID
-        self.taskStartDate = taskStartDate
-        self.weekDaysCount = weekDaysCount
-        self.monthDaysCount = monthDaysCount
-        self.numberOfYears = numberOfYears
-        self.numberOfMonths = numberOfMonths
-        self.numberOfWeeks = numberOfWeeks
-        self.numberOfDays = numberOfDays
-        self.taskPriority = taskPriority
-        self.taskType = taskType
-        self.startWeekDay = startWeekday
-        self.currentMonth = currentMonth
-    }
-}
-
-extension TaskModel{
     
     func toString() -> String{
         return self.name

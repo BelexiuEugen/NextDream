@@ -11,7 +11,7 @@ import SwiftData
 struct TaskCreationView: View {
     
     @Environment(\.dismiss) var dismiss;
-    @State private var viewModel: TaskCreationViewModel
+    @State private var vm: TaskCreationViewModel
     
     init(
         taskCreationManager: TaskCreation,
@@ -20,7 +20,7 @@ struct TaskCreationView: View {
         isLoading: Binding<Bool>
     ) {
         
-        _viewModel = State(
+        _vm = State(
             wrappedValue: TaskCreationViewModel(
                 taskCreationManager: taskCreationManager,
                 sheetDetent: sheetDetent,
@@ -31,6 +31,7 @@ struct TaskCreationView: View {
     }
     
     var body: some View {
+        @Bindable var vm = vm;
         VStack {
             
             taskCreationRegion
@@ -39,7 +40,7 @@ struct TaskCreationView: View {
             
             selectDataRegion
             
-            if(viewModel.selectedOption == .custom){
+            if(vm.selectedType == .custom || vm.selectedType == .byDate){
                 customSelectionRegion
             }
         }
@@ -57,19 +58,30 @@ extension TaskCreationView{
         HStack{
             
             Button {
-                viewModel.createTask(isLoading: $viewModel.isLoading.wrappedValue, path: $viewModel.path.wrappedValue, dismiss: dismiss)
+                vm.createTask(isLoading: $vm.isLoading.wrappedValue, path: $vm.path.wrappedValue, dismiss: dismiss)
             } label: {
                 Text("Perform")
             }
             
-            
-            Picker("Select an option", selection: $viewModel.selectedOption) {
-                ForEach(TaskType.allCases, id: \.self) { type in
-                    Text(type.rawValue).tag(type)
+            VStack{
+                
+                Picker("Select calendar type", selection: $vm.selectedCreationModel){
+                    ForEach(CreationModelType.allCases, id: \.self) { type in
+                        Text(type.rawValue).tag(type)
+                    }
                 }
+                .pickerStyle(.wheel)
+                .padding()
+                
+                
+                Picker("Select an option", selection: $vm.selectedType) {
+                    ForEach(TaskType.allCases, id: \.self) { type in
+                        Text(type.rawValue).tag(type)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .padding()
             }
-            .pickerStyle(.wheel)
-            .padding()
             
         }
     }
@@ -79,7 +91,7 @@ extension TaskCreationView{
             
             Text("Priority Level: ")
             
-            Picker("Priority", selection: $viewModel.selectedPriority){
+            Picker("Priority", selection: $vm.selectedPriority){
                 ForEach(TaskPriority.allCases, id: \.self) { priority in
                     HStack{
                         Circle()
@@ -94,29 +106,37 @@ extension TaskCreationView{
     }
     
     private var selectDataRegion: some View{
-        DatePicker(
-            "Start Date",
-            selection: $viewModel.startDate,
-            displayedComponents: .date
-        )
+        VStack{
+            DatePicker(
+                "Start Date",
+                selection: $vm.startDate,
+                displayedComponents: .date
+            )
+            
+            DatePicker(
+                "Start Date",
+                selection: $vm.endDate,
+                displayedComponents: .date
+            )
+        }
     }
     
     private var customSelectionRegion: some View{
         Group{
-            Stepper("Years: \(viewModel.numberOfYears)", value: $viewModel.numberOfYears, in: 0...10)
+            Stepper("Years: \(vm.numberOfYears)", value: $vm.numberOfYears, in: 0...10)
             
-            Stepper("Months: \(viewModel.numberOfMonths)", value: $viewModel.numberOfMonths, in: 0...12){ _ in
-                viewModel.updateMonthsAndYears()
+            Stepper("Months: \(vm.numberOfMonths)", value: $vm.numberOfMonths, in: 0...12){ _ in
+                vm.updateMonthsAndYears()
             }
             
-            Stepper("Weeks: \(viewModel.numberOfWeeks)", value: $viewModel.numberOfWeeks, in: 0...5) { _ in
-                viewModel.updateWeeksAndMonths()
+            Stepper("Weeks: \(vm.numberOfWeeks)", value: $vm.numberOfWeeks, in: 0...5) { _ in
+                vm.updateWeeksAndMonths()
             }
             
-            Stepper("Days: \(viewModel.numberOfDays)", value: $viewModel.numberOfDays, in: 0...7){ _ in
-                if viewModel.numberOfDays >= 7{
-                    viewModel.numberOfDays = 0;
-                    viewModel.numberOfWeeks += 1;
+            Stepper("Days: \(vm.numberOfDays)", value: $vm.numberOfDays, in: 0...7){ _ in
+                if vm.numberOfDays >= 7{
+                    vm.numberOfDays = 0;
+                    vm.numberOfWeeks += 1;
                 }
             }
         }

@@ -214,3 +214,10 @@ enum Months: Int{
         return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
     }
 }
+
+//MARK: TaskCreationViewModel
+
+enum CreationModelType: String, CaseIterable{
+    case regular
+    case calendar
+}

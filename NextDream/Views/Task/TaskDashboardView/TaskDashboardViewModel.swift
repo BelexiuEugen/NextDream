@@ -19,7 +19,7 @@ class TaskDashboardViewModel{
     var isLoading = false;
     var searchText = ""
     var isPresented: Bool = false;
-    var sheetDetent: PresentationDetent = .fraction(0.4)
+    var sheetDetent: PresentationDetent = .large
     var sortOrder = SortDescriptor(\TaskModel.name)
     
     var queryDescriptorManager: QueryDescriptorManager = QueryDescriptorManager()

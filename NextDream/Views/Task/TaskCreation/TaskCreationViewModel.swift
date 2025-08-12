@@ -12,23 +12,22 @@ import SwiftUI
 final class TaskCreationViewModel{
     
     var taskToCalendar: [ItemDropdownSelection] = []
+    var selectedCreationModel: CreationModelType = .calendar
+    var selectedWeekFirstDay: Weekday = .monday
     var selectedPriority: TaskPriority = .low
-    var selectedOption: TaskType = .custom{
+    var selectedType: TaskType = .custom{
         didSet{
             updateSheetSize()
-        }
+        } 
     }
     var showTask: Bool = false
     var startDate: Date = Date()
+    var endDate: Date = Date()
     var numberOfYears = 1
     var numberOfDays = 1
     var isPresented: Bool = false;
-    var numberOfMonths = 1 {
-        didSet {updateMonthsAndYears()}
-    }
-    var numberOfWeeks = 1{
-        didSet {updateWeeksAndMonths()}
-    }
+    var numberOfMonths = 1
+    var numberOfWeeks = 1
     var taskCreationManager: TaskCreation
     var sheetDetent: Binding<PresentationDetent>
     var isLoading: Binding<Bool>
@@ -46,33 +45,61 @@ final class TaskCreationViewModel{
     
     
     func createTask(isLoading: Binding<Bool>, path: NavigationViewModel, dismiss: DismissAction){
-        
-        let taskData = TaskModelCreationData(
-            name: "Your Task Name",
-            parentID: nil,
-            taskStartDate: startDate,
-            numberOfYears: numberOfYears,
-            numberOfMonths: numberOfMonths,
-            numberOfWeeks: numberOfWeeks,
-            numberOfDays: numberOfDays,
-            taskPriority: selectedPriority,
-            taskType: selectedOption,
-            startWeekday: .monday,
-            currentMonth: .january
-        )
-        
-        
+        let taskData = createTask()
+
         isLoading.wrappedValue = true;
         
         Task{
             
             guard let
-                    newTask = taskCreationManager.createTask(taskData: taskData)
+                    newTask = taskCreationManager.createTask(taskData: taskData, creationModelType: selectedCreationModel)
             else {return}
             path.modelView.append(newTask)
             isLoading.wrappedValue = false;
         }
         dismiss()
+    }
+    
+    func createTask() -> TaskModelCreation{
+        
+        var monthDaysCount: Int = 28
+        
+        if selectedCreationModel == .calendar {
+            let currentMonth = Months(date: startDate)
+            monthDaysCount = currentMonth.calculateDaysCount(date: startDate)
+        }
+        
+        if selectedType == .byDate{
+            calculateComponents()
+        }
+        
+        return TaskModelCreation(
+            taskStartDate: startDate,
+            weekDaysCount: 7,
+            monthDaysCount: monthDaysCount,
+            taskPriority: selectedPriority,
+            taskType: selectedType,
+            startWeekDay: selectedWeekFirstDay,
+            numberOfYears: numberOfYears,
+            numberOfMonths: numberOfMonths,
+            numberOfWeeks: numberOfWeeks,
+            numberOfDays: numberOfDays
+        )
+    }
+    
+    func calculateComponents(calendar: Calendar = .current){
+
+        let components = calendar.dateComponents([.year, .month, .weekOfMonth, .day], from: startDate, to: endDate)
+
+        if let years = components.year,
+           let months = components.month,
+           let weeks = components.weekOfMonth,
+           let days = components.day {
+            numberOfYears = years
+            numberOfMonths = months
+            numberOfWeeks = weeks
+            numberOfDays = days
+        }
     }
 }
 
@@ -102,7 +129,7 @@ extension TaskCreationViewModel{
     }
     
     func updateSheetSize(){
-        if(selectedOption == .custom){
+        if(selectedType == .custom){
             sheetDetent.wrappedValue = .medium
         }
         else{
