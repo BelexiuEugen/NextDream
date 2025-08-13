@@ -12,22 +12,22 @@ import SwiftUI
 final class TaskCreationViewModel{
     
     var taskToCalendar: [ItemDropdownSelection] = []
+    
+    // Task Data
     var selectedCreationModel: CreationModelType = .calendar
     var selectedWeekFirstDay: Weekday = .monday
     var selectedPriority: TaskPriority = .low
-    var selectedType: TaskType = .custom{
-        didSet{
-            updateSheetSize()
-        } 
-    }
+    var selectedType: TaskType = .custom
     var showTask: Bool = false
     var startDate: Date = Date()
     var endDate: Date = Date()
     var numberOfYears = 1
     var numberOfDays = 1
-    var isPresented: Bool = false;
     var numberOfMonths = 1
     var numberOfWeeks = 1
+    var isPresented: Bool = false;
+    var selectedRestDays: [Weekday: Bool] = Dictionary(uniqueKeysWithValues: Weekday.allCases.map { ($0, false) })
+    
     var taskCreationManager: TaskCreation
     var sheetDetent: Binding<PresentationDetent>
     var isLoading: Binding<Bool>
@@ -83,8 +83,13 @@ final class TaskCreationViewModel{
             numberOfYears: numberOfYears,
             numberOfMonths: numberOfMonths,
             numberOfWeeks: numberOfWeeks,
-            numberOfDays: numberOfDays
+            numberOfDays: numberOfDays,
+            restDays: createRestDays()
         )
+    }
+    
+    func createRestDays() -> [Weekday]{
+        selectedRestDays.filter { $0.value }.map { $0.key }
     }
     
     func calculateComponents(calendar: Calendar = .current){

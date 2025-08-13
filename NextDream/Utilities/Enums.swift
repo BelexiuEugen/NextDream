@@ -99,38 +99,50 @@ enum FontSize: String, CaseIterable{
 
 //MARK: Task Creation
 
-enum Weekday: String, CaseIterable, Codable {
+enum Weekday: Int, CaseIterable, Codable {
     
-    case sunday = "Sunday"
-    case monday = "Monday"
-    case tuesday = "Tuesday"
-    case wednesday = "Wednesday"
-    case thursday = "Thursday"
-    case friday = "Friday"
-    case saturday = "Saturday"
+    case sunday = 1
+    case monday = 2
+    case tuesday = 3
+    case wednesday = 4
+    case thursday = 5
+    case friday = 6
+    case saturday = 7
     
-    var index: Int {
+    var dayName: String{
         switch self {
         case .sunday:
-            1
+            "Sunday"
         case .monday:
-            2
+            "Monday"
         case .tuesday:
-            3
+            "Tuesday"
         case .wednesday:
-            4
+            "Wednesday"
         case .thursday:
-            5
+            "Thursday"
         case .friday:
-            6
+            "Friday"
         case .saturday:
-            7
+            "Saturday"
         }
+    }
+    
+    init?(date: Date, calendar: Calendar = .current){
+        let weekdayIndex = calendar.component(.weekday, from: date)
+        guard let weekday = Weekday(rawValue: weekdayIndex) else { return nil }
+        self = weekday
+    }
+    
+    mutating func next(){
+        guard let weekday = Weekday(rawValue: self.rawValue % 7 + 1) else { return }
+        
+        self = weekday
     }
     
     func calculateDaysCount(from date: Date, calendar: Calendar = .current) -> Int{
         let weekdayIndex = calendar.component(.weekday, from: date)
-        let userWeekDayIndex = self.index
+        let userWeekDayIndex = self.rawValue
         
         guard weekdayIndex != userWeekDayIndex else { return 7}
         

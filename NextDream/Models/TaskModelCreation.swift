@@ -23,6 +23,7 @@ struct TaskModelCreation{
     var numberOfMonths: Int? = nil
     var numberOfWeeks: Int? = nil
     var numberOfDays: Int? = nil
+    var restDays: [Weekday]? = nil
 }
 //extension TaskModelCreation{
 //    init(

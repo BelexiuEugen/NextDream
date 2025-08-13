@@ -40,8 +40,10 @@ struct TaskCreationView: View {
             
             selectDataRegion
             
-            if(vm.selectedType == .custom || vm.selectedType == .byDate){
-                customSelectionRegion
+            if(vm.selectedType == .custom){
+                withAnimation(.spring) {
+                    customSelectionRegion
+                }
             }
         }
         .padding(.horizontal)
@@ -64,6 +66,14 @@ extension TaskCreationView{
             }
             
             VStack{
+                
+                WeekDayList(selectedTask: $vm.selectedRestDays)
+                
+                Picker("Select first day", selection: $vm.selectedWeekFirstDay){
+                    ForEach(Weekday.allCases, id:\.self){ type in
+                        Text(type.dayName).tag(type)
+                    }
+                }
                 
                 Picker("Select calendar type", selection: $vm.selectedCreationModel){
                     ForEach(CreationModelType.allCases, id: \.self) { type in
@@ -113,11 +123,13 @@ extension TaskCreationView{
                 displayedComponents: .date
             )
             
-            DatePicker(
-                "Start Date",
-                selection: $vm.endDate,
-                displayedComponents: .date
-            )
+            if vm.selectedType == .byDate{
+                DatePicker(
+                    "End Date",
+                    selection: $vm.endDate,
+                    displayedComponents: .date
+                )
+            }
         }
     }
     
@@ -125,20 +137,11 @@ extension TaskCreationView{
         Group{
             Stepper("Years: \(vm.numberOfYears)", value: $vm.numberOfYears, in: 0...10)
             
-            Stepper("Months: \(vm.numberOfMonths)", value: $vm.numberOfMonths, in: 0...12){ _ in
-                vm.updateMonthsAndYears()
-            }
+            Stepper("Months: \(vm.numberOfMonths)", value: $vm.numberOfMonths, in: 0...11)
             
-            Stepper("Weeks: \(vm.numberOfWeeks)", value: $vm.numberOfWeeks, in: 0...5) { _ in
-                vm.updateWeeksAndMonths()
-            }
+            Stepper("Weeks: \(vm.numberOfWeeks)", value: $vm.numberOfWeeks, in: 0...4)
             
-            Stepper("Days: \(vm.numberOfDays)", value: $vm.numberOfDays, in: 0...7){ _ in
-                if vm.numberOfDays >= 7{
-                    vm.numberOfDays = 0;
-                    vm.numberOfWeeks += 1;
-                }
-            }
+            Stepper("Days: \(vm.numberOfDays)", value: $vm.numberOfDays, in: 0...6)
         }
     }
 }
