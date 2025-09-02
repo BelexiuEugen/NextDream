@@ -32,20 +32,44 @@ final class TaskCreationViewModel{
     var sheetDetent: Binding<PresentationDetent>
     var isLoading: Binding<Bool>
     var path : NavigationViewModel
+    var dismiss: DismissAction?
+    
+    
+    let screenWidth: CGFloat = UIScreen.main.bounds.width
+    var currentWidth: CGFloat = UIScreen.main.bounds.width
+    
     
     init(taskCreationManager: TaskCreation,
          sheetDetent: Binding<PresentationDetent>,
          isLoading: Binding<Bool>,
-         path: NavigationViewModel) {
+         path: NavigationViewModel
+        ) {
         self.taskCreationManager = taskCreationManager
         self.sheetDetent = sheetDetent
         self.isLoading = isLoading
         self.path = path
     }
     
+    func goNext(){
+        
+        if  currentWidth == screenWidth * 3 || (currentWidth == 2 * screenWidth && selectedType != .custom){
+            createTask()
+            return;
+        }
+        
+        withAnimation(.easeInOut(duration: 0.5)) {
+            currentWidth = min(screenWidth * 3, currentWidth + screenWidth)
+        }
+    }
     
-    func createTask(isLoading: Binding<Bool>, path: NavigationViewModel, dismiss: DismissAction){
-        let taskData = createTask()
+    func goBack(){
+        withAnimation(.easeInOut(duration: 0.5)) {
+            currentWidth = max(screenWidth, currentWidth - screenWidth)
+        }
+    }
+    
+    func createTask(){
+        let taskData = createTaskCreationModel()
 
         isLoading.wrappedValue = true;
         
@@ -57,10 +81,13 @@ final class TaskCreationViewModel{
             path.modelView.append(newTask)
             isLoading.wrappedValue = false;
         }
-        dismiss()
+        
+        if let dismiss{
+            dismiss()
+        }
     }
     
-    func createTask() -> TaskModelCreation{
+    func createTaskCreationModel() -> TaskModelCreation{
         
         var monthDaysCount: Int = 28
         
@@ -72,6 +99,8 @@ final class TaskCreationViewModel{
         if selectedType == .byDate{
             calculateComponents()
         }
+        
+        
         
         return TaskModelCreation(
             taskStartDate: startDate,

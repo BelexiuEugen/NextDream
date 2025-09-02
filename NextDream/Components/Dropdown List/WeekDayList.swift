@@ -30,7 +30,6 @@ struct WeekDayList: View {
                 }
             }
         }
-        .padding(.horizontal)
     }
 }
 

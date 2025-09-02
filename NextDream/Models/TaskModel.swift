@@ -30,20 +30,20 @@ class TaskModel: Identifiable{
     var taskType: TaskType;
     var taskPriority: TaskPriority;
     
-    init(id: String, name: String, taskDescription: String? = nil, parentID: String? = nil, calendarIdentifier: String? = nil, creationDate: Date, deadline: Date, progress: CGFloat, isCompleted: Bool, isSelected: Bool, taskType: TaskType, taskPriority: TaskPriority) {
-        self.id = id
-        self.name = name
-        self.taskDescription = taskDescription
-        self.parentID = parentID
-        self.calendarIdentifier = calendarIdentifier
-        self.creationDate = creationDate
-        self.deadline = deadline
-        self.progress = progress
-        self.isCompleted = isCompleted
-        self.isSelected = isSelected
-        self.taskType = taskType
-        self.taskPriority = taskPriority;
-    }
+//    init(id: String, name: String, taskDescription: String? = nil, parentID: String? = nil, calendarIdentifier: String? = nil, creationDate: Date, deadline: Date, progress: CGFloat, isCompleted: Bool, isSelected: Bool, taskType: TaskType, taskPriority: TaskPriority) {
+//        self.id = id
+//        self.name = name
+//        self.taskDescription = taskDescription
+//        self.parentID = parentID
+//        self.calendarIdentifier = calendarIdentifier
+//        self.creationDate = creationDate
+//        self.deadline = deadline
+//        self.progress = progress
+//        self.isCompleted = isCompleted
+//        self.isSelected = isSelected
+//        self.taskType = taskType
+//        self.taskPriority = taskPriority;
+//    }
     
     init(name: String, deadline: Date, taskType: TaskType, taskPriority: TaskPriority){
         self.name = name;
