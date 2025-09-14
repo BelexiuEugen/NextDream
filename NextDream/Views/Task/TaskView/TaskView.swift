@@ -35,7 +35,7 @@ struct TaskView: View {
         
         let container = try ModelContainer(for: TaskModel.self, configurations: config)
         
-        let taskModel = TaskModel(name: "Test", deadline: .now + 3600, taskType: TaskType.day, taskPriority: .low)
+        let taskModel = MockModels.firstModel
         
         let pathExample = NavigationViewModel()
         

@@ -8,6 +8,31 @@
 import Foundation
 import SwiftUI
 
+//MARK: Task Model
+enum TaskPriority: String, Codable, CaseIterable{
+    case low = "Low"
+    case medium = "Medium"
+    case high = "High"
+}
+
+enum TaskType: String, Codable, CaseIterable{
+    case day = "Day Task"
+    case week = "Week Task"
+    case month = "Month Task"
+    case year = "Year Task"
+    case custom = "Custom Task"
+    case byDate = "By Date"
+}
+
+enum TaskCategory: String, Codable, CaseIterable{
+    case work = "Work"
+    case personal = "Personal"
+    case health = "Health"
+    case finance = "Finance"
+    case education = "Education"
+    case hobbies = "Hobbies"
+}
+
 //MARK: Export Type
 
 enum ExportType: String, CaseIterable{

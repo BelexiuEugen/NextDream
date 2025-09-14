@@ -44,7 +44,7 @@ struct TaskSettingsView: View {
 
 #Preview {
     
-    let newTask = TaskModel(name: "Task Name", deadline: .now, taskType: .day, taskPriority: .high)
+    let newTask = MockModels.firstModel
     NavigationStack{
         TaskSettingsView(task: newTask)
     }

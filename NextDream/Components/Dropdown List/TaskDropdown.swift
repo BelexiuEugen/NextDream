@@ -34,7 +34,7 @@ struct TaskDropdown: View {
 
 #Preview {
     
-    let firstTask = TaskModel(name: "Example", deadline: .now, taskType: .day, taskPriority: .low)
+    let firstTask = MockModels.firstModel
     
     let taskToExport: [ItemDropdownSelection] = [
         ItemDropdownSelection(item: firstTask, isSelected: false)

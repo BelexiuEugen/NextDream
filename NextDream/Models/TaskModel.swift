@@ -21,6 +21,7 @@ class TaskModel: Identifiable{
     var name: String
     var taskDescription: String? = nil;
     var parentID : String? = nil;
+    var mainTaskID : String?
     var calendarIdentifier: String? = nil;
     var creationDate:Date = Date.now
     var deadline: Date
@@ -28,55 +29,43 @@ class TaskModel: Identifiable{
     var isCompleted: Bool = false
     var isSelected: Bool = false
     var taskType: TaskType;
+    var taskCategory: TaskCategory
     var taskPriority: TaskPriority;
     
-//    init(id: String, name: String, taskDescription: String? = nil, parentID: String? = nil, calendarIdentifier: String? = nil, creationDate: Date, deadline: Date, progress: CGFloat, isCompleted: Bool, isSelected: Bool, taskType: TaskType, taskPriority: TaskPriority) {
-//        self.id = id
-//        self.name = name
-//        self.taskDescription = taskDescription
-//        self.parentID = parentID
-//        self.calendarIdentifier = calendarIdentifier
-//        self.creationDate = creationDate
-//        self.deadline = deadline
-//        self.progress = progress
-//        self.isCompleted = isCompleted
-//        self.isSelected = isSelected
-//        self.taskType = taskType
-//        self.taskPriority = taskPriority;
-//    }
-    
-    init(name: String, deadline: Date, taskType: TaskType, taskPriority: TaskPriority){
-        self.name = name;
-        self.deadline = deadline;
-        self.taskType = taskType;
-        self.taskPriority = taskPriority;
+    init(
+        id: String = UUID().uuidString,
+        name: String,
+        taskDescription: String? = nil,
+        parentID: String? = nil,
+        mainTaskID: String? = nil,
+        calendarIdentifier: String? = nil,
+        creationDate: Date,
+        deadline: Date,
+        progress: CGFloat = 0.0,
+        isCompleted: Bool = false,
+        isSelected: Bool = false,
+        taskType: TaskType,
+        taskCategory: TaskCategory,
+        taskPriority: TaskPriority
+    ) {
+        self.id = id
+        self.name = name
+        self.taskDescription = taskDescription
+        self.parentID = parentID
+        self.mainTaskID = mainTaskID
+        self.calendarIdentifier = calendarIdentifier
+        self.creationDate = creationDate
+        self.deadline = deadline
+        self.progress = progress
+        self.isCompleted = isCompleted
+        self.isSelected = isSelected
+        self.taskType = taskType
+        self.taskCategory = taskCategory
+        self.taskPriority = taskPriority
     }
-    
-    init(name: String, parentID: String?, deadline: Date, taskType: TaskType, taskPriority: TaskPriority){
-        self.name = name;
-        self.parentID = parentID;
-        self.deadline = deadline;
-        self.taskType = taskType;
-        self.taskPriority = taskPriority;
-    }
 }
 
-
-enum TaskPriority: String, Codable, CaseIterable{
-    case low = "Low"
-    case medium = "Medium"
-    case high = "High"
-}
-
-enum TaskType: String, Codable, CaseIterable{
-    case day = "Day Task"
-    case week = "Week Task"
-    case month = "Month Task"
-    case year = "Year Task"
-    case custom = "Custom Task"
-    case byDate = "By Date"
-}
-
+//MARK: Dictionary
 extension TaskModel{
     
     func createDictionary() -> [String: Any]{
@@ -84,6 +73,7 @@ extension TaskModel{
             "name" : self.name,
             "taskDescription" : self.taskDescription as Any,
             "parentID" : self.parentID as Any,
+            "mainTaskID" : self.mainTaskID as Any,
             "calendarIdentifier" : self.calendarIdentifier as Any,
             "creationDate" : self.creationDate.convertToStringFormat(),
             "deadline" : self.deadline.convertToStringFormat(),

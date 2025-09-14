@@ -73,14 +73,11 @@ final class TaskCreationViewModel{
 
         isLoading.wrappedValue = true;
         
-        Task{
-            
-            guard let
-                    newTask = taskCreationManager.createTask(taskData: taskData, creationModelType: selectedCreationModel)
-            else {return}
-            path.modelView.append(newTask)
-            isLoading.wrappedValue = false;
-        }
+        guard let
+                newTask = taskCreationManager.createTask(taskData: taskData, creationModelType: selectedCreationModel)
+        else {return}
+        path.modelView.append(newTask)
+        isLoading.wrappedValue = false;
         
         if let dismiss{
             dismiss()
@@ -107,6 +104,7 @@ final class TaskCreationViewModel{
             weekDaysCount: 7,
             monthDaysCount: monthDaysCount,
             taskPriority: selectedPriority,
+            taskCategory: .hobbies,
             taskType: selectedType,
             startWeekDay: selectedWeekFirstDay,
             numberOfYears: numberOfYears,
