@@ -24,6 +24,9 @@ struct TaskView: View {
         .navigationTitle(vm.task.name)
         .frame(minWidth: 300, idealWidth: 400, maxWidth: 500)
         .toolbar {
+            if vm.task.mainTaskID == nil{
+                statsButton
+            }
             settingsButton
         }
     }
@@ -95,6 +98,16 @@ extension TaskView{
                 TaskSettingsView(task: vm.task)
             } label: {
                 Image(systemName: "gear")
+            }
+        }
+    }
+    
+    private var statsButton: ToolbarItem<Void, some View>{
+        ToolbarItem(placement: .topBarTrailing){
+            NavigationLink{
+                TaskStatisticView(modelContext: vm.modelContext, taskID: vm.task.id)
+            } label: {
+                Image(systemName: "chart.bar")
             }
         }
     }

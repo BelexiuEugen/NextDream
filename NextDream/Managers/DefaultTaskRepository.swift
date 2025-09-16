@@ -20,6 +20,46 @@ class DefaultTaskRepository: TaskRepository{
         self.modelContext = modelContext
     }
     
+    func fetchTaskByMainTask(descriptor: FetchDescriptor<TaskModel>)
+    -> (completedDays: Int, totalDays: Int,
+               completedWeeks: Int, totalWeeks: Int,
+               completedMonths: Int, totalMonths: Int,
+               completedYears: Int, totalYears: Int
+    ) {
+        var completedDays = 0, totalDays = 0
+        var completedWeeks = 0, totalWeeks = 0
+        var completedMonths = 0, totalMonths = 0
+        var completedYears = 0, totalYears = 0
+        
+        do{
+            let taskList = try modelContext.fetch(descriptor)
+            let daysList = taskList.filter{ $0.taskType == .day}
+            let weeksList = taskList.filter{ $0.taskType == .week}
+            let monthsList = taskList.filter{ $0.taskType == .month}
+            let yearsList = taskList.filter{ $0.taskType == .year}
+            
+            totalDays = daysList.count
+            totalWeeks = weeksList.count
+            totalMonths = monthsList.count
+            totalYears = yearsList.count
+            
+            completedDays = daysList.filter(\.isCompleted).count
+            completedWeeks = weeksList.filter(\.isCompleted).count
+            completedMonths = monthsList.filter(\.isCompleted).count
+            completedYears = yearsList.filter(\.isCompleted).count
+            
+            
+        } catch{
+            print(error)
+        }
+        
+        return (completedDays, totalDays
+                , completedWeeks, totalWeeks
+                , completedMonths, totalMonths
+                , completedYears, totalYears
+        )
+    }
+    
     func fetchTasks(descriptor: FetchDescriptor<TaskModel>) throws -> [TaskModel] {
         do{
             return try modelContext.fetch(descriptor)

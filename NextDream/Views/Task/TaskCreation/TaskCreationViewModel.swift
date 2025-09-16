@@ -17,6 +17,7 @@ final class TaskCreationViewModel{
     var selectedCreationModel: CreationModelType = .calendar
     var selectedWeekFirstDay: Weekday = .monday
     var selectedPriority: TaskPriority = .low
+    var selectedCategory: TaskCategory = .personal
     var selectedType: TaskType = .custom
     var showTask: Bool = false
     var startDate: Date = Date()

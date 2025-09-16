@@ -10,6 +10,10 @@ import Foundation
 
 class QueryDescriptorManager{
     
+    func descriptorForNumberOfTaskByMainTask(id: String) -> FetchDescriptor<TaskModel>{
+        FetchDescriptor<TaskModel> (predicate: #Predicate{ $0.mainTaskID == id })
+    }
+    
     func fetchTaskByDeadline(date: Date) -> FetchDescriptor<TaskModel>?{
         let calendar = Calendar.current
         let startDate: Date? = calendar.startOfDay(for: date)

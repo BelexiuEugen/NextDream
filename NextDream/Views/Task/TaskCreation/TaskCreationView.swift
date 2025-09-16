@@ -133,10 +133,19 @@ extension TaskCreationView{
                         .offset(x: 10)
                 }
                 
+                HStack{
+                    Text("Select Category: ")
+                        .bold()
+                    Spacer()
+                    categoryTypeComponent
+                        .offset(x: 10)
+                }
+                
                 WeekDayList(selectedTask: $vm.selectedRestDays)
             }
             
             selectDataComponent
+            categoryTypeComponent
         }
         .padding()
     }
@@ -154,6 +163,14 @@ extension TaskCreationView{
 //MARK: Components
 
 extension TaskCreationView{
+    
+    private var categoryTypeComponent: some View{
+        Picker("Select Category Type", selection: $vm.selectedCategory){
+            ForEach(TaskCategory.allCases, id:\.self) { type in
+                Text(type.rawValue).tag(type)
+            }
+        }
+    }
     
     private var calendarTypeComponent: some View{
         Picker("Select calendar type", selection: $vm.selectedCreationModel){

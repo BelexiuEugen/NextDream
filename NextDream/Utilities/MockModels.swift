@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 
 struct MockModels {
     static var firstModel = TaskModel(
@@ -19,5 +20,10 @@ struct MockModels {
         taskType: .year,
         taskCategory: .hobbies,
         taskPriority: .high
+    )
+    
+    static var container = try! ModelContainer(
+            for: TaskModel.self, // add any @Model types your manager needs
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
     )
 }
