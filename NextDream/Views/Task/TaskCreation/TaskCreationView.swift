@@ -191,7 +191,7 @@ extension TaskCreationView{
     private var templateTypeComponent: some View{
         Picker("Select an option", selection: $vm.selectedType) {
             ForEach(TaskType.allCases, id: \.self) { type in
-                Text(type.rawValue).tag(type)
+                Text(type.displayName).tag(type)
             }
         }
         .pickerStyle(.wheel)

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 //static let notification = "notification"
 //static let areNotificationEnabled = "areNotificationEnabled"
@@ -23,6 +24,42 @@ final class UserSettingsViewModel{
     var selectedFontSize: FontSize = .body;
     var autoRescheduleTime: Date = .now
     var notificationManager = NotificationManager()
+    var queryDescriptorManager = QueryDescriptorManager()
+    var defaultTaskRepository: DefaultTaskRepository
+    var chartData: [(TaskCategory, Int)] = []
+    var total: Double = 0.0
+
+    var angles: [Angle] {
+        var currentAngle = Angle(degrees: 0)
+        var result: [Angle] = []
+        
+        for category in chartData{
+            let angle = Angle(degrees: (Double(category.1) / total) * 360)
+            result.append(currentAngle)
+            currentAngle += angle
+        }
+        result.append(currentAngle)
+        return result
+    }
+    
+    init(modelContext: ModelContext){
+        defaultTaskRepository = DefaultTaskRepository(modelContext: modelContext)
+        fetchTaskForChart()
+    }
+    
+    func calculateTotal() -> Double {
+        var result = 0.0
+        for value in chartData {
+            result += Double(value.1)
+        }
+        return result
+    }
+    
+    func fetchTaskForChart() {
+        let descriptor = queryDescriptorManager.descriptorForMainTasks()
+        chartData = defaultTaskRepository.fetchTasksForStatistics(descriptor: descriptor)
+        total = calculateTotal()
+    }
     
     func saveData() async{
         
@@ -131,3 +168,4 @@ extension UserSettingsViewModel{
         notificationManager.deleteAllNotification()
     }
 }
+

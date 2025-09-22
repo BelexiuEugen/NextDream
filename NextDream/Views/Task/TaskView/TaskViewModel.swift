@@ -17,10 +17,12 @@ final class TaskViewModel{
     
     var newTaskName = ""
     var isEditing: Bool = true;
+    var pdfURL: URL?
     
     var queryDescriptorManager: QueryDescriptorManager = QueryDescriptorManager()
     var taskRepository: TaskRepository
     var modelContext: ModelContext
+    var exportManager: DataExportManager = DataExportManager.shared
     
     init(task: TaskModel, taskRepository: TaskRepository, modelContext: ModelContext){
         self.task = task
@@ -55,4 +57,14 @@ final class TaskViewModel{
         saveDataToDevice()
         
     }
+    
+    func exportToPDFTree(){
+        
+        let taskDataForTree = TaskModelTreeData(id: task.id, title: task.name, isCompleted: task.isCompleted, deadline: task.deadline)
+        
+        if let url = pdfURL{
+            exportManager.exportTaskTreePDF(to: url, root: taskDataForTree)
+        }
+    }
 }
+

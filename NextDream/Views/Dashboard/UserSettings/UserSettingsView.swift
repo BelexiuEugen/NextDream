@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct UserSettingsView: View {
     
     @Environment(\.dismiss) private var dismiss
     
-    @State var viewModel = UserSettingsViewModel()
+    @State var viewModel: UserSettingsViewModel
+    
+    init(modelContext: ModelContext){
+        _viewModel = State(wrappedValue: UserSettingsViewModel(modelContext: modelContext))
+    }
     
     var body: some View {
         ScrollView {
@@ -23,6 +28,8 @@ struct UserSettingsView: View {
                 createThemePicker
                 
                 createFontSizePicker
+                
+                categoryPieSection
             }
             .padding(.top)
         }
@@ -36,11 +43,89 @@ struct UserSettingsView: View {
 
 #Preview {
     NavigationStack{
-        UserSettingsView()
+        UserSettingsView(modelContext: MockModels.container.mainContext)
     }
 }
 
 extension UserSettingsView{
+    
+    private var categoryPieSection: some View{
+        VStack(alignment: .center){
+            Text("Categories")
+                .font(.title3)
+                .fontWeight(.semibold)
+                .padding(.leading)
+            
+            pieSection
+                .frame(width: 200, height: 200)
+            
+            categoryList
+            
+            
+            Text(String(format: "Total Tasks: %.0f%", viewModel.total))
+                .font(.title3)
+                .fontWeight(.semibold)
+                .padding(.leading)
+            
+        }
+        .frame(maxWidth: .infinity)
+    }
+    
+    private var pieSection: some View{
+        ZStack {
+            
+            
+            ForEach(Array(viewModel.chartData.enumerated()), id: \.1.0) { index, element in
+                PieSlice(
+                    startAngle: viewModel.angles[index],
+                    endAngle: viewModel.angles[index + 1]
+                )
+                .fill(element.0.color)
+            }
+        }
+    }
+    
+    private var categoryList: some View{
+        VStack(alignment: .leading){
+            ForEach(viewModel.chartData, id: \.0) { key, value in
+                HStack{
+                    
+                    RoundedRectangle(cornerRadius: 5)
+                        .frame(width: 50)
+                        .foregroundColor(key.color)
+                    
+                    Text("\(key.rawValue)")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.headline)
+                    
+                    let percentage = (Double(value) / viewModel.total) * 100;
+                    
+                    Text(String(format: "%.0f%%", percentage))
+                }
+            }
+        }
+        .padding()
+    }
+    
+    struct PieSlice: Shape {
+        var startAngle: Angle
+        var endAngle: Angle
+
+        func path(in rect: CGRect) -> Path {
+            let center = CGPoint(x: rect.midX, y: rect.midY)
+            let radius = min(rect.width, rect.height) / 2
+
+            var path = Path()
+            path.move(to: center)
+            path.addArc(center: center,
+                        radius: radius,
+                        startAngle: startAngle,
+                        endAngle: endAngle,
+                        clockwise: false)
+            path.closeSubpath()
+            return path
+        }
+    }
     
     private var createNotificationToggle: some View{
         Toggle("Notification", isOn: $viewModel.notification)

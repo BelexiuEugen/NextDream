@@ -105,7 +105,7 @@ final class TaskCreationViewModel{
             weekDaysCount: 7,
             monthDaysCount: monthDaysCount,
             taskPriority: selectedPriority,
-            taskCategory: .hobbies,
+            taskCategory: selectedCategory,
             taskType: selectedType,
             startWeekDay: selectedWeekFirstDay,
             numberOfYears: numberOfYears,

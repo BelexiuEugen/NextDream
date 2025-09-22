@@ -17,7 +17,7 @@ struct MockModels {
         progress: .pi,
         isCompleted: false,
         isSelected: false,
-        taskType: .year,
+        taskTypeID: 1,
         taskCategory: .hobbies,
         taskPriority: .high
     )
@@ -26,4 +26,22 @@ struct MockModels {
             for: TaskModel.self, // add any @Model types your manager needs
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
     )
+    
+    static let allTasks: [(date: Date, count: Int)] = [
+        (Date().addingTimeInterval(-5*86400), 5),
+        (Date().addingTimeInterval(-4*86400), 8),
+        (Date().addingTimeInterval(-3*86400), 6),
+        (Date().addingTimeInterval(-2*86400), 10),
+        (Date().addingTimeInterval(-1*86400), 7),
+        (Date(), 9)
+    ]
+
+    static let completedTasks: [(date: Date, count: Int)] = [
+        (Date().addingTimeInterval(-5*86400), 2),
+        (Date().addingTimeInterval(-4*86400), 4),
+        (Date().addingTimeInterval(-3*86400), 3),
+        (Date().addingTimeInterval(-2*86400), 6),
+        (Date().addingTimeInterval(-1*86400), 5),
+        (Date(), 7)
+    ]
 }

@@ -68,10 +68,6 @@ final class ExportViewModel{
             exportedData = DataExportManager.shared.convertToJSON(tasks: taskData)
         case .CSV:
             exportedData = DataExportManager.shared.convertToCSV(tasks: taskData)
-        case .PDF:
-            exportedData = DataExportManager.shared.convertToPDF(tasks: taskData)
-        default:
-            exportedData = DataExportManager.shared.convertToJPG(tasks: taskData)
         }
         
         if exportedData != nil{

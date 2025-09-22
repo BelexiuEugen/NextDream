@@ -65,7 +65,7 @@ class TaskCreationManager: TaskCreation{
             mainTaskID: taskData.mainTaskID,
             creationDate: taskData.taskStartDate,
             deadline: taskData.taskStartDate,
-            taskType: .day,
+            taskTypeID: TaskType.day.rawValue,
             taskCategory: taskData.taskCategory,
             taskPriority: taskData.taskPriority
         );
@@ -97,7 +97,7 @@ class TaskCreationManager: TaskCreation{
             mainTaskID: taskData.mainTaskID,
             creationDate: taskData.taskStartDate,
             deadline: deadline,
-            taskType: .week,
+            taskTypeID: TaskType.week.rawValue,
             taskCategory: taskData.taskCategory,
             taskPriority: taskData.taskPriority
         );
@@ -151,7 +151,7 @@ class TaskCreationManager: TaskCreation{
             name: taskData.name,
             creationDate: taskData.taskStartDate,
             deadline: finalDeadline,
-            taskType: .custom,
+            taskTypeID: TaskType.custom.rawValue,
             taskCategory: taskData.taskCategory, taskPriority: taskData.taskPriority
         );
         
@@ -294,7 +294,7 @@ extension TaskCreationManager{
             mainTaskID: taskData.mainTaskID,
             creationDate: taskData.taskStartDate,
             deadline: deadline,
-            taskType: .year,
+            taskTypeID: TaskType.year.rawValue,
             taskCategory: taskData.taskCategory,
             taskPriority: taskData.taskPriority
         );
@@ -370,7 +370,7 @@ extension TaskCreationManager{
             mainTaskID: taskData.mainTaskID,
             creationDate: taskData.taskStartDate,
             deadline: deadline,
-            taskType: .month,
+            taskTypeID: TaskType.month.rawValue,
             taskCategory: taskData.taskCategory,
             taskPriority: taskData.taskPriority
         );
@@ -422,7 +422,7 @@ extension TaskCreationManager{
             mainTaskID: taskData.mainTaskID,
             creationDate: taskData.taskStartDate,
             deadline: deadline,
-            taskType: .year,
+            taskTypeID: TaskType.year.rawValue,
             taskCategory: taskData.taskCategory,
             taskPriority: taskData.taskPriority
         );
@@ -501,7 +501,7 @@ extension TaskCreationManager{
             mainTaskID: taskData.mainTaskID,
             creationDate: taskData.taskStartDate,
             deadline: deadline,
-            taskType: .month,
+            taskTypeID: TaskType.month.rawValue,
             taskCategory: taskData.taskCategory,
             taskPriority: taskData.taskPriority
         );

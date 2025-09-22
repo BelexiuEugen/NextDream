@@ -28,9 +28,14 @@ class TaskModel: Identifiable{
     var progress: CGFloat = 0.0
     var isCompleted: Bool = false
     var isSelected: Bool = false
-    var taskType: TaskType;
+    var taskTypeID: Int
     var taskCategory: TaskCategory
     var taskPriority: TaskPriority;
+    
+    var taskType: TaskType {
+        TaskType(rawValue: taskTypeID) ?? .day
+    }
+
     
     init(
         id: String = UUID().uuidString,
@@ -44,7 +49,7 @@ class TaskModel: Identifiable{
         progress: CGFloat = 0.0,
         isCompleted: Bool = false,
         isSelected: Bool = false,
-        taskType: TaskType,
+        taskTypeID: Int,
         taskCategory: TaskCategory,
         taskPriority: TaskPriority
     ) {
@@ -59,7 +64,7 @@ class TaskModel: Identifiable{
         self.progress = progress
         self.isCompleted = isCompleted
         self.isSelected = isSelected
-        self.taskType = taskType
+        self.taskTypeID = taskTypeID
         self.taskCategory = taskCategory
         self.taskPriority = taskPriority
     }
@@ -70,6 +75,7 @@ extension TaskModel{
     
     func createDictionary() -> [String: Any]{
         return [
+            "id" : self.id,
             "name" : self.name,
             "taskDescription" : self.taskDescription as Any,
             "parentID" : self.parentID as Any,
@@ -80,7 +86,8 @@ extension TaskModel{
             "progress" : self.progress,
             "isCompleted" : self.isCompleted,
             "isSelected" : self.isSelected,
-            "taskType" : self.taskType.rawValue,
+            "taskTypeID" : self.taskTypeID,
+            "taskCategory" : self.taskCategory.rawValue,
             "taskPriority" : self.taskPriority.rawValue
         ]
     }

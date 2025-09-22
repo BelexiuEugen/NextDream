@@ -20,13 +20,50 @@ struct TaskView: View {
         Form{
             createTaskSection
             createSubTaskSection
+            
+            Button {
+                let url = FileManager.default.temporaryDirectory.appendingPathComponent("TaskTree.pdf")
+                
+                Task{
+                    
+                    vm.pdfURL = url
+                    vm.exportToPDFTree()
+                }
+                
+            } label: {
+                Text("Create PDF File")
+                    .frame(maxWidth: .infinity)
+            }
+            
+            if let url = vm.pdfURL {
+                ShareLink(item: url) {
+                    Label("Export PDF", systemImage: "square.and.arrow.up")
+                }
+                .frame(maxWidth: .infinity)
+            }
+            
+            Button {
+                do {
+                    if let url = vm.pdfURL{
+                        try FileManager.default.removeItem(at: url)
+                    }
+                    print("Temporary file deleted")
+                } catch {
+                    print("Could not delete file: \(error)")
+                }
+            } label: {
+                Text("delete")
+            }
+
         }
         .navigationTitle(vm.task.name)
         .frame(minWidth: 300, idealWidth: 400, maxWidth: 500)
         .toolbar {
+
             if vm.task.mainTaskID == nil{
                 statsButton
             }
+//            pdfExporter
             settingsButton
         }
     }
@@ -105,9 +142,19 @@ extension TaskView{
     private var statsButton: ToolbarItem<Void, some View>{
         ToolbarItem(placement: .topBarTrailing){
             NavigationLink{
-                TaskStatisticView(modelContext: vm.modelContext, taskID: vm.task.id)
+                TaskStatisticView(modelContext: vm.modelContext, taskID: vm.task.id, taskStartDate: vm.task.creationDate)
             } label: {
                 Image(systemName: "chart.bar")
+            }
+        }
+    }
+    
+    private var pdfExporter: ToolbarItem<Void, some View>{
+        ToolbarItem(placement: .topBarTrailing) {
+            NavigationLink{
+                TaskStatisticView(modelContext: vm.modelContext, taskID: vm.task.id, taskStartDate: vm.task.creationDate)
+            } label: {
+                Image(systemName: "doc.text")
             }
         }
     }

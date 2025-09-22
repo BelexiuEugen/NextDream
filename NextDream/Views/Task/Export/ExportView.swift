@@ -59,10 +59,9 @@ struct ExportView: View {
 
 #Preview {
     
-//    NavigationStack{
-//        TaskExport()
-//            .environment(TaskViewModel())
-//    }
+    NavigationStack{
+        ExportView(modelContext: MockModels.container.mainContext, taskRepository: DefaultTaskRepository(modelContext: MockModels.container.mainContext))
+    }
 }
 
 extension ExportView{

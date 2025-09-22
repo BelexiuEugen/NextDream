@@ -33,10 +33,10 @@ class DefaultTaskRepository: TaskRepository{
         
         do{
             let taskList = try modelContext.fetch(descriptor)
-            let daysList = taskList.filter{ $0.taskType == .day}
-            let weeksList = taskList.filter{ $0.taskType == .week}
-            let monthsList = taskList.filter{ $0.taskType == .month}
-            let yearsList = taskList.filter{ $0.taskType == .year}
+            let daysList = taskList.filter{ $0.taskTypeID == TaskType.day.rawValue}
+            let weeksList = taskList.filter{ $0.taskTypeID == TaskType.week.rawValue}
+            let monthsList = taskList.filter{ $0.taskTypeID == TaskType.month.rawValue}
+            let yearsList = taskList.filter{ $0.taskTypeID == TaskType.year.rawValue}
             
             totalDays = daysList.count
             totalWeeks = weeksList.count
@@ -66,6 +66,47 @@ class DefaultTaskRepository: TaskRepository{
         } catch{
             throw error
         }
+    }
+    
+    func fetcTasksForProgressChart(descriptor: FetchDescriptor<TaskModel>) -> [(Date, Bool)]{
+        
+        var result: [(Date, Bool)] = []
+        
+        do{
+            let tasks = try modelContext.fetch(descriptor)
+            
+            for task in tasks {
+                let taskData = (task.deadline, task.isCompleted)
+                result.append(taskData)
+            }
+        } catch{
+            print("Error: \(error)")
+            return []
+        }
+        
+        return result
+    }
+    
+    func fetchTasksForStatistics(descriptor: FetchDescriptor<TaskModel>) -> [(TaskCategory, Int)]{
+        var resultDictionary: [TaskCategory: Int] = [:]
+        
+        do{
+            let tasks = try modelContext.fetch(descriptor)
+            
+            for task in tasks {
+                resultDictionary[task.taskCategory, default: 0] += 1
+            }
+        } catch{
+            print("Error: \(error)")
+        }
+        
+        var resultTuple: [(TaskCategory, Int)] = [];
+        
+        for cateogry in resultDictionary {
+            resultTuple.append((cateogry.key, cateogry.value))
+        }
+        
+        return resultTuple;
     }
     
     func fetchTasksByParentID(parentID: String?) throws -> [TaskModel]{

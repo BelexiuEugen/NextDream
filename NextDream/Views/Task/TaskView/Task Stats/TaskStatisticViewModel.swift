@@ -12,6 +12,7 @@ import SwiftData
 class TaskStatisticViewModel {
     
     var taskID: String
+    var taskStartDate: Date
     
     var daysCompleted: Int = 0
     var totalDays: Int = 0
@@ -22,16 +23,60 @@ class TaskStatisticViewModel {
     var yearsCompleted: Int = 0
     var totalYears: Int = 0
     
+    var selectedTaskType: TaskType = .day{
+        didSet{
+            self.fillArrays()
+        }
+    }
+    
+    var allTasks: [(Date, Int)] = []
+    var completedTasks: [(Date, Int)] = []
+    
     var defaultTaskRepository: DefaultTaskRepository
     var queryDescriptorManager: QueryDescriptorManager = QueryDescriptorManager()
     
-    init(taskID: String, modelContext: ModelContext){
+    init(taskID: String, taskStartDate: Date, modelContext: ModelContext){
         defaultTaskRepository = DefaultTaskRepository(modelContext: modelContext)
         self.taskID = taskID
+        self.taskStartDate = taskStartDate
         let descriptor = queryDescriptorManager.descriptorForNumberOfTaskByMainTask(id: taskID)
         
         (daysCompleted, totalDays, weeksCompleted, totalWeeks, monthsCompleted, totalMonths, yearsCompleted, totalYears) = defaultTaskRepository.fetchTaskByMainTask(descriptor: descriptor)
         
+        fillArrays()
+        
+    }
+    
+    func fillArrays(){
+        allTasks = [(taskStartDate, 0)]
+        completedTasks = [(taskStartDate, 0)]
+        let descriptor = queryDescriptorManager.descriptorForSearchingByTaskTypeAndMainID(taskType: selectedTaskType, mainID: taskID)
+        let data = defaultTaskRepository.fetcTasksForProgressChart(descriptor: descriptor)
+        
+        fillAllTasksArray(data: data)
+        fillCompletedTasksArray(data: data)
+    }
+    
+    func fillAllTasksArray(data: [(Date, Bool)]){
+        var count = 1
+        for item in data{
+            allTasks.append((item.0, count))
+            count += 1
+        }
+    }
+    
+    func fillCompletedTasksArray(data: [(Date, Bool)]){
+        var count = 0
+        for item in data{
+            if item.0 > .now {
+                break
+            }
+            if item.1{
+                count += 1
+            }
+            
+            completedTasks.append((item.0, count))
+        }
     }
 
 }

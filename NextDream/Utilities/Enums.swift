@@ -15,13 +15,27 @@ enum TaskPriority: String, Codable, CaseIterable{
     case high = "High"
 }
 
-enum TaskType: String, Codable, CaseIterable{
-    case day = "Day Task"
-    case week = "Week Task"
-    case month = "Month Task"
-    case year = "Year Task"
-    case custom = "Custom Task"
-    case byDate = "By Date"
+enum TaskType: Int, Codable, CaseIterable{
+
+    
+    case day = 1, week = 2, month = 3, year = 4, custom = 5, byDate = 6
+    
+    var displayName: String{
+        switch self {
+        case .day:
+            "Day Task"
+        case .week:
+            "Week Task"
+        case .month:
+            "Month Task"
+        case .year:
+            "Year Task"
+        case .custom:
+            "Custom Task"
+        case .byDate:
+            "By Date"
+        }
+    }
 }
 
 enum TaskCategory: String, Codable, CaseIterable{
@@ -31,6 +45,25 @@ enum TaskCategory: String, Codable, CaseIterable{
     case finance = "Finance"
     case education = "Education"
     case hobbies = "Hobbies"
+    
+    static var count: Int = 0
+    
+    var color: Color {
+        switch self {
+        case .work:
+            return .blue
+        case .personal:
+            return .purple
+        case .health:
+            return .green
+        case .finance:
+            return .orange
+        case .education:
+            return .yellow
+        case .hobbies:
+            return .pink
+        }
+    }
 }
 
 //MARK: Export Type
@@ -38,8 +71,6 @@ enum TaskCategory: String, Codable, CaseIterable{
 enum ExportType: String, CaseIterable{
     case JSON
     case CSV
-    case PDF
-    case JPG
 }
 
 enum ErrorType{

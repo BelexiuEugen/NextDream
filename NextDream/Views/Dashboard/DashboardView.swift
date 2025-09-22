@@ -31,6 +31,7 @@ struct DashboardView: View {
         .frame(minWidth: 400, minHeight: 600) // macOS-friendly sizing
 //        .navigationTitle("Dashboard")
         .toolbar {
+            infoButton
             userSettingsButton
         }
         .onAppear{
@@ -110,9 +111,20 @@ extension  DashboardView{
         ToolbarItem(placement: .topBarTrailing) {
             
             NavigationLink {
-                UserSettingsView()
+                UserSettingsView(modelContext: viewModel.modelContext)
             } label: {
                 Image(systemName: "gear")
+            }
+        }
+    }
+    
+    private var infoButton: ToolbarItem<Void, some View>{
+        ToolbarItem(placement: .topBarLeading) {
+            
+            NavigationLink {
+//                InfoView()
+            } label: {
+                Image(systemName: "info")
             }
         }
     }
