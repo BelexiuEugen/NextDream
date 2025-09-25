@@ -69,8 +69,8 @@ enum TaskCategory: String, Codable, CaseIterable{
 //MARK: Export Type
 
 enum ExportType: String, CaseIterable{
-    case JSON
-    case CSV
+    case JSON = "json"
+    case CSV = "csv"
 }
 
 enum ErrorType{

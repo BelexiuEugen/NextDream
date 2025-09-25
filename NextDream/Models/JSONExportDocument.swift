@@ -9,8 +9,9 @@ import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct JSONExportDocument: FileDocument {
-    static var readableContentTypes: [UTType] { [.json] }
+
+struct ExportDocument: FileDocument {
+    static var readableContentTypes: [UTType] { [.myText] }
     var data: Data
 
     init(data: Data) {

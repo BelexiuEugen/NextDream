@@ -18,11 +18,7 @@ struct TaskImport: View {
                     Button {
                         dismiss()
                     } label: {
-                        VStack{
-                            Image(systemName: "square.and.arrow.up")
-                            
-                            Text("Export")
-                        }
+                        Image(systemName: "square.and.arrow.up")
                     }
                     
                 }

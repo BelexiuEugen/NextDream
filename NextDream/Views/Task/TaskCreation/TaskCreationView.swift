@@ -145,7 +145,6 @@ extension TaskCreationView{
             }
             
             selectDataComponent
-            categoryTypeComponent
         }
         .padding()
     }

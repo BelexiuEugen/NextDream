@@ -20,40 +20,6 @@ struct TaskView: View {
         Form{
             createTaskSection
             createSubTaskSection
-            
-            Button {
-                let url = FileManager.default.temporaryDirectory.appendingPathComponent("TaskTree.pdf")
-                
-                Task{
-                    
-                    vm.pdfURL = url
-                    vm.exportToPDFTree()
-                }
-                
-            } label: {
-                Text("Create PDF File")
-                    .frame(maxWidth: .infinity)
-            }
-            
-            if let url = vm.pdfURL {
-                ShareLink(item: url) {
-                    Label("Export PDF", systemImage: "square.and.arrow.up")
-                }
-                .frame(maxWidth: .infinity)
-            }
-            
-            Button {
-                do {
-                    if let url = vm.pdfURL{
-                        try FileManager.default.removeItem(at: url)
-                    }
-                    print("Temporary file deleted")
-                } catch {
-                    print("Could not delete file: \(error)")
-                }
-            } label: {
-                Text("delete")
-            }
 
         }
         .navigationTitle(vm.task.name)

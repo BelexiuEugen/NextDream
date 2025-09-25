@@ -122,7 +122,7 @@ extension  DashboardView{
         ToolbarItem(placement: .topBarLeading) {
             
             NavigationLink {
-//                InfoView()
+                InfoView()
             } label: {
                 Image(systemName: "info")
             }

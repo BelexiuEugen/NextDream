@@ -40,8 +40,6 @@ class DataExportManager{
                 }.joined(separator: ",")
                 csvString += row + "\n"
             }
-        
-        print(csvString);
 
         // Convert the CSV string to Data using UTF-8 encoding
         return csvString.data(using: .utf8)
