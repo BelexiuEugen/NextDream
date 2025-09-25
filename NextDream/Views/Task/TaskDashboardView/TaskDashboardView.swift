@@ -33,7 +33,7 @@ struct TaskDashboardView: View {
         } else{
             
             NavigationStack(path: $vm.path.modelView){
-                TaskListingView(sort: $vm.sortOrder, searchString:$vm.searchText, viewModel: $vm)
+                TaskListingView(viewModel: $vm)
                     .environment(vm)
                     .navigationTitle("Your Task")
                     .navigationDestination(for: TaskModel.self){ task in

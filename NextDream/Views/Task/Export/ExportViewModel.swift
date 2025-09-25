@@ -53,9 +53,26 @@ final class ExportViewModel{
         }
     }
     
+    func loadAllSubTasks(parentID: String){
+        let descriptor = queryDescriptorManager.descriptorForParentID(parentID: parentID)
+        do{
+            let subTasks: [TaskModel] = try taskRepository.fetchTasks(descriptor: descriptor)
+            for task in subTasks{
+                tasks.append(task)
+                loadAllSubTasks(parentID: task.id)
+            }
+        }catch{
+            print("There was an error Trying: \(error.localizedDescription)")
+        }
+    }
+    
     func exportData(){
         
         let taskData: [TaskModel] = taskToExport.filter { $0.isSelected }.map { $0.item }
+        
+        for task in taskData{
+            loadAllSubTasks(parentID: task.id)
+        }
         
         guard !taskData.isEmpty else {
             print("No data presented")
@@ -64,11 +81,14 @@ final class ExportViewModel{
         
         do{
             switch selectedType{
-                
+                    
             case .JSON:
                 exportedData = try JSONEncoder().encode(self.tasks)
             case .CSV:
-                exportedData = try CSVEncoder().encode(self.tasks)
+                let encoder = CSVEncoder {
+                    $0.headers = TaskModel.getCodingKeys
+                }
+                exportedData = try encoder.encode(self.tasks)
             }
         }catch{
             print("There was an error: \(error.localizedDescription)")

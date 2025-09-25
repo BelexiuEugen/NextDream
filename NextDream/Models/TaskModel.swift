@@ -36,6 +36,14 @@ class TaskModel: Identifiable, Codable{
     var taskType: TaskType {
         TaskType(rawValue: taskTypeID) ?? .day
     }
+    
+    static var getCodingKeys: [String]{
+        var result: [String] = []
+        for key in CodingKeys.allCases{
+            result.append(key.stringValue)
+        }
+        return result
+    }
 
     
     init(
@@ -70,7 +78,7 @@ class TaskModel: Identifiable, Codable{
         self.taskPriority = taskPriority
     }
     
-    private enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, CaseIterable {
         case id
         case name
         case taskDescription

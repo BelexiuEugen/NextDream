@@ -15,15 +15,6 @@ struct ExportView: View {
     
     init(modelContext: ModelContext, taskRepository: TaskRepository) {
         _viewModel = State(wrappedValue: ExportViewModel(modelContext: modelContext, taskRepository: taskRepository))
-        
-        viewModel.tasks.append(contentsOf: [
-            MockModels.firstModel,
-            MockModels.firstModel,
-            MockModels.firstModel,
-            
-        ])
-        
-        viewModel.addTaskToExport()
     }
     
     var body: some View {
@@ -87,7 +78,7 @@ extension ExportView{
     var taskImportButton: ToolbarItem<Void, some View>{
         ToolbarItem {
             NavigationLink {
-                TaskImport()
+                ImportView(modelContext: viewModel.modelContext)
             } label: {
                 Image(systemName: "square.and.arrow.down")
             }

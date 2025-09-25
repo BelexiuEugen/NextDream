@@ -29,7 +29,6 @@ struct TaskView: View {
             if vm.task.mainTaskID == nil{
                 statsButton
             }
-//            pdfExporter
             settingsButton
         }
     }

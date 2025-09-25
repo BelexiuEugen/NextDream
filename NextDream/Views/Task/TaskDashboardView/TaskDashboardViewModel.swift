@@ -42,9 +42,9 @@ class TaskDashboardViewModel{
         }
     }
     
-    func fetchTaskByDescriptorAndSearchString(sort: SortDescriptor<TaskModel>, serchString: String){
+    func fetchTaskByDescriptorAndSearchString(){
         
-        let descriptor = queryDescriptorManager.descriptorForSortAndString(sort: sort, serchString: serchString)
+        let descriptor = queryDescriptorManager.descriptorForSortAndString(sort: self.sortOrder, serchString: self.searchText)
         
         do{
             tasks = try taskRepository.fetchTasks(descriptor: descriptor)

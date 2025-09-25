@@ -14,10 +14,10 @@ struct TaskListingView: View {
     
     @Bindable var viewModel: TaskDashboardViewModel
     
-    init(sort: Binding<SortDescriptor<TaskModel>>, searchString: Binding<String>, viewModel: Bindable<TaskDashboardViewModel>) {
+    init(viewModel: Bindable<TaskDashboardViewModel>) {
         _viewModel = viewModel
         
-        viewModel.wrappedValue.fetchTaskByDescriptorAndSearchString(sort: sort.wrappedValue, serchString: searchString.wrappedValue);
+        _viewModel.wrappedValue.fetchTaskByDescriptorAndSearchString()
     }
     
     var body: some View {
@@ -36,6 +36,9 @@ struct TaskListingView: View {
                 }
             }
             .onDelete(perform: viewModel.deleteTask)
+        }
+        .refreshable {
+            viewModel.fetchTaskByDescriptorAndSearchString()
         }
     }
 }
