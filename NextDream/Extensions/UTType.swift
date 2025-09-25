@@ -7,12 +7,13 @@
 import UniformTypeIdentifiers
 
 extension UTType {
-    
-    static func myText(exportType: ExportType, taskName: String) -> UTType {
-        UTType(exportedAs: "\(taskName).\(exportType.rawValue)")
-    }
-    
-    static var myText: UTType {
-        UTType(exportedAs: "com.example.mytext")
+    /// Map our app's ExportType to system-provided UTTypes.
+    static func export(for exportType: ExportType) -> UTType {
+        switch exportType {
+        case .JSON:
+            return .json
+        case .CSV:
+            return .commaSeparatedText
+        }
     }
 }

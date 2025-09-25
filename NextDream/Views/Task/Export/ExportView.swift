@@ -56,7 +56,15 @@ struct ExportView: View {
         .toolbar {
             taskImportButton
         }
-        .fileExporter(isPresented: $viewModel.isExporting, document: ExportDocument(data: viewModel.exportedData ?? viewModel.errorData)){ result in
+        .fileExporter(
+            isPresented: $viewModel.isExporting,
+            document: ExportDocument(
+                data: viewModel.exportedData ?? viewModel.errorData,
+                contentType: UTType.export(for: viewModel.selectedType)
+            ),
+            contentType: UTType.export(for: viewModel.selectedType),
+            defaultFilename: "TasksExport.\(viewModel.selectedType.rawValue)"
+        ) { result in
             switch result {
                 case .success(let url):
                     print("Saved to \(url)")

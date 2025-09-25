@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01FF6CAC2E859CAB00719C24 /* CodableCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 01FF6CAB2E859CAB00719C24 /* CodableCSV */; };
 		3DEEA0D72D36D4600073B5BA /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 3DEEA0D62D36D4600073B5BA /* FSCalendar */; };
 		B0BCD8412E3115A8009B7E18 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0CA2EA42E2BCB7900DB2C5D /* SwiftUI.framework */; };
 		B0BCD8422E3115A8009B7E18 /* SwiftUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B0CA2EA42E2BCB7900DB2C5D /* SwiftUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -115,6 +116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01FF6CAC2E859CAB00719C24 /* CodableCSV in Frameworks */,
 				3DEEA0D72D36D4600073B5BA /* FSCalendar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -184,6 +186,7 @@
 			name = NextDream;
 			packageProductDependencies = (
 				3DEEA0D62D36D4600073B5BA /* FSCalendar */,
+				01FF6CAB2E859CAB00719C24 /* CodableCSV */,
 			);
 			productName = NextDream;
 			productReference = 3DEEA0602D36D29A0073B5BA /* NextDream.app */;
@@ -220,7 +223,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1640;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					3DEEA05F2D36D29A0073B5BA = {
 						CreatedOnToolsVersion = 16.2;
@@ -241,6 +244,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				3DEEA0D52D36D4600073B5BA /* XCRemoteSwiftPackageReference "FSCalendar" */,
+				01FF6CAA2E859CAB00719C24 /* XCRemoteSwiftPackageReference "CodableCSV" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3DEEA0612D36D29A0073B5BA /* Products */;
@@ -360,6 +364,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -417,6 +422,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -577,6 +583,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		01FF6CAA2E859CAB00719C24 /* XCRemoteSwiftPackageReference "CodableCSV" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dehesa/CodableCSV.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.7;
+			};
+		};
 		3DEEA0D52D36D4600073B5BA /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/WenchaoD/FSCalendar.git";
@@ -588,6 +602,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		01FF6CAB2E859CAB00719C24 /* CodableCSV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 01FF6CAA2E859CAB00719C24 /* XCRemoteSwiftPackageReference "CodableCSV" */;
+			productName = CodableCSV;
+		};
 		3DEEA0D62D36D4600073B5BA /* FSCalendar */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3DEEA0D52D36D4600073B5BA /* XCRemoteSwiftPackageReference "FSCalendar" */;

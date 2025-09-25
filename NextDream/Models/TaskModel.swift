@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import CoreGraphics
 
 
 // Possible variables name :
@@ -15,7 +16,7 @@ import SwiftData
 // isVisible - I don't know it's purpose
 
 @Model
-class TaskModel: Identifiable{
+class TaskModel: Identifiable, Codable{
     
     var id: String = UUID().uuidString
     var name: String
@@ -68,6 +69,87 @@ class TaskModel: Identifiable{
         self.taskCategory = taskCategory
         self.taskPriority = taskPriority
     }
+    
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case taskDescription
+        case parentID
+        case mainTaskID
+        case calendarIdentifier
+        case creationDate
+        case deadline
+        case progress
+        case isCompleted
+        case isSelected
+        case taskTypeID
+        case taskCategory
+        case taskPriority
+    }
+
+    // Custom Decodable to avoid @Model synthesized properties and to handle enums via raw values
+    required convenience init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try container.decode(String.self, forKey: .id)
+        let name = try container.decode(String.self, forKey: .name)
+        let taskDescription = try container.decodeIfPresent(String.self, forKey: .taskDescription)
+        let parentID = try container.decodeIfPresent(String.self, forKey: .parentID)
+        let mainTaskID = try container.decodeIfPresent(String.self, forKey: .mainTaskID)
+        let calendarIdentifier = try container.decodeIfPresent(String.self, forKey: .calendarIdentifier)
+        let creationDate = try container.decode(Date.self, forKey: .creationDate)
+        let deadline = try container.decode(Date.self, forKey: .deadline)
+        let progress = try container.decodeIfPresent(CGFloat.self, forKey: .progress) ?? 0.0
+        let isCompleted = try container.decodeIfPresent(Bool.self, forKey: .isCompleted) ?? false
+        let isSelected = try container.decodeIfPresent(Bool.self, forKey: .isSelected) ?? false
+        let taskTypeID = try container.decode(Int.self, forKey: .taskTypeID)
+
+        // Decode enums from their raw values using the enum's RawValue type
+        let taskCategoryRaw = try container.decode(TaskCategory.RawValue.self, forKey: .taskCategory)
+        let taskPriorityRaw = try container.decode(TaskPriority.RawValue.self, forKey: .taskPriority)
+
+        guard let taskCategory = TaskCategory(rawValue: taskCategoryRaw) else {
+            throw DecodingError.dataCorruptedError(forKey: .taskCategory, in: container, debugDescription: "Invalid TaskCategory raw value: \(taskCategoryRaw)")
+        }
+        guard let taskPriority = TaskPriority(rawValue: taskPriorityRaw) else {
+            throw DecodingError.dataCorruptedError(forKey: .taskPriority, in: container, debugDescription: "Invalid TaskPriority raw value: \(taskPriorityRaw)")
+        }
+
+        self.init(
+            id: id,
+            name: name,
+            taskDescription: taskDescription,
+            parentID: parentID,
+            mainTaskID: mainTaskID,
+            calendarIdentifier: calendarIdentifier,
+            creationDate: creationDate,
+            deadline: deadline,
+            progress: progress,
+            isCompleted: isCompleted,
+            isSelected: isSelected,
+            taskTypeID: taskTypeID,
+            taskCategory: taskCategory,
+            taskPriority: taskPriority
+        )
+    }
+
+    // Custom Encodable to match the CodingKeys and avoid @Model internals
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encodeIfPresent(taskDescription, forKey: .taskDescription)
+        try container.encodeIfPresent(parentID, forKey: .parentID)
+        try container.encodeIfPresent(mainTaskID, forKey: .mainTaskID)
+        try container.encodeIfPresent(calendarIdentifier, forKey: .calendarIdentifier)
+        try container.encode(creationDate, forKey: .creationDate)
+        try container.encode(deadline, forKey: .deadline)
+        try container.encode(progress, forKey: .progress)
+        try container.encode(isCompleted, forKey: .isCompleted)
+        try container.encode(isSelected, forKey: .isSelected)
+        try container.encode(taskTypeID, forKey: .taskTypeID)
+        try container.encode(taskCategory.rawValue, forKey: .taskCategory)
+        try container.encode(taskPriority.rawValue, forKey: .taskPriority)
+    }
 }
 
 //MARK: Dictionary
@@ -96,3 +178,4 @@ extension TaskModel{
         return self.name
     }
 }
+

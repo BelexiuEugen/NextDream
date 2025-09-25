@@ -1,6 +1,15 @@
 {
-  "originHash" : "2210fcafa6e02a3f16f3c2d3cc45e0b8bfbabcff7a5be6325d5d2194bc31f854",
+  "originHash" : "c609ce03e12c15f5e3eb890dd04cc4340697c823dd04d758476e6162c4975a43",
   "pins" : [
+    {
+      "identity" : "codablecsv",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dehesa/CodableCSV.git",
+      "state" : {
+        "revision" : "99ace2cfdfbc19108b529c021005fb57a460e715",
+        "version" : "0.6.7"
+      }
+    },
     {
       "identity" : "fscalendar",
       "kind" : "remoteSourceControl",

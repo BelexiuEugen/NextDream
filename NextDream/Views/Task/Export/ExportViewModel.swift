@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import CodableCSV
 
 @Observable
 final class ExportViewModel{
@@ -23,7 +24,6 @@ final class ExportViewModel{
     var taskRepository: TaskRepository
     
     var errorData: Data {
-        // Example JSON data for export
         let dictionary = ["error": "something went wrong, try again."] as [String: Any]
         return try! JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted)
     }
@@ -62,12 +62,16 @@ final class ExportViewModel{
             return
         }
         
-        switch selectedType{
-            
-        case .JSON:
-            exportedData = DataExportManager.shared.convertToJSON(tasks: taskData)
-        case .CSV:
-            exportedData = DataExportManager.shared.convertToCSV(tasks: taskData)
+        do{
+            switch selectedType{
+                
+            case .JSON:
+                exportedData = try JSONEncoder().encode(self.tasks)
+            case .CSV:
+                exportedData = try CSVEncoder().encode(self.tasks)
+            }
+        }catch{
+            print("There was an error: \(error.localizedDescription)")
         }
         
         if exportedData != nil{
