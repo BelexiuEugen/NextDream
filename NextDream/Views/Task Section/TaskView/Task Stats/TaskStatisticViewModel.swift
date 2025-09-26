@@ -41,7 +41,7 @@ class TaskStatisticViewModel {
         self.taskStartDate = taskStartDate
         let descriptor = queryDescriptorManager.descriptorForNumberOfTaskByMainTask(id: taskID)
         
-        (daysCompleted, totalDays, weeksCompleted, totalWeeks, monthsCompleted, totalMonths, yearsCompleted, totalYears) = defaultTaskRepository.fetchTaskByMainTask(descriptor: descriptor)
+        (daysCompleted, totalDays, weeksCompleted, totalWeeks, monthsCompleted, totalMonths, yearsCompleted, totalYears) = defaultTaskRepository.fetchStatsForTaskID(descriptor: descriptor)
         
         fillArrays()
         

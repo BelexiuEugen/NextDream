@@ -31,7 +31,7 @@ struct CalendarView: View {
         }
         .padding()
         .sheet(isPresented: $viewModel.isPresented, content: {
-            EventSelectionView()
+            EventSelectionView(modelContext: viewModel.modelContext)
                 .presentationDetents([.fraction(0.4), .medium, .large])
         })
         .toolbar {

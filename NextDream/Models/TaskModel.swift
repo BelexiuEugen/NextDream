@@ -159,31 +159,3 @@ class TaskModel: Identifiable, Codable{
         try container.encode(taskPriority.rawValue, forKey: .taskPriority)
     }
 }
-
-//MARK: Dictionary
-extension TaskModel{
-    
-    func createDictionary() -> [String: Any]{
-        return [
-            "id" : self.id,
-            "name" : self.name,
-            "taskDescription" : self.taskDescription as Any,
-            "parentID" : self.parentID as Any,
-            "mainTaskID" : self.mainTaskID as Any,
-            "calendarIdentifier" : self.calendarIdentifier as Any,
-            "creationDate" : self.creationDate.convertToStringFormat(),
-            "deadline" : self.deadline.convertToStringFormat(),
-            "progress" : self.progress,
-            "isCompleted" : self.isCompleted,
-            "isSelected" : self.isSelected,
-            "taskTypeID" : self.taskTypeID,
-            "taskCategory" : self.taskCategory.rawValue,
-            "taskPriority" : self.taskPriority.rawValue
-        ]
-    }
-    
-    func toString() -> String{
-        return self.name
-    }
-}
-

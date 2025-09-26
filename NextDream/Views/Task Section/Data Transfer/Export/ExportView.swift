@@ -29,12 +29,13 @@ struct ExportView: View {
             
             Spacer()
             
-            TaskDropdown(taskToExport: $viewModel.taskToExport)
+            TaskDropdown(taskToExport: viewModel.taskContainer)
             
             Spacer()
             
             Button {
                 viewModel.exportData()
+                viewModel.fetchMainTasks()
             } label: {
                 Text("Export")
             }
@@ -62,6 +63,10 @@ struct ExportView: View {
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
+        }
+        .refreshable {
+            viewModel.fetchMainTasks()
+            viewModel.addTaskToExport()
         }
     }
 }

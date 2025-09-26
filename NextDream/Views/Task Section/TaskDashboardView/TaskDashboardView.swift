@@ -29,7 +29,7 @@ struct TaskDashboardView: View {
         @Bindable var vm = vm;
         
         if vm.isLoading{
-            FullScreenLoadingView(taskCompleted: $vm.taskCreationManager.taskCount)
+            FullScreenLoadingView(taskCompleted: $vm.taskCreationManager.taskCount, text: "Task Created: ")
         } else{
             
             NavigationStack(path: $vm.path.modelView){

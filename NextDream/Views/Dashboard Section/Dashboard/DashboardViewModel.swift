@@ -63,7 +63,7 @@ extension DashboardViewModel{
         var result: [String] = []
         
         for task in tasks{
-            result.append(task.toString())
+            result.append(task.name)
         }
         
         return result

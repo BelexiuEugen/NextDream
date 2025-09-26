@@ -10,6 +10,11 @@ import SwiftData
 import SwiftUI
 
 @Observable
+class NavigationViewModel{
+    var modelView: [TaskModel] = []
+}
+
+@Observable
 class TaskDashboardViewModel{
     
     var tasks: [TaskModel] = []
@@ -17,6 +22,8 @@ class TaskDashboardViewModel{
     
     var path: NavigationViewModel = NavigationViewModel()
     var isLoading = false;
+    var isLoadingForDeletion = false
+    var deletedTask: Int = 0;
     var searchText = ""
     var isPresented: Bool = false;
     var sheetDetent: PresentationDetent = .large
@@ -68,28 +75,6 @@ class TaskDashboardViewModel{
     
 }
 
-@Observable
-class NavigationViewModel{
-    var modelView: [TaskModel] = []
-}
-
-extension TaskDashboardViewModel{
-    
-    static func asDictionaryList(tasks: [TaskModel]) -> [[String: Any]]{
-        
-        var newTasksArray: [[String: Any]] = [];
-        
-        for task in tasks{
-            
-            let newTask: [String: Any] = task.createDictionary()
-            
-            newTasksArray.append(newTask)
-        }
-        
-        return newTasksArray
-    }
-}
-
 
 //MARK: Task Deletion
 
@@ -106,24 +91,29 @@ extension TaskDashboardViewModel{
             }
 
             modelContext.delete(task)
+            deletedTask += 1
         }
     }
     
     func deleteTask(_ indexSet: IndexSet){
-        for index in indexSet{
-        
-            let item = tasks[index]
-            deleteTaskById(id: item.id)
-            modelContext.delete(item)
-            
-            saveDataToDevice()
-            
-            tasks = fetchTasksByParentID(parentID: nil);
-            
-            guard item.id != "" else {return}
-            
+        Task(priority: .high){
+            self.isLoadingForDeletion = true
+            for index in indexSet{
+                
+                let item = tasks[index]
+                deleteTaskById(id: item.id)
+                modelContext.delete(item)
+                deletedTask += 1;
+                
+                saveDataToDevice()
+                
+                tasks = fetchTasksByParentID(parentID: nil);
+                
+                guard item.id != "" else {return}
+                
+            }
+            self.isLoadingForDeletion = false
+            deletedTask = 0
         }
     }
 }
-
-// MARK: Task Creation

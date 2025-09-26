@@ -14,7 +14,7 @@ final class ExportViewModel{
     
     var tasks: [TaskModel] = []
     
-    var taskToExport: [ItemDropdownSelection] = []
+    var taskToExport: [ItemDropdownModel] = []
     var selectedType: ExportType = .JSON
     var isExporting: Bool = false;
     var exportedData: Data? = nil
@@ -22,6 +22,7 @@ final class ExportViewModel{
 
     var queryDescriptorManager: QueryDescriptorManager = QueryDescriptorManager()
     var taskRepository: TaskRepository
+    var taskContainer: ItemDropdownContainer
     
     var errorData: Data {
         let dictionary = ["error": "something went wrong, try again."] as [String: Any]
@@ -31,44 +32,38 @@ final class ExportViewModel{
     init(modelContext: ModelContext, taskRepository: TaskRepository){
         self.modelContext = modelContext
         self.taskRepository = taskRepository
+        self.taskContainer = ItemDropdownContainer(defaultTaskRepository: taskRepository)
         self.fetchMainTasks()
         self.addTaskToExport()
     }
     
     func fetchMainTasks(){
-        
+        tasks = []
         let descriptor = queryDescriptorManager.descriptorForMainTasks()
         
-        do{
-            tasks = try taskRepository.fetchTasks(descriptor: descriptor)
-        } catch{
-            print("There was an error \(error.localizedDescription)")
-        }
+        tasks = taskRepository.fetchTasks(descriptor: descriptor)
     }
     
     func addTaskToExport(){
         
         taskToExport = tasks.map { task in
-            ItemDropdownSelection(item: task, isSelected: false)
+            ItemDropdownModel(task: task, isSelected: false)
         }
     }
     
     func loadAllSubTasks(parentID: String){
         let descriptor = queryDescriptorManager.descriptorForParentID(parentID: parentID)
-        do{
-            let subTasks: [TaskModel] = try taskRepository.fetchTasks(descriptor: descriptor)
-            for task in subTasks{
-                tasks.append(task)
-                loadAllSubTasks(parentID: task.id)
-            }
-        }catch{
-            print("There was an error Trying: \(error.localizedDescription)")
+        
+        let subTasks: [TaskModel] =  taskRepository.fetchTasks(descriptor: descriptor)
+        for task in subTasks{
+            tasks.append(task)
+            loadAllSubTasks(parentID: task.id)
         }
     }
     
     func exportData(){
         
-        let taskData: [TaskModel] = taskToExport.filter { $0.isSelected }.map { $0.item }
+        let taskData: [TaskModel] = taskToExport.filter { $0.isSelected }.map { $0.task }
         
         for task in taskData{
             loadAllSubTasks(parentID: task.id)

@@ -66,6 +66,12 @@ enum TaskCategory: String, Codable, CaseIterable{
     }
 }
 
+
+enum calendarExportOption: String, CaseIterable{
+    case all = "Add All Tasks"
+    case select = "Select Tasks To Add"
+}
+
 //MARK: Export Type
 
 enum ExportType: String, CaseIterable{

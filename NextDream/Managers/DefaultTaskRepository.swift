@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 protocol TaskRepository{
-    func fetchTasks(descriptor: FetchDescriptor<TaskModel>) throws -> [TaskModel]
+    func fetchTasks(descriptor: FetchDescriptor<TaskModel>)-> [TaskModel]
 }
 
 class DefaultTaskRepository: TaskRepository{
@@ -20,7 +20,7 @@ class DefaultTaskRepository: TaskRepository{
         self.modelContext = modelContext
     }
     
-    func fetchTaskByMainTask(descriptor: FetchDescriptor<TaskModel>)
+    func fetchStatsForTaskID(descriptor: FetchDescriptor<TaskModel>)
     -> (completedDays: Int, totalDays: Int,
                completedWeeks: Int, totalWeeks: Int,
                completedMonths: Int, totalMonths: Int,
@@ -60,12 +60,14 @@ class DefaultTaskRepository: TaskRepository{
         )
     }
     
-    func fetchTasks(descriptor: FetchDescriptor<TaskModel>) throws -> [TaskModel] {
+    func fetchTasks(descriptor: FetchDescriptor<TaskModel>) -> [TaskModel] {
         do{
-            return try modelContext.fetch(descriptor)
+            return try modelContext.fetch(descriptor).sorted { $0.deadline < $1.deadline }
         } catch{
-            throw error
+            print("There was an error gettings the tasks")
         }
+        
+        return []
     }
     
     func fetcTasksForProgressChart(descriptor: FetchDescriptor<TaskModel>) -> [(Date, Bool)]{
@@ -199,13 +201,14 @@ class DefaultTaskRepository: TaskRepository{
         }
     }
     
-    func fetchMainTasks() throws -> [TaskModel]{
+    func fetchMainTasks() -> [TaskModel]{
         
         do{
             let descriptor = FetchDescriptor<TaskModel>(predicate: #Predicate { $0.parentID == nil})
             return try modelContext.fetch(descriptor)
         } catch{
-            throw error
+            print("There was an error: \(error.localizedDescription)")
         }
+        return []
     }
 }

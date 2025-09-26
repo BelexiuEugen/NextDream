@@ -12,7 +12,7 @@ struct HomeView: View {
     
     @Environment(\.modelContext) var modelContext;
     
-    @State private var selectedTab = 2 // Set the initial tab index or tag
+    @State private var selectedTab = 2
     
     private var taskRepository: DefaultTaskRepository {
         DefaultTaskRepository(modelContext: modelContext)

@@ -11,7 +11,7 @@ import SwiftUI
 @Observable
 final class TaskCreationViewModel{
     
-    var taskToCalendar: [ItemDropdownSelection] = []
+    
     
     // Task Data
     var selectedCreationModel: CreationModelType = .calendar
@@ -73,12 +73,13 @@ final class TaskCreationViewModel{
         let taskData = createTaskCreationModel()
 
         isLoading.wrappedValue = true;
-        
-        guard let
-                newTask = taskCreationManager.createTask(taskData: taskData, creationModelType: selectedCreationModel)
-        else {return}
-        path.modelView.append(newTask)
-        isLoading.wrappedValue = false;
+        Task(priority: .high){
+            guard let
+                    newTask = taskCreationManager.createTask(taskData: taskData, creationModelType: selectedCreationModel)
+            else {return}
+            path.modelView.append(newTask)
+            isLoading.wrappedValue = false;
+        }
         
         if let dismiss{
             dismiss()
