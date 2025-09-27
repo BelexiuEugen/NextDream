@@ -26,6 +26,9 @@ extension TaskRow{
         Image(systemName: item.isSelected ? "checkmark.square.fill" : "square.dashed")
             .onTapGesture {
                 item.isSelected.toggle()
+                Task(priority: .high) {
+                    await container.markChildrenAsFather(parentID: item.task.id, isSelected: item.isSelected)
+                }
             }
     }
     
@@ -45,10 +48,6 @@ extension TaskRow{
         .onTapGesture {
             if item.task.taskType != .day{
                 withAnimation(.easeInOut) {
-                    if item.itemLoaded == false{
-                        container.fetchSubChildren(parentID: item.task.id)
-                        item.itemLoaded = true
-                    }
                     item.showChildren.toggle()
                 }
             }

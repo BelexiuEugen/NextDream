@@ -69,7 +69,7 @@ extension TaskDashboardView{
     private var exportButton: ToolbarItem<Void, some View>{
         ToolbarItem(placement: .topBarLeading) {
             NavigationLink {
-                ExportView(modelContext: vm.modelContext, taskRepository: vm.taskRepository)
+                LazyView(ExportView(modelContext: vm.modelContext, taskRepository: vm.taskRepository))
             } label: {
                 Image(systemName: "arrow.up.arrow.down")
             }

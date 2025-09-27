@@ -9,6 +9,16 @@ import SwiftUI
 import UniformTypeIdentifiers
 import SwiftData
 
+struct LazyView<Content: View>: View {
+    let build: () -> Content
+    init(_ build: @autoclosure @escaping () -> Content) {
+        self.build = build
+    }
+    var body: Content {
+        build()
+    }
+}
+
 struct ExportView: View {
     
     @State private var viewModel: ExportViewModel
@@ -21,52 +31,52 @@ struct ExportView: View {
         
         @Bindable var viewModel = viewModel
         
-        VStack{
+        if viewModel.taskContainer.taskAreLoading{
+            FullScreenLoadingView(taskCompleted: $viewModel.taskContainer.taskFetched, text: "Task Fetched:")
+        } else {
             
-            Spacer()
-            
-            exportOption
-            
-            Spacer()
-            
-            TaskDropdown(taskToExport: viewModel.taskContainer)
-            
-            Spacer()
-            
-            Button {
-                viewModel.exportData()
-                viewModel.fetchMainTasks()
-            } label: {
-                Text("Export")
+            VStack{
+                
+                Spacer()
+                
+                exportOption
+                
+                Spacer()
+                
+                TaskDropdown(container: viewModel.taskContainer)
+                
+                Spacer()
+                
+                Button {
+                    viewModel.exportData()
+                } label: {
+                    Text("Export")
+                }
+                .padding()
+                
+                Spacer()
+                
             }
-            .padding()
-            
-            Spacer()
-            
-        }
-        .background(Color.gray.opacity(0.1))
-        .toolbar {
-            taskImportButton
-        }
-        .fileExporter(
-            isPresented: $viewModel.isExporting,
-            document: ExportDocument(
-                data: viewModel.exportedData ?? viewModel.errorData,
-                contentType: UTType.export(for: viewModel.selectedType)
-            ),
-            contentType: UTType.export(for: viewModel.selectedType),
-            defaultFilename: "TasksExport.\(viewModel.selectedType.rawValue)"
-        ) { result in
-            switch result {
+            .background(Color.gray.opacity(0.1))
+            .toolbar {
+                taskImportButton
+            }
+            .fileExporter(
+                isPresented: $viewModel.isExporting,
+                document: ExportDocument(
+                    data: viewModel.exportedData ?? viewModel.errorData,
+                    contentType: UTType.export(for: viewModel.selectedType)
+                ),
+                contentType: UTType.export(for: viewModel.selectedType),
+                defaultFilename: "TasksExport.\(viewModel.selectedType.rawValue)"
+            ) { result in
+                switch result {
                 case .success(let url):
                     print("Saved to \(url)")
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
-        }
-        .refreshable {
-            viewModel.fetchMainTasks()
-            viewModel.addTaskToExport()
+            }
         }
     }
 }

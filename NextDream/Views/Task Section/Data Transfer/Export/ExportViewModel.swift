@@ -12,9 +12,6 @@ import CodableCSV
 @Observable
 final class ExportViewModel{
     
-    var tasks: [TaskModel] = []
-    
-    var taskToExport: [ItemDropdownModel] = []
     var selectedType: ExportType = .JSON
     var isExporting: Bool = false;
     var exportedData: Data? = nil
@@ -33,43 +30,64 @@ final class ExportViewModel{
         self.modelContext = modelContext
         self.taskRepository = taskRepository
         self.taskContainer = ItemDropdownContainer(defaultTaskRepository: taskRepository)
-        self.fetchMainTasks()
-        self.addTaskToExport()
-    }
-    
-    func fetchMainTasks(){
-        tasks = []
-        let descriptor = queryDescriptorManager.descriptorForMainTasks()
         
-        tasks = taskRepository.fetchTasks(descriptor: descriptor)
-    }
-    
-    func addTaskToExport(){
-        
-        taskToExport = tasks.map { task in
-            ItemDropdownModel(task: task, isSelected: false)
+        Task(priority: .high){
+            await self.taskContainer.getTasks()
+            taskContainer.taskAreLoading = false
         }
     }
     
-    func loadAllSubTasks(parentID: String){
-        let descriptor = queryDescriptorManager.descriptorForParentID(parentID: parentID)
+    func refreshView() async{
+        taskContainer.taskAreLoading = true
+        self.taskContainer.items.removeAll()
+        taskContainer.taskAreLoading = false
+        await self.taskContainer.getTasks()
+    }
+    
+    func createParentIDSet(items: [ItemDropdownModel]) -> Set<String>{
+        var parentIDSet: Set<String> = Set<String>()
         
-        let subTasks: [TaskModel] =  taskRepository.fetchTasks(descriptor: descriptor)
-        for task in subTasks{
-            tasks.append(task)
-            loadAllSubTasks(parentID: task.id)
+        for item in items {
+            parentIDSet.insert(item.task.id)
         }
+        
+        return parentIDSet
+    }
+    
+    func createTasksToExport(items: [ItemDropdownModel], parentIDSet: Set<String>) -> [TaskModel]{
+        var taskToExport: [TaskModel] = []
+        
+        for item in items{
+            guard let parentID = item.task.parentID else { taskToExport.append(item.task); continue }
+            guard parentIDSet.contains(parentID) else { taskToExport.append(item.task.removeParentID); continue }
+            
+            taskToExport.append(item.task)
+        }
+        
+        return taskToExport
+    }
+    
+    func createSelectedItemsList() -> [ItemDropdownModel]{
+        var items: [ItemDropdownModel] = []
+        
+        for (parentID, childrens) in self.taskContainer.items{
+            for child in childrens where child.isSelected{
+                items.append(child)
+            }
+        }
+        
+        return items
     }
     
     func exportData(){
         
-        let taskData: [TaskModel] = taskToExport.filter { $0.isSelected }.map { $0.task }
+        let items = createSelectedItemsList()
+
+        let parentIDSet: Set<String> = createParentIDSet(items: items)
+
+        let taskToExport: [TaskModel] = createTasksToExport(items: items, parentIDSet: parentIDSet)
         
-        for task in taskData{
-            loadAllSubTasks(parentID: task.id)
-        }
-        
-        guard !taskData.isEmpty else {
+        guard !taskToExport.isEmpty else {
             print("No data presented")
             return
         }
@@ -78,12 +96,12 @@ final class ExportViewModel{
             switch selectedType{
                     
             case .JSON:
-                exportedData = try JSONEncoder().encode(self.tasks)
+                exportedData = try JSONEncoder().encode(taskToExport)
             case .CSV:
                 let encoder = CSVEncoder {
                     $0.headers = TaskModel.getCodingKeys
                 }
-                exportedData = try encoder.encode(self.tasks)
+                exportedData = try encoder.encode(taskToExport)
             }
         }catch{
             print("There was an error: \(error.localizedDescription)")

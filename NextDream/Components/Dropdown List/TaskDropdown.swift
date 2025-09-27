@@ -9,16 +9,16 @@ import SwiftUI
 
 struct TaskDropdown: View {
     
-    @Bindable var taskToExport: ItemDropdownContainer
+    @Bindable var container: ItemDropdownContainer
     
     var body: some View {
         List{
-            ForEach(taskToExport.items.filter { $0.task.parentID == nil}) { item in
+            ForEach(container.items["nil"] ?? []) { item in
                 
-                TaskRow(item: item, container: taskToExport)
+                TaskRow(item: item, container: container)
                 
                 if item.showChildren {
-                    SubTaskRegion(allTasks: taskToExport, level: 1, parentID: item.task.id)
+                    SubTaskRegion(container: container, parentID: item.task.id)
                 }
             }
         }
@@ -27,22 +27,22 @@ struct TaskDropdown: View {
 
 struct SubTaskRegion: View {
     
-    @Bindable var allTasks: ItemDropdownContainer
-    var level: Int = 1
+    @Bindable var container: ItemDropdownContainer
+    var level: Int
     var parentID: String
     
-    init(allTasks: ItemDropdownContainer, level: Int, parentID: String) {
-        self.allTasks = allTasks
+    init(container: ItemDropdownContainer, level: Int = 1, parentID: String) {
+        self.container = container
         self.level = level
         self.parentID = parentID
     }
     
     var body: some View {
-        ForEach(allTasks.items.filter({$0.task.parentID == parentID})) { item in
-            TaskRow(item: item, container: allTasks)
+        ForEach(container.items[parentID] ?? []) { item in
+            TaskRow(item: item, container: container)
             
             if item.showChildren {
-                SubTaskRegion(allTasks: allTasks, level: level + 1, parentID: item.task.id)
+                SubTaskRegion(container: container, level: level + 1, parentID: item.task.id)
             }
         }
         .padding(.leading, CGFloat(15 * level))
@@ -51,7 +51,7 @@ struct SubTaskRegion: View {
 
 #Preview {
     
-    let taskContainer = ItemDropdownContainer( defaultTaskRepository: DefaultTaskRepository(modelContext: MockModels.container.mainContext))
+    let container = ItemDropdownContainer( defaultTaskRepository: DefaultTaskRepository(modelContext: MockModels.container.mainContext))
     
-    TaskDropdown(taskToExport: taskContainer)
+    TaskDropdown(container: container)
 }

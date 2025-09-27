@@ -159,3 +159,24 @@ class TaskModel: Identifiable, Codable{
         try container.encode(taskPriority.rawValue, forKey: .taskPriority)
     }
 }
+
+extension TaskModel{
+    var removeParentID: TaskModel{
+        return TaskModel(
+            id: self.id,
+            name: self.name,
+            taskDescription: self.taskDescription,
+            parentID: nil,
+            mainTaskID: self.mainTaskID,
+            calendarIdentifier: self.calendarIdentifier,
+            creationDate: self.creationDate,
+            deadline: self.deadline,
+            progress: self.progress,
+            isCompleted: self.isCompleted,
+            isSelected: self.isSelected,
+            taskTypeID: self.taskTypeID,
+            taskCategory: self.taskCategory,
+            taskPriority: self.taskPriority
+        )
+    }
+}
