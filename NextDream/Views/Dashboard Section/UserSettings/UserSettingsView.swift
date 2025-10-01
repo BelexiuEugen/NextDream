@@ -11,6 +11,7 @@ import SwiftData
 struct UserSettingsView: View {
     
     @Environment(\.dismiss) private var dismiss
+    @Environment(AuthViewModel.self) private var auth
     
     @State var viewModel: UserSettingsViewModel
     
@@ -30,6 +31,31 @@ struct UserSettingsView: View {
                 createFontSizePicker
                 
                 categoryPieSection
+                
+                Button {
+                    auth.signOut()
+                } label: {
+                    Text("Sign out")
+                        .frame(maxWidth: .infinity)
+                }
+                .tint(.red)
+                .frame(height: 50)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .buttonStyle(.borderedProminent)
+                
+                Button {
+                    auth.deleteAccount()
+                } label: {
+                    Text("Delete Account")
+                        .frame(maxWidth: .infinity)
+                }
+                .tint(.red)
+                .frame(height: 50)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .buttonStyle(.borderedProminent)
+
             }
             .padding(.top)
         }

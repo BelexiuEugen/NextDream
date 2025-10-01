@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0173A1C92E8AD39200B3C0B5 /* FirebaseAI in Frameworks */ = {isa = PBXBuildFile; productRef = 0173A1C82E8AD39200B3C0B5 /* FirebaseAI */; };
+		0173A1D12E8ADFE400B3C0B5 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0173A1D02E8ADFE400B3C0B5 /* FirebaseAuth */; };
+		0173A1D32E8ADFE400B3C0B5 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0173A1D22E8ADFE400B3C0B5 /* FirebaseCore */; };
+		0173A1D52E8ADFE400B3C0B5 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 0173A1D42E8ADFE400B3C0B5 /* FirebaseFirestore */; };
+		0173A1DE2E8BDE1D00B3C0B5 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 0173A1DD2E8BDE1D00B3C0B5 /* GoogleSignIn */; };
+		0173A1E02E8BDE1D00B3C0B5 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0173A1DF2E8BDE1D00B3C0B5 /* GoogleSignInSwift */; };
 		01FF6CAC2E859CAB00719C24 /* CodableCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 01FF6CAB2E859CAB00719C24 /* CodableCSV */; };
 		3DEEA0D72D36D4600073B5BA /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 3DEEA0D62D36D4600073B5BA /* FSCalendar */; };
 		B0BCD8412E3115A8009B7E18 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0CA2EA42E2BCB7900DB2C5D /* SwiftUI.framework */; };
@@ -117,7 +123,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				01FF6CAC2E859CAB00719C24 /* CodableCSV in Frameworks */,
+				0173A1D32E8ADFE400B3C0B5 /* FirebaseCore in Frameworks */,
 				3DEEA0D72D36D4600073B5BA /* FSCalendar in Frameworks */,
+				0173A1E02E8BDE1D00B3C0B5 /* GoogleSignInSwift in Frameworks */,
+				0173A1C92E8AD39200B3C0B5 /* FirebaseAI in Frameworks */,
+				0173A1D12E8ADFE400B3C0B5 /* FirebaseAuth in Frameworks */,
+				0173A1D52E8ADFE400B3C0B5 /* FirebaseFirestore in Frameworks */,
+				0173A1DE2E8BDE1D00B3C0B5 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,6 +199,12 @@
 			packageProductDependencies = (
 				3DEEA0D62D36D4600073B5BA /* FSCalendar */,
 				01FF6CAB2E859CAB00719C24 /* CodableCSV */,
+				0173A1C82E8AD39200B3C0B5 /* FirebaseAI */,
+				0173A1D02E8ADFE400B3C0B5 /* FirebaseAuth */,
+				0173A1D22E8ADFE400B3C0B5 /* FirebaseCore */,
+				0173A1D42E8ADFE400B3C0B5 /* FirebaseFirestore */,
+				0173A1DD2E8BDE1D00B3C0B5 /* GoogleSignIn */,
+				0173A1DF2E8BDE1D00B3C0B5 /* GoogleSignInSwift */,
 			);
 			productName = NextDream;
 			productReference = 3DEEA0602D36D29A0073B5BA /* NextDream.app */;
@@ -245,6 +263,8 @@
 			packageReferences = (
 				3DEEA0D52D36D4600073B5BA /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				01FF6CAA2E859CAB00719C24 /* XCRemoteSwiftPackageReference "CodableCSV" */,
+				0173A1C72E8AD39200B3C0B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				0173A1DC2E8BDE1D00B3C0B5 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3DEEA0612D36D29A0073B5BA /* Products */;
@@ -441,6 +461,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NextDream/Info.plist;
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -473,6 +494,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NextDream/Info.plist;
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -583,6 +605,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0173A1C72E8AD39200B3C0B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.3.0;
+			};
+		};
+		0173A1DC2E8BDE1D00B3C0B5 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
 		01FF6CAA2E859CAB00719C24 /* XCRemoteSwiftPackageReference "CodableCSV" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/dehesa/CodableCSV.git";
@@ -602,6 +640,36 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0173A1C82E8AD39200B3C0B5 /* FirebaseAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0173A1C72E8AD39200B3C0B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAI;
+		};
+		0173A1D02E8ADFE400B3C0B5 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0173A1C72E8AD39200B3C0B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		0173A1D22E8ADFE400B3C0B5 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0173A1C72E8AD39200B3C0B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		0173A1D42E8ADFE400B3C0B5 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0173A1C72E8AD39200B3C0B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		0173A1DD2E8BDE1D00B3C0B5 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0173A1DC2E8BDE1D00B3C0B5 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		0173A1DF2E8BDE1D00B3C0B5 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0173A1DC2E8BDE1D00B3C0B5 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		01FF6CAB2E859CAB00719C24 /* CodableCSV */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 01FF6CAA2E859CAB00719C24 /* XCRemoteSwiftPackageReference "CodableCSV" */;

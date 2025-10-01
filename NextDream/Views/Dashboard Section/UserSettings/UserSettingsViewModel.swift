@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import FirebaseAuth
 
 //static let notification = "notification"
 //static let areNotificationEnabled = "areNotificationEnabled"
@@ -166,6 +167,17 @@ final class UserSettingsViewModel{
 extension UserSettingsViewModel{
     func deleteAllNotification(){
         notificationManager.deleteAllNotification()
+    }
+}
+
+extension UserSettingsViewModel{
+    
+    func signOut(){
+        do {
+            try Auth.auth().signOut()
+        } catch let signOutError as NSError {
+          print("Error signing out: %@", signOutError)
+        }
     }
 }
 

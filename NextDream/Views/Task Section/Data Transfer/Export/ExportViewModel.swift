@@ -70,7 +70,7 @@ final class ExportViewModel{
     func createSelectedItemsList() -> [ItemDropdownModel]{
         var items: [ItemDropdownModel] = []
         
-        for (parentID, childrens) in self.taskContainer.items{
+        for (_, childrens) in self.taskContainer.items{
             for child in childrens where child.isSelected{
                 items.append(child)
             }
