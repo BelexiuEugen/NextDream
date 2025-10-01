@@ -34,18 +34,26 @@ struct TaskCreationView: View {
         @Bindable var vm = vm;
         
         VStack{
-            ZStack{
-                
-                templateSelectionRegion
-                    .offset(x: vm.screenWidth - vm.currentWidth)
-                
-                taskDetailRegion
-                    .offset(x: 2 * vm.screenWidth - vm.currentWidth)
-                    .id(2)
-                
-                customElementsRegion
-                    .offset(x: 3 * vm.screenWidth - vm.currentWidth)
-                    .id(3)
+            ScrollView{
+                ZStack{
+                    
+                    nameAndStartingPointRegion
+                        .offset(x: vm.screenWidth - vm.currentWidth)
+                        .id(1)
+                    
+                    templateSelectionRegion
+                        .offset(x: 2 * vm.screenWidth - vm.currentWidth)
+                        .id(2)
+                    
+                    taskDetailRegion
+                        .offset(x: 3 * vm.screenWidth - vm.currentWidth)
+                        .id(3)
+                    
+                    customElementsRegion
+                        .offset(x: 4 * vm.screenWidth - vm.currentWidth)
+                        .id(4)
+                    
+                }
             }
             Spacer()
             
@@ -157,6 +165,58 @@ extension TaskCreationView{
             Spacer()
         }
     }
+    
+    private var nameAndStartingPointRegion: some View{
+        VStack(alignment: .leading, spacing: 16){
+            Text("Goal Details")
+                .font(.headline)
+                .fontWeight(.semibold)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Goal Name")
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                HStack{
+                    TextField("Enter goal name", text: $vm.goalName)
+                        .textFieldStyle(.roundedBorder)
+                        .disabled(vm.goalIsSet)
+                    
+                    Image(systemName: vm.goalIsSet ? "checkmark.square.fill" : "square.dashed")
+                        .onTapGesture {
+                            vm.goalIsSet.toggle()
+                        }
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Starting Point questions")
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                
+                TextEditor(text: $vm.startingPointHelp)
+                    .frame(height: 200)
+                    .overlay{
+                        if vm.fetchingAIHelp{
+                            ProgressView()
+                        }
+                    }
+                
+            }
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Starting Point")
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                
+                TextEditor(text: $vm.startingPoint)
+                    .frame(height: 200)
+            }
+            .disabled(vm.goalName.isEmpty)
+
+            Spacer()
+        }
+        .padding()
+    }
 }
 
 //MARK: Components
@@ -254,3 +314,4 @@ extension TaskCreationView{
     
     
 }
+

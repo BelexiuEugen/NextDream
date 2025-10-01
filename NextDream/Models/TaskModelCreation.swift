@@ -12,6 +12,8 @@ import Foundation
 struct TaskModelCreation{
     
     var name: String = "No Description"
+    var askedQuestions: String? = nil
+    var description: String? = nil
     var parentID: String? = nil
     var mainTaskID: String? = nil
     var taskStartDate: Date

@@ -29,11 +29,28 @@ final class TaskCreationViewModel{
     var isPresented: Bool = false;
     var selectedRestDays: [Weekday: Bool] = Dictionary(uniqueKeysWithValues: Weekday.allCases.map { ($0, false) })
     
+    // User-provided meta
+    var goalName: String = ""
+    
+    var goalIsSet: Bool = false {
+        didSet{
+            if goalIsSet{
+                debounceSearch()
+            }
+        }
+    }
+    
+    var fetchingAIHelp: Bool = false
+    
+    var startingPointHelp: String = ""
+    var startingPoint: String = ""
+    
     var taskCreationManager: TaskCreation
     var sheetDetent: Binding<PresentationDetent>
     var isLoading: Binding<Bool>
     var path : NavigationViewModel
     var dismiss: DismissAction?
+    var gemini: GeminiAIManager = GeminiAIManager()
     
     
     let screenWidth: CGFloat = UIScreen.main.bounds.width
@@ -51,15 +68,37 @@ final class TaskCreationViewModel{
         self.path = path
     }
     
+    private var pendingRequestWorkItem: DispatchWorkItem?
+
+    private func debounceSearch() {
+        // Cancel the previous work item if it exists
+        pendingRequestWorkItem?.cancel()
+        
+        // Re-assign with a new work item
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            Task{
+                self.fetchingAIHelp = true
+                self.startingPointHelp = await self.gemini.generateText(goalName: self.goalName)
+                self.fetchingAIHelp = false
+            }
+        }
+        
+        pendingRequestWorkItem = workItem
+        
+        // Execute after 0.5 seconds if not cancelled
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
+    }
+    
     func goNext(){
         
-        if  currentWidth == screenWidth * 3 || (currentWidth == 2 * screenWidth && selectedType != .custom){
+        if  currentWidth == screenWidth * 4 || (currentWidth == 3 * screenWidth && selectedType != .custom){
             createTask()
             return;
         }
-        
+//        
         withAnimation(.easeInOut(duration: 0.5)) {
-            currentWidth = min(screenWidth * 3, currentWidth + screenWidth)
+            currentWidth = min(screenWidth * 4, currentWidth + screenWidth)
         }
     }
     
@@ -99,9 +138,30 @@ final class TaskCreationViewModel{
             calculateComponents()
         }
         
+//        let resolvedName: String = {
+//            if !goalName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+//                return goalName
+//            }
+//            switch selectedType {
+//            case .day:
+//                return startDate.getDayName()
+//            case .week:
+//                return startDate.weekRange(7)
+//            case .year:
+//                return "\(Calendar.current.component(.year, from: startDate))"
+//            case .month:
+//                let m = Months(date: startDate)
+//                return m.monthName
+//            default:
+//                return "Custom Goal"
+//            }
+//        }()
+        
         
         
         return TaskModelCreation(
+            name: self.goalName,
+            description: self.startingPoint,
             taskStartDate: startDate,
             weekDaysCount: 7,
             monthDaysCount: monthDaysCount,
@@ -171,3 +231,4 @@ extension TaskCreationViewModel{
         }
     }
 }
+

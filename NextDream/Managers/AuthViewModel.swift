@@ -11,7 +11,6 @@ import FirebaseFirestore
 final class AuthViewModel {
     var user: FirebaseAuth.User?
     var isLoading = true
-    var emailVerified: Bool = false
     var errorMessage: String? = nil
     
     nonisolated(unsafe) private var handle: AuthStateDidChangeListenerHandle?
@@ -128,12 +127,6 @@ final class AuthViewModel {
         user.reload { error in
             if let error = error {
                 self.errorMessage = error.localizedDescription
-            }
-            
-            if user.isEmailVerified {
-                self.emailVerified = true
-            } else {
-                self.emailVerified = false
             }
         }
     }

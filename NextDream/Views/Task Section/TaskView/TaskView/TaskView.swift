@@ -17,10 +17,16 @@ struct TaskView: View {
     }
     
     var body: some View {
-        Form{
-            createTaskSection
-            createSubTaskSection
-
+        
+        VStack{
+            
+            Form{
+                createTaskSection
+                
+                createSubTaskSection
+                
+            }
+            
         }
         .navigationTitle(vm.task.name)
         .frame(minWidth: 300, idealWidth: 400, maxWidth: 500)
@@ -75,20 +81,84 @@ extension TaskView{
     }
     
     private var createSubTaskSection: some View{
-        
-        Section("Sub Task") {
-            List{
-                ForEach(vm.tasks){ subTask in
-                    NavigationLink(value: subTask){
-                        Text(subTask.name)
-                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                Button("Complete"){
-                                    vm.markTaskAsCompleted(task: subTask)
-                                }
-                                .tint(.green)
+        Section {
+            if vm.isLoading{
+                ProgressView()
+            } else {
+                List{
+                    ForEach(vm.tasks){ subTask in
+                        HStack{
+                            
+                            HStack{
+                                Image(systemName: "sparkles")
+                                    .foregroundStyle(
+                                        LinearGradient(colors: [.purple, .blue],
+                                                       startPoint: .topLeading,
+                                                       endPoint: .bottomTrailing)
+                                    )
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .background(.thickMaterial)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .onTapGesture {
+                                        subTask.showAcceptOrRejectButton.toggle()
+                                        print("Generating code ...")
+                                    }
+                                
                             }
+                            
+                            NavigationLink(value: subTask){
+                                Text(subTask.temporaryName ?? subTask.name)
+                                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                        Button("Complete"){
+                                            vm.markTaskAsCompleted(task: subTask)
+                                        }
+                                        .tint(.green)
+                                    }
+                            }
+                            
+                            if subTask.showAcceptOrRejectButton{
+                                
+                                Image(systemName: "checkmark.square.fill")
+                                    .foregroundStyle(.green)
+                                    .background(.white)
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .onTapGesture {
+                                        vm.modifyTaskNameAndDescription(task: subTask)
+                                    }
+                                
+                                Image(systemName: "xmark.square.fill")
+                                    .foregroundStyle(.red)
+                                    .background(.white)
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .onTapGesture {
+                                        vm.cancelChanges(task: subTask)
+                                    }
+                            }
+                        }
                     }
                 }
+            }
+        } header: {
+            HStack {
+                Text("Sub Task")
+                
+                Spacer()
+                Button {
+                    Task{
+                        await vm.generateDataForSubTasks()
+                    }
+                } label: {
+                    Text("Generate With AI")
+                        .font(.body)
+                        .fontWeight(.semibold)
+                }
+                .padding()
+                .background(.purple)
+                .foregroundColor(.primary)
+                .cornerRadius(16)
             }
         }
     }

@@ -18,6 +18,8 @@ extension TaskCreationManager{
         
         let newRegularYear = TaskModel(
             name: taskData.name,
+            askedGoalQuestions: taskData.askedQuestions,
+            taskDescription: taskData.description,
             parentID: taskData.parentID,
             mainTaskID: taskData.mainTaskID,
             creationDate: taskData.taskStartDate,
@@ -94,6 +96,8 @@ extension TaskCreationManager{
         
         let newRegularMonth = TaskModel(
             name: taskData.name,
+            askedGoalQuestions: taskData.askedQuestions,
+            taskDescription: taskData.description,
             parentID: taskData.parentID,
             mainTaskID: taskData.mainTaskID,
             creationDate: taskData.taskStartDate,

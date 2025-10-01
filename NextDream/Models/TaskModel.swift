@@ -20,6 +20,7 @@ class TaskModel: Identifiable, Codable{
     
     var id: String = UUID().uuidString
     var name: String
+    var askedGoalQuestions: String? = nil;
     var taskDescription: String? = nil;
     var parentID : String? = nil;
     var mainTaskID : String?
@@ -29,6 +30,7 @@ class TaskModel: Identifiable, Codable{
     var progress: CGFloat = 0.0
     var isCompleted: Bool = false
     var isSelected: Bool = false
+    var showAcceptOrRejectButton = false
     var taskTypeID: Int
     var taskCategory: TaskCategory
     var taskPriority: TaskPriority;
@@ -36,6 +38,9 @@ class TaskModel: Identifiable, Codable{
     var taskType: TaskType {
         TaskType(rawValue: taskTypeID) ?? .day
     }
+    
+    var temporaryName: String? = nil
+    var temporaryDescription: String? = nil
     
     static var getCodingKeys: [String]{
         var result: [String] = []
@@ -49,6 +54,7 @@ class TaskModel: Identifiable, Codable{
     init(
         id: String = UUID().uuidString,
         name: String,
+        askedGoalQuestions: String? = nil,
         taskDescription: String? = nil,
         parentID: String? = nil,
         mainTaskID: String? = nil,
@@ -64,6 +70,7 @@ class TaskModel: Identifiable, Codable{
     ) {
         self.id = id
         self.name = name
+        self.askedGoalQuestions = askedGoalQuestions
         self.taskDescription = taskDescription
         self.parentID = parentID
         self.mainTaskID = mainTaskID

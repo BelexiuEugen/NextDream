@@ -27,6 +27,14 @@ struct MockModels {
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
     )
     
+    static let mockSubTasks: [TaskModel] = [
+        firstModel,
+        firstModel,
+        firstModel,
+        firstModel,
+        firstModel,
+        firstModel,
+    ]
     static let allTasks: [(date: Date, count: Int)] = [
         (Date().addingTimeInterval(-5*86400), 5),
         (Date().addingTimeInterval(-4*86400), 8),

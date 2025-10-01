@@ -18,10 +18,12 @@ final class TaskViewModel{
     var newTaskName = ""
     var isEditing: Bool = true;
     var pdfURL: URL?
+    var isLoading: Bool = false;
     
     var queryDescriptorManager: QueryDescriptorManager = QueryDescriptorManager()
     var taskRepository: TaskRepository
     var modelContext: ModelContext
+    var gemini: GeminiAIManager = GeminiAIManager()
     
     
     init(task: TaskModel, taskRepository: TaskRepository, modelContext: ModelContext){
@@ -38,6 +40,41 @@ final class TaskViewModel{
         } catch{
             print("Implement an error in here")
         }
+    }
+    
+    func generateDataForSubTasks() async{
+        
+        self.isLoading = true
+        
+        let data = await gemini.generateSubTasks(
+            goalName: task.name,
+            goalQuesetion: task.askedGoalQuestions ?? "No question asked",
+            goalDescription: task.taskDescription ?? "No description Added",
+            numberOfSubTasks: tasks.count,
+            taskType: task.taskType
+        )
+        
+        for (index, taskData) in data.enumerated(){
+            self.tasks[index].temporaryName = taskData.name
+            self.tasks[index].temporaryDescription = taskData.description
+            self.tasks[index].showAcceptOrRejectButton = true
+        }
+        
+        self.isLoading = false
+    }
+    
+    func modifyTaskNameAndDescription(task: TaskModel){
+        task.name = task.temporaryName ?? "No Name provided"
+        task.taskDescription = task.temporaryDescription
+        task.showAcceptOrRejectButton = false
+        task.temporaryName = nil
+        task.temporaryDescription = nil
+    }
+    
+    func cancelChanges(task: TaskModel){
+        task.temporaryName = nil
+        task.temporaryDescription = nil
+        task.showAcceptOrRejectButton = false
     }
     
     func saveDataToDevice(){

@@ -13,7 +13,7 @@ struct RootView: View {
     @Environment(AuthViewModel.self) var auth: AuthViewModel
     
     var body: some View {
-        if auth.user != nil && auth.emailVerified {
+        if auth.user != nil && ((auth.user?.isEmailVerified) != nil) {
             HomeView()
         } else if auth.user != nil {
             EmailNotVerifiedView()

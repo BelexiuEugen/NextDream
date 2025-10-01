@@ -33,10 +33,10 @@ class TaskCreationManager: TaskCreation{
         
         switch taskData.taskType {
         case .day:
-            newTaskData.name = taskData.taskStartDate.getDayName()
+//            newTaskData.name = taskData.taskStartDate.getDayName()
             result = createDay(taskData: newTaskData);
         case .week:
-            newTaskData.name = taskData.taskStartDate.weekRange(7)
+//            newTaskData.name = taskData.taskStartDate.weekRange(7)
             result = createWeek(taskData: newTaskData)
         case .month:
             result = creationModelType == .calendar ? createCalendarMonth(taskData: taskData): createRegularMonth(taskData: taskData)
@@ -61,6 +61,8 @@ class TaskCreationManager: TaskCreation{
         
         let newDayModel = TaskModel(
             name: taskData.name,
+            askedGoalQuestions: taskData.askedQuestions,
+            taskDescription: taskData.description,
             parentID: taskData.parentID,
             mainTaskID: taskData.mainTaskID,
             creationDate: taskData.taskStartDate,
@@ -93,6 +95,8 @@ class TaskCreationManager: TaskCreation{
         
         let newWeekModel = TaskModel(
             name: taskData.name,
+            askedGoalQuestions: taskData.askedQuestions,
+            taskDescription: taskData.description,
             parentID: taskData.parentID,
             mainTaskID: taskData.mainTaskID,
             creationDate: taskData.taskStartDate,
@@ -149,6 +153,8 @@ class TaskCreationManager: TaskCreation{
         
         let newCustomModel = TaskModel(
             name: taskData.name,
+            askedGoalQuestions: taskData.askedQuestions,
+            taskDescription: taskData.description,
             creationDate: taskData.taskStartDate,
             deadline: finalDeadline,
             taskTypeID: TaskType.custom.rawValue,
