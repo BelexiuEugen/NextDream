@@ -23,7 +23,14 @@ struct TaskView: View {
             Form{
                 createTaskSection
                 
-                createSubTaskSection
+                if vm.task.taskType != .day{
+                    createSubTaskSection
+                        .overlay{
+                            if vm.isLoading{
+                                ProgressView()
+                            }
+                        }
+                }
                 
             }
             
@@ -82,43 +89,57 @@ extension TaskView{
     
     private var createSubTaskSection: some View{
         Section {
-            if vm.isLoading{
-                ProgressView()
-            } else {
-                List{
-                    ForEach(vm.tasks){ subTask in
+            List{
+                ForEach(vm.tasks){ subTask in
+                    HStack{
+                        
                         HStack{
+                            Image(systemName: "sparkles")
+                                .foregroundStyle(
+                                    LinearGradient(colors: [.purple, .blue],
+                                                   startPoint: .topLeading,
+                                                   endPoint: .bottomTrailing)
+                                )
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                                .background(.thickMaterial)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .onTapGesture {
+                                    Task{
+                                        subTask.isLoading = true
+                                        await vm.GeneratedDataForATask(selectedTask: subTask)
+                                        subTask.showAcceptOrRejectButton = true
+                                        subTask.isLoading = false
+                                    }
+                                }
+                                .disabled(subTask.isLoading)
                             
+                        }
+                        
+                        NavigationLink(value: subTask){
                             HStack{
-                                Image(systemName: "sparkles")
-                                    .foregroundStyle(
-                                        LinearGradient(colors: [.purple, .blue],
-                                                       startPoint: .topLeading,
-                                                       endPoint: .bottomTrailing)
-                                    )
-                                    .font(.title2)
-                                    .fontWeight(.semibold)
-                                    .background(.thickMaterial)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    .onTapGesture {
-                                        subTask.showAcceptOrRejectButton.toggle()
-                                        print("Generating code ...")
-                                    }
-                                
-                            }
-                            
-                            NavigationLink(value: subTask){
                                 Text(subTask.temporaryName ?? subTask.name)
-                                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                        Button("Complete"){
-                                            vm.markTaskAsCompleted(task: subTask)
-                                        }
-                                        .tint(.green)
-                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    
+                                    
+                                if subTask.hasAName{
+                                    Text(subTask.datePeriod)
+                                        .font(.caption2)
+                                }
+                                    
                             }
+                            .frame(maxWidth: .infinity)
                             
-                            if subTask.showAcceptOrRejectButton{
-                                
+                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                    Button("Complete"){
+                                        vm.markTaskAsCompleted(task: subTask)
+                                    }
+                                    .tint(.green)
+                                }
+                        }
+                        
+                        if subTask.showAcceptOrRejectButton {
+                            HStack(spacing: 8) {
                                 Image(systemName: "checkmark.square.fill")
                                     .foregroundStyle(.green)
                                     .background(.white)
@@ -127,7 +148,7 @@ extension TaskView{
                                     .onTapGesture {
                                         vm.modifyTaskNameAndDescription(task: subTask)
                                     }
-                                
+
                                 Image(systemName: "xmark.square.fill")
                                     .foregroundStyle(.red)
                                     .background(.white)
@@ -137,9 +158,17 @@ extension TaskView{
                                         vm.cancelChanges(task: subTask)
                                     }
                             }
+                            .transition(.move(edge: .trailing).combined(with: .opacity))
                         }
                     }
+                    .overlay{
+                        if subTask.isLoading{
+                            ProgressView()
+                        }
+                    }
+                    .animation(.spring(response: 0.35, dampingFraction: 0.8, blendDuration: 0.2), value: subTask.showAcceptOrRejectButton)
                 }
+                
             }
         } header: {
             HStack {
@@ -159,6 +188,7 @@ extension TaskView{
                 .background(.purple)
                 .foregroundColor(.primary)
                 .cornerRadius(16)
+                .disabled(vm.isLoading)
             }
         }
     }
@@ -194,3 +224,4 @@ extension TaskView{
         }
     }
 }
+

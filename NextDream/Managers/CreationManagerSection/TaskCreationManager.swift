@@ -61,6 +61,7 @@ class TaskCreationManager: TaskCreation{
         
         let newDayModel = TaskModel(
             name: taskData.name,
+            datePeriod: taskData.name,
             askedGoalQuestions: taskData.askedQuestions,
             taskDescription: taskData.description,
             parentID: taskData.parentID,
@@ -95,6 +96,7 @@ class TaskCreationManager: TaskCreation{
         
         let newWeekModel = TaskModel(
             name: taskData.name,
+            datePeriod: taskData.name,
             askedGoalQuestions: taskData.askedQuestions,
             taskDescription: taskData.description,
             parentID: taskData.parentID,
@@ -114,7 +116,9 @@ class TaskCreationManager: TaskCreation{
             
             guard let startDate = Calendar.current.date(byAdding: .day, value: 1, to: subTaskStartDate) else { break }
             
-            let dayName = restDays.contains(currentDay) ? "Rest" : subTaskStartDate.getDayName()
+            if restDays.contains(currentDay) { subTaskStartDate = startDate; currentDay.next(); continue }
+            
+            let dayName = subTaskStartDate.getDayName()
             
             let subTaskData = TaskModelCreation(
                 name: dayName,
@@ -153,6 +157,7 @@ class TaskCreationManager: TaskCreation{
         
         let newCustomModel = TaskModel(
             name: taskData.name,
+            datePeriod: taskData.name,
             askedGoalQuestions: taskData.askedQuestions,
             taskDescription: taskData.description,
             creationDate: taskData.taskStartDate,

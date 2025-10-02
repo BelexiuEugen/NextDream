@@ -20,6 +20,7 @@ class TaskModel: Identifiable, Codable{
     
     var id: String = UUID().uuidString
     var name: String
+    var datePeriod: String
     var askedGoalQuestions: String? = nil;
     var taskDescription: String? = nil;
     var parentID : String? = nil;
@@ -31,6 +32,8 @@ class TaskModel: Identifiable, Codable{
     var isCompleted: Bool = false
     var isSelected: Bool = false
     var showAcceptOrRejectButton = false
+    var isLoading: Bool = false
+    var hasAName: Bool = false
     var taskTypeID: Int
     var taskCategory: TaskCategory
     var taskPriority: TaskPriority;
@@ -54,6 +57,7 @@ class TaskModel: Identifiable, Codable{
     init(
         id: String = UUID().uuidString,
         name: String,
+        datePeriod: String,
         askedGoalQuestions: String? = nil,
         taskDescription: String? = nil,
         parentID: String? = nil,
@@ -64,12 +68,14 @@ class TaskModel: Identifiable, Codable{
         progress: CGFloat = 0.0,
         isCompleted: Bool = false,
         isSelected: Bool = false,
+        hasAName: Bool = false,
         taskTypeID: Int,
         taskCategory: TaskCategory,
         taskPriority: TaskPriority
     ) {
         self.id = id
         self.name = name
+        self.datePeriod = datePeriod
         self.askedGoalQuestions = askedGoalQuestions
         self.taskDescription = taskDescription
         self.parentID = parentID
@@ -80,6 +86,7 @@ class TaskModel: Identifiable, Codable{
         self.progress = progress
         self.isCompleted = isCompleted
         self.isSelected = isSelected
+        self.hasAName = hasAName
         self.taskTypeID = taskTypeID
         self.taskCategory = taskCategory
         self.taskPriority = taskPriority
@@ -88,6 +95,7 @@ class TaskModel: Identifiable, Codable{
     enum CodingKeys: String, CodingKey, CaseIterable {
         case id
         case name
+        case datePeriod
         case taskDescription
         case parentID
         case mainTaskID
@@ -107,6 +115,7 @@ class TaskModel: Identifiable, Codable{
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let id = try container.decode(String.self, forKey: .id)
         let name = try container.decode(String.self, forKey: .name)
+        let datePeriod = try container.decode(String.self, forKey: .datePeriod)
         let taskDescription = try container.decodeIfPresent(String.self, forKey: .taskDescription)
         let parentID = try container.decodeIfPresent(String.self, forKey: .parentID)
         let mainTaskID = try container.decodeIfPresent(String.self, forKey: .mainTaskID)
@@ -132,6 +141,7 @@ class TaskModel: Identifiable, Codable{
         self.init(
             id: id,
             name: name,
+            datePeriod: datePeriod,
             taskDescription: taskDescription,
             parentID: parentID,
             mainTaskID: mainTaskID,
@@ -152,6 +162,7 @@ class TaskModel: Identifiable, Codable{
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
+        try container.encode(datePeriod, forKey: .datePeriod)
         try container.encodeIfPresent(taskDescription, forKey: .taskDescription)
         try container.encodeIfPresent(parentID, forKey: .parentID)
         try container.encodeIfPresent(mainTaskID, forKey: .mainTaskID)
@@ -172,6 +183,7 @@ extension TaskModel{
         return TaskModel(
             id: self.id,
             name: self.name,
+            datePeriod: self.datePeriod,
             taskDescription: self.taskDescription,
             parentID: nil,
             mainTaskID: self.mainTaskID,

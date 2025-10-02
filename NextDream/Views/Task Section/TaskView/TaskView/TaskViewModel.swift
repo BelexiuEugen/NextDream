@@ -42,19 +42,68 @@ final class TaskViewModel{
         }
     }
     
+    func getOtherTasksName(except: TaskModel) -> String{
+        var result: String = ""
+        
+        for task in self.tasks{
+            if task == except{
+                result += "This is the main task:"
+            }
+            result += task.name + " " + task.datePeriod + ", "
+        }
+        
+        return result
+    }
+    
+    func GeneratedDataForATask(selectedTask: TaskModel) async {
+        
+        let otherTasksName: String = getOtherTasksName(except: selectedTask)
+        
+        let result = await gemini
+            .generateSubTask(
+                goalName: task.name,
+                goalQuestion: task.askedGoalQuestions ?? "No question asked",
+                goalDescription: task.taskDescription ?? "No responses",
+                otherTaskName: otherTasksName,
+                mainParentType: task.taskType,
+                childrenTaskType: selectedTask.taskType
+            )
+        
+        selectedTask.temporaryName = result.name
+        selectedTask.temporaryDescription = result.description
+        selectedTask.showAcceptOrRejectButton = true
+    }
+    
+    func generateSubTasksInformation() -> String{
+        var result: String = ""
+        
+        for task in self.tasks{
+            result += task.creationDate.convertToDayAndMonth() + "+"
+            result += task.deadline.convertToDayAndMonth() + "+"
+            result += task.taskType.displayName + ","
+        }
+        
+        return result
+    }
+    
     func generateDataForSubTasks() async{
         
         self.isLoading = true
+        let taskData = generateSubTasksInformation()
         
         let data = await gemini.generateSubTasks(
             goalName: task.name,
             goalQuesetion: task.askedGoalQuestions ?? "No question asked",
             goalDescription: task.taskDescription ?? "No description Added",
             numberOfSubTasks: tasks.count,
+            taskData: taskData,
             taskType: task.taskType
         )
         
         for (index, taskData) in data.enumerated(){
+            
+            if index >= tasks.count || (index == 13 && task.taskType == .year) { continue }
+            
             self.tasks[index].temporaryName = taskData.name
             self.tasks[index].temporaryDescription = taskData.description
             self.tasks[index].showAcceptOrRejectButton = true
@@ -69,6 +118,7 @@ final class TaskViewModel{
         task.showAcceptOrRejectButton = false
         task.temporaryName = nil
         task.temporaryDescription = nil
+        task.hasAName = true
     }
     
     func cancelChanges(task: TaskModel){

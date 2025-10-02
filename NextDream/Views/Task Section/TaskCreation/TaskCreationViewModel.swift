@@ -202,12 +202,9 @@ final class TaskCreationViewModel{
 extension TaskCreationViewModel{
     func updateWeeksAndMonths(){
         
-        if numberOfWeeks >= 5{
+        if numberOfWeeks >= 4{
             numberOfWeeks = 0;
-            
-            if(numberOfMonths < 12){
-                numberOfMonths += 1;
-            }
+
         }
     }
     
@@ -216,9 +213,6 @@ extension TaskCreationViewModel{
         if numberOfMonths >= 12{
             numberOfMonths = 0
             
-            if numberOfYears < 10{
-                numberOfYears += 1;
-            }
         }
     }
     

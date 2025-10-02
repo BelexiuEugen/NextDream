@@ -12,14 +12,16 @@ struct MockModels {
     static var firstModel = TaskModel(
         id: UUID().uuidString,
         name: "Mock Task",
+        datePeriod: "12 - 35 feb",
         creationDate: .now,
         deadline: .distantFuture,
         progress: .pi,
         isCompleted: false,
         isSelected: false,
-        taskTypeID: 1,
+        hasAName: true,
+        taskTypeID: 2,
         taskCategory: .hobbies,
-        taskPriority: .high
+        taskPriority: .high,
     )
     
     static var container = try! ModelContainer(
