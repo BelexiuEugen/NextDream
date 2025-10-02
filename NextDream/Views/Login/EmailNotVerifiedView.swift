@@ -10,6 +10,7 @@ import FirebaseAuth
 
 struct EmailNotVerifiedView: View {
     @Environment(AuthViewModel.self) private var auth: AuthViewModel
+    @AppStorage("isEmailVerified") var emailVerified: Bool = false
 
     @State private var isSending = false
     @State private var showSuccess = false
@@ -45,10 +46,18 @@ struct EmailNotVerifiedView: View {
             }
 //            .buttonStyle(.link)
             .disabled(isSending)
-
-            // Refresh button to re-check verification status
+            
             Button("I've verified — Refresh status") {
-                refreshStatus()
+                Task{
+                    emailVerified = await refreshStatus()
+                }
+            }
+            .buttonStyle(.bordered)
+            
+            Button(role: .destructive) {
+                auth.signOut()
+            } label: {
+                Label("Sign Out", systemImage: "arrow.backward.circle")
             }
             .buttonStyle(.bordered)
 
@@ -89,12 +98,13 @@ struct EmailNotVerifiedView: View {
         }
     }
 
-    private func refreshStatus() {
+    private func refreshStatus() async -> Bool{
         if let user = auth.user {
-            auth.checkIfEmailIsVerified(user: user)
+            return await auth.checkIfEmailIsVerified(user: user)
         } else {
             Auth.auth().currentUser?.reload(completion: { _ in })
         }
+        return false
     }
 }
 

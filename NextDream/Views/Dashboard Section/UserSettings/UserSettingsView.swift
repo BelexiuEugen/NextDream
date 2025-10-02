@@ -12,6 +12,8 @@ struct UserSettingsView: View {
     
     @Environment(\.dismiss) private var dismiss
     @Environment(AuthViewModel.self) private var auth
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
+    @AppStorage("isEmailVerified") var emailVerified: Bool = true
     
     @State var viewModel: UserSettingsViewModel
     
@@ -34,6 +36,8 @@ struct UserSettingsView: View {
                 
                 Button {
                     auth.signOut()
+                    isLoggedIn = false
+                    emailVerified = false
                 } label: {
                     Text("Sign out")
                         .frame(maxWidth: .infinity)
@@ -46,6 +50,8 @@ struct UserSettingsView: View {
                 
                 Button {
                     auth.deleteAccount()
+                    isLoggedIn = false
+                    emailVerified = false
                 } label: {
                     Text("Delete Account")
                         .frame(maxWidth: .infinity)

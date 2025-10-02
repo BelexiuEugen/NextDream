@@ -13,6 +13,8 @@ struct LoginView: View {
     @State var viewModel: LoginViewModel = .init()
     @State private var showRegistration = false
     @Environment(AuthViewModel.self) var auth
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    @AppStorage("isEmailVerified") var emailVerified: Bool = false
     
     var body: some View {
         ZStack {
@@ -116,7 +118,9 @@ extension LoginView{
         Button {
             if viewModel.checkEmailAndPassword(){
                 Task{
-                    await viewModel.handleLogin()
+                    let results = await viewModel.handleLogin()
+                    isLoggedIn = results.0
+                    emailVerified = results.1
                 }
 //                viewModel.errorMessage =  auth.signInWithEmailAndPassword(email: viewModel.email, password: viewModel.password)
             }

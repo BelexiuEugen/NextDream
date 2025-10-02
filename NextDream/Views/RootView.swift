@@ -11,11 +11,13 @@ import FirebaseAuth
 struct RootView: View {
     
     @Environment(AuthViewModel.self) var auth: AuthViewModel
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    @AppStorage("isEmailVerified") var emailVerified: Bool = false
     
     var body: some View {
-        if auth.user != nil && ((auth.user?.isEmailVerified) != nil) {
+        if isLoggedIn && emailVerified {
             HomeView()
-        } else if auth.user != nil {
+        } else if isLoggedIn {
             EmailNotVerifiedView()
         } else {
             LoginView()

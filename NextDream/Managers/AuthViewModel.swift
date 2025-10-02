@@ -123,10 +123,14 @@ final class AuthViewModel {
         }
     }
     
-    func checkIfEmailIsVerified(user: User){
-        user.reload { error in
-            if let error = error {
-                self.errorMessage = error.localizedDescription
+    func checkIfEmailIsVerified(user: User) async -> Bool{
+        await withCheckedContinuation { continuation in
+            user.reload { error in
+                if let error = error {
+                    self.errorMessage = error.localizedDescription
+                }
+                
+                continuation.resume(returning: user.isEmailVerified)
             }
         }
     }
@@ -162,11 +166,24 @@ final class AuthViewModel {
         }
     }
     
-    func createAccountWithEmailAndPassword(email: String, password: String, name: String, familyName: String, country: String, birthDay: Date, gender: String) async -> String{
+    func sendVerificationMail(){
+        
+        guard let user = Auth.auth().currentUser else { return }
+        
+        user.sendEmailVerification { error in
+            if let error = error {
+                print("Error sending email verification: \(error.localizedDescription)")
+            } else {
+                print("Email verification sent.")
+            }
+        }
+    }
+    
+    func createAccountWithEmailAndPassword(email: String, password: String, name: String, familyName: String, country: String, birthDay: Date, gender: String) async -> (Bool, String){
         await withCheckedContinuation {  continuation in
             Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
                 if let error = error {
-                    continuation.resume(returning: error.localizedDescription)
+                    continuation.resume(returning: (false, error.localizedDescription))
                     return
                 }
                 
@@ -174,7 +191,9 @@ final class AuthViewModel {
                     self.saveUserData(uid: userID, name: name, familyName: familyName, country: country, birthDay: birthDay, gender: gender)
                 }
                 
-                continuation.resume(returning: "Succefully Logged In")
+                self.sendVerificationMail()
+                
+                continuation.resume(returning: (true, "User Successfully Created"))
             }
         }
     }

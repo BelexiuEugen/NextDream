@@ -75,7 +75,9 @@ class DefaultTaskRepository: TaskRepository{
         var result: [(Date, Bool)] = []
         
         do{
-            let tasks = try modelContext.fetch(descriptor)
+            var tasks: [TaskModel] = try modelContext.fetch(descriptor)
+            
+            tasks = tasks.sorted { $0.deadline < $1.deadline}
             
             for task in tasks {
                 let taskData = (task.deadline, task.isCompleted)

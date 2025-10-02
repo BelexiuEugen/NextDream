@@ -14,6 +14,7 @@ struct RegistrationView: View {
     @State private var model = RegistrationViewModel()
     @Environment(\.dismiss) var dismiss
     @Environment(AuthViewModel.self) var auth
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     
     var body: some View {
         ZStack {
@@ -211,7 +212,7 @@ extension RegistrationView{
                 return
             }
             Task{
-                model.errorMessage = await auth
+                (isLoggedIn, model.errorMessage) = await auth
                     .createAccountWithEmailAndPassword(
                         email: model.email,
                         password: model.password,
