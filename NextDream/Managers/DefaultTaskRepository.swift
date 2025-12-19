@@ -62,7 +62,7 @@ class DefaultTaskRepository: TaskRepository{
     
     func fetchTasks(descriptor: FetchDescriptor<TaskModel>) -> [TaskModel] {
         do{
-            return try modelContext.fetch(descriptor).sorted { $0.deadline < $1.deadline }
+            return try modelContext.fetch(descriptor)   .sorted { $0.deadline < $1.deadline }
         } catch{
             print("There was an error gettings the tasks")
         }

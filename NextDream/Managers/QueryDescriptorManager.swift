@@ -45,7 +45,7 @@ class QueryDescriptorManager{
         return descriptor
     }
     
-    func descriptorForParentID(parentID: String?) -> FetchDescriptor<TaskModel>{
+    func        descriptorForParentID(parentID: String?) -> FetchDescriptor<TaskModel>{
         FetchDescriptor<TaskModel>(predicate: #Predicate{ $0.parentID == parentID})
     }
     

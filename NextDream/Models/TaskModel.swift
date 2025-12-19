@@ -16,9 +16,12 @@ import CoreGraphics
 // isVisible - I don't know it's purpose
 
 @Model
+// NOTE: Removed unsupported @Index attribute (caused 'Unknown attribute "Index"')
 class TaskModel: Identifiable, Codable{
     
-    var id: String = UUID().uuidString
+    #Index<TaskModel>([\.parentID], [\.id])
+    
+    @Attribute(.unique) var id: String = UUID().uuidString
     var name: String
     var datePeriod: String
     var askedGoalQuestions: String? = nil;
@@ -199,3 +202,4 @@ extension TaskModel{
         )
     }
 }
+
