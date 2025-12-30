@@ -108,7 +108,7 @@ enum Notification: String{
 //MARK: Streak Elements
 
 enum ElementStreak{
-    case streak, todayTaskAchieved, totalTaskAchieved
+    case streak, todayTaskAchieved, totalTaskAchieved, monthlyTaskAchieved
     
     var image: Image{
         switch self {
@@ -118,6 +118,8 @@ enum ElementStreak{
             return Image(systemName: "target")
         case .totalTaskAchieved:
             return Image(systemName: "trophy.fill")
+        case .monthlyTaskAchieved:
+            return Image(systemName: "calendar")
         }
     }
     
@@ -129,6 +131,8 @@ enum ElementStreak{
             return Text("Today Task Achieved")
         case .totalTaskAchieved:
             return Text("Total Task Achieved")
+        case .monthlyTaskAchieved:
+            return Text("Monthly Task Achieved")
         }
     }
     
@@ -140,6 +144,8 @@ enum ElementStreak{
               return .blue
           case .totalTaskAchieved:
               return .green
+          case .monthlyTaskAchieved:
+              return .purple
           }
       }
 }
@@ -295,3 +301,4 @@ enum CreationModelType: String, CaseIterable{
     case regular
     case calendar
 }
+

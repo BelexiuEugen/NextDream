@@ -30,13 +30,14 @@ struct CalendarView: View {
             showTaskDetails
         }
         .padding()
-        .sheet(isPresented: $viewModel.isPresented, content: {
-            EventSelectionView(modelContext: viewModel.modelContext)
-                .presentationDetents([.fraction(0.4), .medium, .large])
-        })
-        .toolbar {
-            calendarButton
-        }
+//        .sheet(isPresented: $viewModel.isPresented, content: {
+////            EventSelectionView(modelContext: viewModel.modelContext)
+////                .presentationDetents([.fraction(0.4), .medium, .large])
+//                Text("Coming Soon - Apple Calendar integration is on its way!")
+//        })
+//        .toolbar {
+//            calendarButton
+//        }
     }
 }
 

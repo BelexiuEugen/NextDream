@@ -38,18 +38,31 @@ struct TaskCreationView: View {
                 ZStack{
                     
                     nameAndStartingPointRegion
+                        .padding(.horizontal)
+                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+                        .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
                         .offset(x: vm.screenWidth - vm.currentWidth)
                         .id(1)
                     
                     templateSelectionRegion
+                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+                        .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
                         .offset(x: 2 * vm.screenWidth - vm.currentWidth)
                         .id(2)
+                        .padding(.horizontal, 4)
                     
                     taskDetailRegion
+                        .padding(.horizontal)
+                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+                        .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
                         .offset(x: 3 * vm.screenWidth - vm.currentWidth)
                         .id(3)
+                        .padding(.horizontal, 4)
                     
                     customElementsRegion
+                        .padding(.horizontal)
+                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+                        .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
                         .offset(x: 4 * vm.screenWidth - vm.currentWidth)
                         .id(4)
                     
@@ -59,6 +72,10 @@ struct TaskCreationView: View {
             
             buttonsRegion
         }
+        .padding(.horizontal, 16)
+        .padding(.top, 12)
+        .background(.thinMaterial)
+        .ignoresSafeArea(edges: .bottom)
         .onAppear{
             vm.dismiss = dismiss
         }
@@ -85,49 +102,60 @@ struct TaskCreationView: View {
 extension TaskCreationView{
     
     private var buttonsRegion: some View{
-        HStack{
-            Button {
+        HStack(spacing: 16){
+            Button(role: .none) {
                 vm.goBack()
             } label: {
-                Text("Back")
+                Label("Back", systemImage: "chevron.left")
+                    .font(.headline)
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 16)
+                    .frame(maxWidth: .infinity)
             }
-            
-            Spacer()
+            .buttonStyle(.bordered)
+            .buttonBorderShape(.roundedRectangle(radius: 16))
             
             Button {
                 vm.goNext()
             } label: {
-                Text("Next")
+                Label("Next", systemImage: "chevron.right")
+                    .font(.headline)
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 16)
+                    .frame(maxWidth: .infinity)
             }
-
-
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.roundedRectangle(radius: 16))
         }
-        .padding()
+        .padding(.horizontal)
+        .padding(.bottom, 12)
+        
     }
     
     private var templateSelectionRegion: some View{
-        VStack{
-            Spacer()
+        VStack(spacing: 24){
             
             Text("Select Your Goal Template: ")
                 .font(.headline)
                 .fontWeight(.semibold)
+                .foregroundStyle(.primary)
+                .padding(.top)
             
             templateTypeComponent
-            
-            Spacer()
         }
+        .padding(.horizontal, 24)
     }
     
     private var taskDetailRegion: some View{
         
-        VStack{
+        VStack(spacing: 16){
             
             if vm.selectedType != .day && vm.selectedType != .week{
                 
                 HStack{
                     Text("First Day Of The Week: ")
-                        .fontWeight(.bold)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.primary)
                     Spacer()
                     startingWeekdayComponent
                         .offset(x: 10)
@@ -135,7 +163,8 @@ extension TaskCreationView{
                 
                 HStack{
                     Text("Select Time Type:")
-                        .fontWeight(.bold)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.primary)
                     Spacer()
                     calendarTypeComponent
                         .offset(x: 10)
@@ -144,6 +173,7 @@ extension TaskCreationView{
                 HStack{
                     Text("Select Category: ")
                         .bold()
+                        .foregroundStyle(.primary)
                     Spacer()
                     categoryTypeComponent
                         .offset(x: 10)
@@ -154,7 +184,7 @@ extension TaskCreationView{
             
             selectDataComponent
         }
-        .padding()
+        .padding(.vertical, 12)
     }
     
     private var customElementsRegion: some View{
@@ -167,34 +197,40 @@ extension TaskCreationView{
     }
     
     private var nameAndStartingPointRegion: some View{
-        VStack(alignment: .leading, spacing: 16){
+        VStack(alignment: .leading, spacing: 24){
             Text("Goal Details")
                 .font(.headline)
                 .fontWeight(.semibold)
+                .foregroundStyle(.primary)
+                .padding(.top)
 
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 12) {
                 Text("Goal Name")
                     .font(.subheadline)
                     .fontWeight(.bold)
+                    .foregroundStyle(.primary)
                 HStack{
                     TextField("Enter goal name", text: $vm.goalName)
                         .textFieldStyle(.roundedBorder)
                         .disabled(vm.goalIsSet)
                     
                     Image(systemName: vm.goalIsSet ? "checkmark.square.fill" : "square.dashed")
+                        .animation(.easeInOut, value: vm.goalIsSet)
                         .onTapGesture {
                             vm.goalIsSet.toggle()
                         }
                 }
             }
 
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 12) {
                 Text("Starting Point questions")
                     .font(.subheadline)
                     .fontWeight(.bold)
+                    .foregroundStyle(.primary)
                 
                 TextEditor(text: $vm.startingPointHelp)
                     .frame(height: 200)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                     .overlay{
                         if vm.fetchingAIHelp{
                             ProgressView()
@@ -203,19 +239,21 @@ extension TaskCreationView{
                 
             }
             
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Starting Point")
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Starting Point Answer")
                     .font(.subheadline)
                     .fontWeight(.bold)
+                    .foregroundStyle(.primary)
                 
                 TextEditor(text: $vm.startingPoint)
                     .frame(height: 200)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
             }
             .disabled(vm.goalName.isEmpty)
 
             Spacer()
         }
-        .padding()
+        .padding(.vertical, 12)
     }
 }
 
@@ -229,6 +267,7 @@ extension TaskCreationView{
                 Text(type.rawValue).tag(type)
             }
         }
+        .tint(.accentColor)
     }
     
     private var calendarTypeComponent: some View{
@@ -237,6 +276,7 @@ extension TaskCreationView{
                 Text(type.rawValue).tag(type)
             }
         }
+        .tint(.accentColor)
     }
     
     private var startingWeekdayComponent: some View{
@@ -245,6 +285,7 @@ extension TaskCreationView{
                 Text(type.dayName).tag(type)
             }
         }
+        .tint(.accentColor)
     }
     
     private var templateTypeComponent: some View{
@@ -254,6 +295,7 @@ extension TaskCreationView{
             }
         }
         .pickerStyle(.wheel)
+        .tint(.accentColor)
         .padding()
     }
     
@@ -261,26 +303,31 @@ extension TaskCreationView{
         Group{
             Stepper("Years: \(vm.numberOfYears)", value: $vm.numberOfYears, in: 0...10)
                 .bold()
+                .foregroundStyle(.primary)
             
             Stepper("Months: \(vm.numberOfMonths)", value: $vm.numberOfMonths, in: 0...11)
                 .bold()
+                .foregroundStyle(.primary)
             
             Stepper("Weeks: \(vm.numberOfWeeks)", value: $vm.numberOfWeeks, in: 0...4)
                 .bold()
+                .foregroundStyle(.primary)
             
             Stepper("Days: \(vm.numberOfDays)", value: $vm.numberOfDays, in: 0...6)
                 .bold()
+                .foregroundStyle(.primary)
         }
     }
     
     private var selectDataComponent: some View{
-        VStack{
+        VStack(spacing: 16){
             DatePicker(
                 "Start Date",
                 selection: $vm.startDate,
                 displayedComponents: .date
             )
             .bold()
+            .foregroundStyle(.primary)
             
             if vm.selectedType == .byDate{
                 DatePicker(
@@ -289,6 +336,7 @@ extension TaskCreationView{
                     displayedComponents: .date
                 )
                 .bold()
+                .foregroundStyle(.primary)
             }
         }
     }

@@ -16,7 +16,12 @@ struct DashboardView: View {
         
         VStack(spacing: 20) {
             
-            StreakRowView(streakCount: 10, todayTaskAchieved: 0, totalTaskAchieved: 10)
+            StreakRowView(
+                dailyTaskAchieved: viewModel.dailyTaskAchieved,
+                monthlyTaskAchieved: viewModel.monthlyTaskAchieved,
+                totalTaskAchieved: viewModel.totalTaskAchieved
+            )
+            // Monthly task achieved: viewModel.monthlyTaskAchieved (not shown unless StreakRowView is updated)
             
             createTodayTask
             
@@ -164,5 +169,4 @@ extension DashboardView{
         }
     }
 }
-
 

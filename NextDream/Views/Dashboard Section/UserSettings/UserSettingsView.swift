@@ -23,50 +23,103 @@ struct UserSettingsView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading){
-                createNotificationToggle
+            // Main card with liquid glass / ultraThinMaterial background and rounded corners + shadow
+            VStack(alignment: .leading, spacing: 24){
+                // Group Notification and Reschedule Toggles with section header
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Notifications")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(.leading)
+                    
+                    createNotificationToggle
+                    
+                    createRescheduleToggle
+                }
+                .padding(.vertical)
+                .background(.ultraThinMaterial)
+                .cornerRadius(16)
+                .padding(.horizontal)
                 
-                createRescheduleToggle
+                // Group Category Pie Section with section header style is already included inside
                 
+                VStack(alignment: .leading, spacing: 16){
+                    Text("Task Categories")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(.leading)
+                    
+                    categoryPieSection
+                }
+                .padding(.vertical)
+                .background(.ultraThinMaterial)
+                .cornerRadius(16)
+                .padding(.horizontal)
+                
+                // MARK: - Theme and Font Pickers have been commented out to disable them as per instructions
+                /*
                 createThemePicker
                 
                 createFontSizePicker
+                */
                 
-                categoryPieSection
-                
-                Button {
-                    auth.signOut()
-                    isLoggedIn = false
-                    emailVerified = false
-                } label: {
-                    Text("Sign out")
-                        .frame(maxWidth: .infinity)
+                // Buttons section with more spacing and prominent style
+                VStack(spacing: 20) {
+                    Button {
+                        auth.signOut()
+                        isLoggedIn = false
+                        emailVerified = false
+                    } label: {
+                        Text("Sign out")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.red)
+                    .cornerRadius(12)
+                    .padding(.horizontal)
+                    
+                    Button {
+                        auth.deleteAccount()
+                        isLoggedIn = false
+                        emailVerified = false
+                    } label: {
+                        Text("Delete Account")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.red)
+                    .cornerRadius(12)
+                    .padding(.horizontal)
                 }
-                .tint(.red)
-                .frame(height: 50)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .buttonStyle(.borderedProminent)
+                .padding(.bottom, 30)
                 
-                Button {
-                    auth.deleteAccount()
-                    isLoggedIn = false
-                    emailVerified = false
-                } label: {
-                    Text("Delete Account")
-                        .frame(maxWidth: .infinity)
-                }
-                .tint(.red)
-                .frame(height: 50)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .buttonStyle(.borderedProminent)
-
             }
             .padding(.top)
+            .padding(.bottom, 40)
+            // Add subtle shadow and border to the entire VStack card area
+            .background(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(Color(.systemBackground).opacity(0.75))
+                    .background(.ultraThinMaterial)
+                    .shadow(color: Color.black.opacity(0.12), radius: 20, x: 0, y: 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .stroke(Color.gray.opacity(0.15), lineWidth: 1)
+                    )
+            )
+            .padding()
         }
         .navigationTitle("User Settings")
-        .background(.gray.opacity(0.4))
+        .background(
+            // Background adjusted for cohesive app theme,
+            // subtle gray with ultraThinMaterial blur to keep modern style
+            Color.gray.opacity(0.15)
+                .ignoresSafeArea()
+        )
         .toolbar {
             saveButton
         }
@@ -210,6 +263,8 @@ extension UserSettingsView{
         .animation(.easeOut(duration: 0.3), value: viewModel.notification)
     }
     
+    // MARK: - Theme Picker Commented Out to Disable
+    /*
     private var createThemePicker: some View{
         HStack{
             Text("Theme: ")
@@ -225,7 +280,10 @@ extension UserSettingsView{
         }
         .padding()
     }
+    */
     
+    // MARK: - Font Size Picker Commented Out to Disable
+    /*
     private var createFontSizePicker: some View{
         HStack{
             Text("Font Size:")
@@ -242,6 +300,7 @@ extension UserSettingsView{
         }
         .padding()
     }
+    */
 }
 
 extension UserSettingsView{

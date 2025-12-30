@@ -9,13 +9,9 @@ import SwiftUI
 
 struct StreakRowView: View {
     
-    var streakCount: Int
-    var todayTaskAchieved: Int
+    var dailyTaskAchieved: Int
+    var monthlyTaskAchieved: Int
     var totalTaskAchieved: Int
-    
-    var didCompleteATask: Bool{
-        todayTaskAchieved > 0
-    }
     
     var body: some View {
         VStack{
@@ -25,9 +21,9 @@ struct StreakRowView: View {
                 .fontWeight(.bold)
             
             HStack {
-                ElementStreakCell(element: .streak, count: streakCount, didCompleteATask: didCompleteATask)
-                ElementStreakCell(element: .todayTaskAchieved, count: todayTaskAchieved, didCompleteATask: true)
-                ElementStreakCell(element: .totalTaskAchieved, count: totalTaskAchieved, didCompleteATask: true)
+                ElementStreakCell(element: .todayTaskAchieved, count: dailyTaskAchieved, didCompleteATask: dailyTaskAchieved > 0)
+                ElementStreakCell(element: .monthlyTaskAchieved, count: monthlyTaskAchieved, didCompleteATask: monthlyTaskAchieved > 0)
+                ElementStreakCell(element: .totalTaskAchieved, count: totalTaskAchieved, didCompleteATask: totalTaskAchieved > 0)
             }
         }
         
@@ -38,9 +34,9 @@ struct StreakRowView: View {
 
 #Preview {
     StreakRowView(
-        streakCount: 10,
-        todayTaskAchieved:0,
-        totalTaskAchieved: 10
+        dailyTaskAchieved: 3,
+        monthlyTaskAchieved: 15,
+        totalTaskAchieved: 100
     )
     .frame(maxWidth: .infinity, maxHeight: .infinity)
 }
