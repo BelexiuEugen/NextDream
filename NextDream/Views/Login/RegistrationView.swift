@@ -36,6 +36,8 @@ struct RegistrationView: View {
                         .font(.footnote)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
+                    dataUsageInfoSection
+                    
                     registerButton
                     
                     Spacer().frame(height: 10)
@@ -46,7 +48,7 @@ struct RegistrationView: View {
                 .padding(.horizontal, 12)
                 
                 signInWithOtherProvidersSection
-                .padding()
+                    .padding()
 
                 Spacer()
             }
@@ -88,6 +90,34 @@ extension RegistrationView{
     }
 }
 
+extension RegistrationView {
+    private var dataUsageInfoSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Image(systemName: "shield.lefthalf.filled")
+                    .foregroundStyle(.blue)
+                Text("How we use your data")
+                    .font(.headline)
+            }
+            Text("We only collect the information needed to create and manage your account and provide core app features:")
+                .font(.footnote)
+                .foregroundColor(.secondary)
+            VStack(alignment: .leading, spacing: 4) {
+                Label { Text("Name & Family Name – to personalize your profile") } icon: { Image(systemName: "person") }
+                Label { Text("Email – to authenticate your account and send verification emails") } icon: { Image(systemName: "envelope") }
+                Label { Text("Date of Birth & Gender – to tailor certain experiences and demographics") } icon: { Image(systemName: "calendar") }
+                Label { Text("Country – to localize content and comply with regional requirements") } icon: { Image(systemName: "globe") }
+            }
+            .font(.footnote)
+            .foregroundColor(.secondary)
+            Text("We do not sell your data. You can request account deletion at any time.")
+                .font(.footnote)
+                .foregroundColor(.secondary)
+        }
+        .padding(12)
+        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+    }
+}
 //MARK: User Info Elements
 
 extension RegistrationView{

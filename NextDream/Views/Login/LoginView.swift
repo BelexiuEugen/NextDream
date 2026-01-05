@@ -154,10 +154,23 @@ extension LoginView{
         SignInWithAppleButton(
             .signIn,
             onRequest: { request in
-                // Configure request here if needed
+
+                let nonce = auth.randomNonceString()
+                        auth.currentNonce = nonce // Store it in the ViewModel for later
+                        
+                        // 2. Configure request
+                        request.requestedScopes = [.fullName, .email]
+                        request.nonce = auth.sha256(nonce) // Send hashed nonce to Apple
             },
             onCompletion: { result in
-                // Handle result here if needed
+                switch result {
+                case .success(let success):
+                    auth.handleAppleResult(authorization: success)
+                    isLoggedIn = true
+                    emailVerified = true
+                case .failure(let failure):
+                    print("There was an error: \(failure)")
+                }
             }
         )
         .signInWithAppleButtonStyle(.black)

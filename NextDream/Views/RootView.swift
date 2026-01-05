@@ -10,7 +10,7 @@ import FirebaseAuth
 
 struct RootView: View {
     
-    @Environment(AuthViewModel.self) var auth: AuthViewModel
+//    @Environment(AuthViewModel.self) var auth: AuthViewModel
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @AppStorage("isEmailVerified") var emailVerified: Bool = false
     

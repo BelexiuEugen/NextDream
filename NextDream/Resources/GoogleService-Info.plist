@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>75613313117-s5fnb6l88pund479itjecq733mrok5o3.apps.googleusercontent.com</string>
+	<string>75613313117-hqeto010nf2k9h96erm7susvsj8178io.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.75613313117-s5fnb6l88pund479itjecq733mrok5o3</string>
+	<string>com.googleusercontent.apps.75613313117-hqeto010nf2k9h96erm7susvsj8178io</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBlMEouB7i_Us5FLObInetSlI6-xuWL_jM</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>Person.NextDream</string>
+	<string>NextDream</string>
 	<key>PROJECT_ID</key>
 	<string>next-dream</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:75613313117:ios:517b9991b8d213c16115b4</string>
+	<string>1:75613313117:ios:d4788d13f44e07866115b4</string>
 </dict>
 </plist>

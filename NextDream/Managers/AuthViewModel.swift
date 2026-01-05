@@ -1,27 +1,26 @@
 import SwiftUI
+import AuthenticationServices
 import UIKit
 import GoogleSignIn
 import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
+import CryptoKit
 
 
 @Observable
 @MainActor
-final class AuthViewModel {
+final class AuthViewModel: NSObject, ASAuthorizationControllerPresentationContextProviding {
     var user: FirebaseAuth.User?
     var isLoading = true
     var errorMessage: String? = nil
     
     nonisolated(unsafe) private var handle: AuthStateDidChangeListenerHandle?
+    var currentNonce: String?
     
-    init() {
-        handle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
-            Task { @MainActor in
-                self?.user = user
-                self?.isLoading = false
-            }
-        }
+    override init() {
+        super.init()
+        setUpAuthStateListener()
     }
     
     deinit {
@@ -30,17 +29,52 @@ final class AuthViewModel {
         }
     }
     
+    nonisolated(unsafe) private func setUpAuthStateListener() {
+        handle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            Task { @MainActor in
+                self?.user = user
+                self?.isLoading = false
+            }
+        }
+    }
+    
     func deleteAccount() {
+        
         if let user = Auth.auth().currentUser {
-            user.delete { error in
-                if let error = error {
-                    print("Error deleting account:", error.localizedDescription)
-                } else {
-                    print("User account deleted successfully")
+            
+            let isAppleLogin = user.providerData.contains { $0.providerID == "apple.com" }
+            
+            if isAppleLogin{
+                deleteCurrentUser()
+            }
+            else {
+                user.delete { error in
+                    if let error = error {
+                        print("Error deleting account:", error.localizedDescription)
+                    } else {
+                        print("User account deleted successfully")
+                    }
                 }
             }
         }
     }
+
+    private func deleteCurrentUser() {
+
+        let nonce = self.randomNonceString()
+        currentNonce = nonce
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        request.nonce = self.sha256(nonce)
+
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+        
+    }
+
     
     func signOut() {
         do {
@@ -58,7 +92,18 @@ final class AuthViewModel {
             .first(where: { $0.isKeyWindow })?.rootViewController
     }
     
-    func signInWithGoogle() {
+    // MARK: - ASAuthorizationControllerPresentationContextProviding
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        // Use the key window as the presentation anchor
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            return window
+        }
+        // Fallback to a new window if key window isn't available
+        return ASPresentationAnchor()
+    }
+    
+    func signInWithGoogle(){
         
         guard let clientID = FirebaseApp.app()?.options.clientID else {
             print("Missing Firebase clientID.")
@@ -98,12 +143,88 @@ final class AuthViewModel {
                 if let error = error {
                     print("Firebase sign-in with Google credential failed: \(error)")
                 } else {
+                    UserDefaults.standard.set(true, forKey: "isLoggedIn")
+                    UserDefaults.standard.set(true, forKey: "isEmailVerified")
                     print("The user was succesfully Connected")
                 }
             }
         }
     }
+
+    func handleAppleResult(authorization: ASAuthorization) {
+  
+
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            
+            // Retrieve the nonce we stored during the request
+            guard let nonce = currentNonce else {
+                fatalError("Invalid state: A login callback was received, but no login request was sent.")
+            }
+            
+            guard let appleIDToken = appleIDCredential.identityToken else {
+                print("Unable to fetch identity token")
+                return
+            }
+            
+            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+                print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                return
+            }
+            
+            // 3. Create Firebase Credential
+            let credential = OAuthProvider.appleCredential(withIDToken: idTokenString,
+                                                           rawNonce: nonce,
+                                                           fullName: appleIDCredential.fullName)
+            
+            // 4. Sign in to Firebase
+            Auth.auth().signIn(with: credential) { (authResult, error) in
+                if let error = error {
+                    print("Firebase Sign In Error: \(error.localizedDescription)")
+                    return
+                }
+                
+                print("User is signed in to Firebase with Apple.")
+                // Handle success (e.g., set isLoggedIn = true)
+            }
+        }
+    }
+
+    func randomNonceString(length: Int = 32) -> String {
+      precondition(length > 0)
+      var randomBytes = [UInt8](repeating: 0, count: length)
+      let errorCode = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
+      if errorCode != errSecSuccess {
+        fatalError(
+          "Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)"
+        )
+      }
+
+      let charset: [Character] =
+        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+
+      let nonce = randomBytes.map { byte in
+        // Pick a random character from the set, wrapping around if needed.
+        charset[Int(byte) % charset.count]
+      }
+
+      return String(nonce)
+    }
+
+    @available(iOS 13, *)
+    func sha256(_ input: String) -> String {
+      let inputData = Data(input.utf8)
+      let hashedData = SHA256.hash(data: inputData)
+      let hashString = hashedData.compactMap {
+        String(format: "%02x", $0)
+      }.joined()
+
+      return hashString
+    }
     
+
+        
+
+        
     
     func saveUserData(uid: String, name: String, familyName: String, country: String, birthDay: Date, gender: String) {
         let db = Firestore.firestore()
@@ -259,3 +380,60 @@ final class AuthViewModel {
         return checkPassword(password, minLength: minLength, maxLength: maxLength).isEmpty
     }
 }
+
+
+@available(iOS 13.0, *)
+extension AuthViewModel: ASAuthorizationControllerDelegate {
+
+  func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+    if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+      guard let nonce = currentNonce else {
+        fatalError("Invalid state: A login callback was received, but no login request was sent.")
+      }
+      // Prefer using authorizationCode for revocation when deleting account; fall back to identityToken for sign-in
+      if let appleAuthCode = appleIDCredential.authorizationCode, let authCodeString = String(data: appleAuthCode, encoding: .utf8) {
+        // Attempt to revoke and delete the current Firebase user
+        Task { [weak self] in
+          do {
+            try await Auth.auth().revokeToken(withAuthorizationCode: authCodeString)
+            try await self?.user?.delete()
+          } catch {
+            print("Error revoking token or deleting user: \(error)")
+          }
+        }
+        return
+      }
+
+      guard let appleIDToken = appleIDCredential.identityToken else {
+        print("Unable to fetch identity token")
+        return
+      }
+      guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+        print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+        return
+      }
+      // Initialize a Firebase credential, including the user's full name.
+      let credential = OAuthProvider.appleCredential(withIDToken: idTokenString,
+                                                     rawNonce: nonce,
+                                                     fullName: appleIDCredential.fullName)
+      // Sign in with Firebase.
+      Auth.auth().signIn(with: credential) { (authResult, error) in
+        if let error = error {
+          // Error. If error.code == .MissingOrInvalidNonce, make sure
+          // you're sending the SHA256-hashed nonce as a hex string with
+          // your request to Apple.
+          print(error.localizedDescription)
+          return
+        }
+        // User is signed in to Firebase with Apple.
+      }
+    }
+  }
+
+  func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+    // Handle error.
+    print("Sign in with Apple errored: \(error)")
+  }
+
+}
+
