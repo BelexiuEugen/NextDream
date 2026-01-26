@@ -98,7 +98,7 @@ enum symbolName{
 enum Notification: String{
     case title = "Daily Reminder"
     case subtitle = "Time to complete tasks 🔥"
-    case body = "You have 10 task to complete today"
+    case body = "And Achieve your best"
     
     static var notificationSound: UNNotificationSound {
         return .default
