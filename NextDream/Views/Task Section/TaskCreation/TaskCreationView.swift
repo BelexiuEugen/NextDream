@@ -13,6 +13,14 @@ struct TaskCreationView: View {
     @Environment(\.dismiss) var dismiss;
     @State private var vm: TaskCreationViewModel
     
+    @FocusState private var focusedField: Field?
+
+    private enum Field: Hashable {
+        case goalName
+        case startingPointHelp
+        case startingPoint
+    }
+    
     init(
         taskCreationManager: TaskCreation,
         path: NavigationViewModel,
@@ -72,10 +80,21 @@ struct TaskCreationView: View {
             
             buttonsRegion
         }
+        .contentShape(Rectangle())
+        .onTapGesture { focusedField = nil }
         .padding(.horizontal, 16)
         .padding(.top, 12)
         .background(.thinMaterial)
         .ignoresSafeArea(edges: .bottom)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    focusedField = nil
+                }
+                .bold()
+            }
+        }
         .onAppear{
             vm.dismiss = dismiss
         }
@@ -212,6 +231,9 @@ extension TaskCreationView{
                 HStack{
                     TextField("Enter goal name", text: $vm.goalName)
                         .textFieldStyle(.roundedBorder)
+                        .focused($focusedField, equals: .goalName)
+                        .submitLabel(.done)
+                        .onSubmit { focusedField = nil }
                         .disabled(vm.goalIsSet)
                     
                     Image(systemName: vm.goalIsSet ? "checkmark.square.fill" : "square.dashed")
@@ -236,6 +258,9 @@ extension TaskCreationView{
                             ProgressView()
                         }
                     }
+                    .focused($focusedField, equals: .startingPointHelp)
+                    .submitLabel(.done)
+                    .onSubmit { focusedField = nil }
                 
             }
             
@@ -248,6 +273,9 @@ extension TaskCreationView{
                 TextEditor(text: $vm.startingPoint)
                     .frame(height: 200)
                     .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .focused($focusedField, equals: .startingPoint)
+                    .submitLabel(.done)
+                    .onSubmit { focusedField = nil }
             }
             .disabled(vm.goalName.isEmpty)
 

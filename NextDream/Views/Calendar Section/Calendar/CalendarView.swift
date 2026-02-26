@@ -5,6 +5,8 @@ import SwiftData
 struct CalendarView: View {
     
     @State private var viewModel: CalendarViewModel
+    @Environment(\.colorScheme) private var colorScheme
+    @State private var calendarResetToken = UUID()
     
     init(modelContext: ModelContext, taskRepository: TaskRepository){
         _viewModel = State(wrappedValue: CalendarViewModel(modelContext: modelContext, taskRepository: taskRepository))
@@ -22,6 +24,7 @@ struct CalendarView: View {
                 currentPage: $viewModel.currentPage
             )
             .frame(height: 300)
+            .id(calendarResetToken)
             
             Text("Selected Date: \(viewModel.selectedDate.toMediumStyle())")
                 .font(.headline)
@@ -30,6 +33,10 @@ struct CalendarView: View {
             showTaskDetails
         }
         .padding()
+        .onChange(of: colorScheme) { _, _ in
+            // Force re-create FSCalendar when appearance changes to avoid rendering bug
+            calendarResetToken = UUID()
+        }
 //        .sheet(isPresented: $viewModel.isPresented, content: {
 ////            EventSelectionView(modelContext: viewModel.modelContext)
 ////                .presentationDetents([.fraction(0.4), .medium, .large])
