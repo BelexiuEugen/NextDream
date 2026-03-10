@@ -37,6 +37,8 @@ fastlane/screenshots
 # Package.resolved
 Package.resolved
 
+GoogleService-Info.plist
+
 # .env or secrets
 .env
 
