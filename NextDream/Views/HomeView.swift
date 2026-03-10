@@ -11,9 +11,16 @@ import SwiftData
 struct HomeView: View {
     
     @Environment(\.modelContext) var modelContext;
-    @Environment(TaskViewModel.self) var vm;
     
-    @State private var selectedTab = 2 // Set the initial tab index or tag
+    @State private var selectedTab = 2
+    
+    private var taskRepository: DefaultTaskRepository {
+        DefaultTaskRepository(modelContext: modelContext)
+    }
+    private var taskCreationManager: TaskCreationManager{
+        TaskCreationManager(modelContext: modelContext)
+    }
+    
     
     var body: some View {
         
@@ -21,23 +28,26 @@ struct HomeView: View {
             TabView(selection: $selectedTab){
                 
                 Tab("Task List", systemImage: "checklist", value: 1) {
-                    TaskDashboardView()
+                    TaskDashboardView(
+                        modelContext: modelContext,
+                        taskRepository: taskRepository,
+                        taskCreationManager: taskCreationManager
+                    )
                 }
                 
                 Tab("DashBoard", systemImage: "square.grid.2x2", value: 2){
-                    DashboardView()
+                    NavigationStack{
+                        DashboardView(modelContext: modelContext, taskRepository: taskRepository)
+                    }
                 }
 
                 Tab("Calendar", systemImage: "calendar", value: 3){
                     NavigationStack{
-                        CalendarView()
+                        CalendarView(modelContext: modelContext, taskRepository: taskRepository)
                     }
                 }
                 
             }
-        }
-        .onAppear{
-            vm.modelContext = modelContext;
         }
     }
 }

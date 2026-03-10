@@ -7,11 +7,44 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0173A1C92E8AD39200B3C0B5 /* FirebaseAI in Frameworks */ = {isa = PBXBuildFile; productRef = 0173A1C82E8AD39200B3C0B5 /* FirebaseAI */; };
+		0173A1D12E8ADFE400B3C0B5 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0173A1D02E8ADFE400B3C0B5 /* FirebaseAuth */; };
+		0173A1D32E8ADFE400B3C0B5 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0173A1D22E8ADFE400B3C0B5 /* FirebaseCore */; };
+		0173A1D52E8ADFE400B3C0B5 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 0173A1D42E8ADFE400B3C0B5 /* FirebaseFirestore */; };
+		0173A1DE2E8BDE1D00B3C0B5 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 0173A1DD2E8BDE1D00B3C0B5 /* GoogleSignIn */; };
+		0173A1E02E8BDE1D00B3C0B5 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0173A1DF2E8BDE1D00B3C0B5 /* GoogleSignInSwift */; };
+		01FF6CAC2E859CAB00719C24 /* CodableCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 01FF6CAB2E859CAB00719C24 /* CodableCSV */; };
 		3DEEA0D72D36D4600073B5BA /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 3DEEA0D62D36D4600073B5BA /* FSCalendar */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B0CA2F432E2C277700DB2C5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DEEA0582D36D29A0073B5BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B0CA2E9F2E2BCB7900DB2C5D;
+			remoteInfo = NextDreamWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B0CA2EB72E2BCB7D00DB2C5D /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		3DEEA0602D36D29A0073B5BA /* NextDream.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NextDream.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0BCD8462E311B00009B7E18 /* NextDreamWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NextDreamWidgetExtension.entitlements; sourceTree = "<group>"; };
+		B0CA2EA22E2BCB7900DB2C5D /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		B0CA2EA42E2BCB7900DB2C5D /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -40,7 +73,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01FF6CAC2E859CAB00719C24 /* CodableCSV in Frameworks */,
+				0173A1D32E8ADFE400B3C0B5 /* FirebaseCore in Frameworks */,
 				3DEEA0D72D36D4600073B5BA /* FSCalendar in Frameworks */,
+				0173A1E02E8BDE1D00B3C0B5 /* GoogleSignInSwift in Frameworks */,
+				0173A1C92E8AD39200B3C0B5 /* FirebaseAI in Frameworks */,
+				0173A1D12E8ADFE400B3C0B5 /* FirebaseAuth in Frameworks */,
+				0173A1D52E8ADFE400B3C0B5 /* FirebaseFirestore in Frameworks */,
+				0173A1DE2E8BDE1D00B3C0B5 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,7 +90,9 @@
 		3DEEA0572D36D29A0073B5BA = {
 			isa = PBXGroup;
 			children = (
+				B0BCD8462E311B00009B7E18 /* NextDreamWidgetExtension.entitlements */,
 				3DEEA0622D36D29A0073B5BA /* NextDream */,
+				B0CA2EA12E2BCB7900DB2C5D /* Frameworks */,
 				3DEEA0612D36D29A0073B5BA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -63,6 +105,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		B0CA2EA12E2BCB7900DB2C5D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B0CA2EA22E2BCB7900DB2C5D /* WidgetKit.framework */,
+				B0CA2EA42E2BCB7900DB2C5D /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -73,10 +124,12 @@
 				3DEEA05C2D36D29A0073B5BA /* Sources */,
 				3DEEA05D2D36D29A0073B5BA /* Frameworks */,
 				3DEEA05E2D36D29A0073B5BA /* Resources */,
+				B0CA2EB72E2BCB7D00DB2C5D /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B0CA2F442E2C277700DB2C5D /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				3DEEA0622D36D29A0073B5BA /* NextDream */,
@@ -84,6 +137,13 @@
 			name = NextDream;
 			packageProductDependencies = (
 				3DEEA0D62D36D4600073B5BA /* FSCalendar */,
+				01FF6CAB2E859CAB00719C24 /* CodableCSV */,
+				0173A1C82E8AD39200B3C0B5 /* FirebaseAI */,
+				0173A1D02E8ADFE400B3C0B5 /* FirebaseAuth */,
+				0173A1D22E8ADFE400B3C0B5 /* FirebaseCore */,
+				0173A1D42E8ADFE400B3C0B5 /* FirebaseFirestore */,
+				0173A1DD2E8BDE1D00B3C0B5 /* GoogleSignIn */,
+				0173A1DF2E8BDE1D00B3C0B5 /* GoogleSignInSwift */,
 			);
 			productName = NextDream;
 			productReference = 3DEEA0602D36D29A0073B5BA /* NextDream.app */;
@@ -96,8 +156,8 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1620;
-				LastUpgradeCheck = 1620;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					3DEEA05F2D36D29A0073B5BA = {
 						CreatedOnToolsVersion = 16.2;
@@ -115,6 +175,9 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				3DEEA0D52D36D4600073B5BA /* XCRemoteSwiftPackageReference "FSCalendar" */,
+				01FF6CAA2E859CAB00719C24 /* XCRemoteSwiftPackageReference "CodableCSV" */,
+				0173A1C72E8AD39200B3C0B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				0173A1DC2E8BDE1D00B3C0B5 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3DEEA0612D36D29A0073B5BA /* Products */;
@@ -145,6 +208,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B0CA2F442E2C277700DB2C5D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			targetProxy = B0CA2F432E2C277700DB2C5D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		3DEEA06E2D36D29C0073B5BA /* Debug */ = {
@@ -182,6 +252,8 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = XB75K2CSMC;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -205,6 +277,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -245,6 +318,8 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = XB75K2CSMC;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -261,6 +336,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -271,16 +347,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = NextDream/NextDream.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"NextDream/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = XB75K2CSMC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NextDream/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Next Dream";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -288,12 +369,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Person.NextDream;
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = NextDream;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -302,16 +387,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = NextDream/NextDream.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"NextDream/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = XB75K2CSMC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NextDream/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Next Dream";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -319,12 +409,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Person.NextDream;
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = NextDream;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -352,6 +446,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0173A1C72E8AD39200B3C0B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.3.0;
+			};
+		};
+		0173A1DC2E8BDE1D00B3C0B5 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+		01FF6CAA2E859CAB00719C24 /* XCRemoteSwiftPackageReference "CodableCSV" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dehesa/CodableCSV.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.7;
+			};
+		};
 		3DEEA0D52D36D4600073B5BA /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/WenchaoD/FSCalendar.git";
@@ -363,6 +481,41 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0173A1C82E8AD39200B3C0B5 /* FirebaseAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0173A1C72E8AD39200B3C0B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAI;
+		};
+		0173A1D02E8ADFE400B3C0B5 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0173A1C72E8AD39200B3C0B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		0173A1D22E8ADFE400B3C0B5 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0173A1C72E8AD39200B3C0B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		0173A1D42E8ADFE400B3C0B5 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0173A1C72E8AD39200B3C0B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		0173A1DD2E8BDE1D00B3C0B5 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0173A1DC2E8BDE1D00B3C0B5 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		0173A1DF2E8BDE1D00B3C0B5 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0173A1DC2E8BDE1D00B3C0B5 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		01FF6CAB2E859CAB00719C24 /* CodableCSV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 01FF6CAA2E859CAB00719C24 /* XCRemoteSwiftPackageReference "CodableCSV" */;
+			productName = CodableCSV;
+		};
 		3DEEA0D62D36D4600073B5BA /* FSCalendar */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3DEEA0D52D36D4600073B5BA /* XCRemoteSwiftPackageReference "FSCalendar" */;
